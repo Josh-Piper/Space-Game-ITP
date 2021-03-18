@@ -24,9 +24,13 @@ enum ship_kind
 /**
  * The player data keeps track of all of the information related to the player.
  * 
- * @field   player_sprite   The player's sprite - used to track position and movement
- * @field   score           The current score for the player
- * @field   kind            Current kind of player ship
+ * @field   player_sprite       The player's sprite - used to track position and movement
+ * @field   score               The current score for the player
+ * @field   kind                Current kind of player ship
+ * @field   fuel_pct            Handles the drawing of the fuel capacity
+ * @field   total_power_ups     The total power ups collected
+ * @field   current_power_up    Bitmap to draw the current powerup the user has
+ * @field   invincible          Handles the user's infinite health or not
  */
 struct player_data
 {
@@ -36,6 +40,7 @@ struct player_data
     double      fuel_pct;
     int         total_power_ups;
     bitmap      current_power_up;
+    bool        invincible;
 };
 
 /**
