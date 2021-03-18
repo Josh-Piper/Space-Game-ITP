@@ -21,6 +21,7 @@ bitmap ship_bitmap(ship_kind kind)
     default:
         return bitmap_named("pegasi");
     }
+    
 }
 
 player_data new_player()
@@ -44,6 +45,11 @@ player_data new_player()
     // Position in the centre of the initial screen
     sprite_set_x(result.player_sprite, (screen_height() - (sprite_width(result.player_sprite))) / 2);
     sprite_set_y(result.player_sprite, (screen_height() - (sprite_height(result.player_sprite))) / 2);
+
+    result.fuel_pct = 0.75;
+    result.total_power_ups = 0;
+    result.score = 0;
+    result.current_power_up = bitmap_named("box");
 
     return result;
 }

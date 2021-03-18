@@ -20,7 +20,7 @@ BITMAP,fuel,fuel.png
 BITMAP,drops,drops.png
 BITMAP,diamond,diamond.png
 BITMAP,star,star.png
-BITMAP,cash,cash.png
+BITMAP,cash,cash.pngdow 
 BITMAP,nos,nos.png
 BITMAP,level,level.png
 BITMAP,bullet,bullet.png
@@ -38,3 +38,5 @@ BITMAP,box,box.png
 BITMAP,empty,empty.png
 BITMAP,full,full.png
 ANIM,coins,coin_animation.txt
+FONT, valentime, Valentime.otf
+FONT, hud_font, Locanita.otf

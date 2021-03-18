@@ -33,6 +33,9 @@ struct player_data
     sprite      player_sprite;
     int         score;
     ship_kind   kind;
+    double      fuel_pct;
+    int         total_power_ups;
+    bitmap      current_power_up;
 };
 
 /**
