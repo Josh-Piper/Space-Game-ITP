@@ -3,6 +3,11 @@
 #include "player.h"
 #include "power_up.h"
 
+const int MINI_MAP_SIZE = 100;
+const double MINI_MAP_X = 200.0;
+const double MINI_MAP_Y = 12.5;
+const double GAME_WIDTH = 3000.0;
+
 string get_heads_up_display_cords_as_string(point_2d cords) 
 {
     string result;
@@ -17,23 +22,46 @@ string get_heads_up_display_cords_as_string(point_2d cords)
     return result;
 }
 
+point_2d mini_map_coordinate_player(double x, double y)
+{
+    double return_x = ( x + 1500.0 ) / GAME_WIDTH * MINI_MAP_SIZE + MINI_MAP_X;
+    double return_y = ( y + 1500.0 ) / GAME_WIDTH * MINI_MAP_SIZE + MINI_MAP_Y;
+
+    return point_at(return_x, return_y);
+}
+
 point_2d mini_map_coordinate(const power_up_data &power_up)
 {
-    //loop through and draw_pixel onto colour pixel black minimap
-    //draw_pixel(clr, point2d)
+    //points escape left and top borders of the black box
+    float player_x = sprite_x(power_up.power_up_sprite);
+    float player_y = sprite_y(power_up.power_up_sprite);
+
+    double return_x = ( player_x + 1500.0 ) / GAME_WIDTH * MINI_MAP_SIZE + MINI_MAP_X;
+    double return_y = ( player_y + 1500.0 ) / GAME_WIDTH * MINI_MAP_SIZE + MINI_MAP_Y;
+
+    return point_at(return_x, return_y);
 }
 
 void draw_mini_map(const vector<power_up_data> &power_ups)
 {
-    fill_rectangle(COLOR_BLACK, 200, 12.5, 100, 100, option_to_screen());
-    return;
+
+    fill_rectangle(COLOR_BLACK, MINI_MAP_X, MINI_MAP_Y, MINI_MAP_SIZE, MINI_MAP_SIZE, option_to_screen());
+    for (int i = 0; i < power_ups.size(); i++)
+    {
+        point_2d cords = mini_map_coordinate (power_ups[i]);
+        if (cords.x >= 200 && cords.x <= 300 && cords.y >= 12.5 && cords.y <= 112.5) draw_pixel( rgba_color(199, 202, 203, 200), cords, option_to_screen() );
+    }
+
 }
 
 void draw_heads_up_display_background(const game_data &game) {
     clear_screen(COLOR_BLACK);
+    
     fill_rectangle(COLOR_DARK_SLATE_GRAY, 0, 0, 325, 150, option_to_screen());
-
     draw_mini_map(game.power_ups);
+    //draw player
+    draw_pixel( COLOR_AQUA, mini_map_coordinate_player(sprite_x(game.player.player_sprite), sprite_y(game.player.player_sprite)), option_to_screen() );
+    
 }
 
 void draw_heads_up_display(const game_data &game) 

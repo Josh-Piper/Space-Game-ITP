@@ -26,8 +26,8 @@ int main()
     while ( ! quit_requested() )
     {
         process_events();
+
         handle_input(game.player);
-        
         update_game(game);
         draw_game(game);
     }

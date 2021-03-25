@@ -103,7 +103,7 @@ void update_game(game_data &game)
 {
     
     // Perform movement and update the camera
-    if (rnd(0, 1000) <= 25)
+    if (rnd(0, 1000) <= 15)
         add_power_up(game);
 
     check_collisions(game);

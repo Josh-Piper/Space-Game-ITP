@@ -16,6 +16,9 @@ string get_heads_up_display_cords_as_string(point_2d cords);
 
 point_2d mini_map_coordinate(const power_up_data &power_up);
 
+point_2d mini_map_coordinate_player(double x, double y);
+
+
 void draw_mini_map(const vector<power_up_data> &power_ups);
 
 void draw_heads_up_display_background(const game_data &game);

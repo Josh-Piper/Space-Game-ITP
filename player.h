@@ -1,7 +1,7 @@
 #ifndef LOST_IN_SPACE_PLAYER
 #define LOST_IN_SPACE_PLAYER
 
-#include "splashkit.h"
+#include "./include/splashkit/splashkit.h"
 #include <vector>
 
 using namespace std;
