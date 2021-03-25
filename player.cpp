@@ -32,7 +32,7 @@ player_data new_player()
     result.fuel_pct = 0.75;
     result.total_power_ups = 0;
     result.score = 0;
-
+    result.power_up_counter = 0;
     //custom
     result.invincible = false;
     result.current_power_up = bitmap_named("placeholder");
@@ -99,6 +99,20 @@ void update_player(player_data &player_to_update)
     {
         move_camera_by(sprite_center.x - right_edge, 0);
     }
+
+    if (player_to_update.power_up_counter > 0.0) 
+    {//counter only active when shield is accessed
+        player_to_update.power_up_counter -= 1.0 / (10.0 * 60.0);
+        if (player_to_update.power_up_counter < 0.0)
+            player_to_update.power_up_counter = 0;
+    }
+    else 
+    {
+        player_to_update.fuel_pct = player_to_update.fuel_pct - 1.0 / (60.0 * 60.0);//  /fuel will last 60 seconds
+    }
+
+    if (player_to_update.total_power_ups >= 100)
+        player_to_update.invincible = true;
 }
 
 /**

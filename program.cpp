@@ -1,6 +1,7 @@
 #include "./include/splashkit/splashkit.h"
 #include "player.h"
 #include "power_up.h"
+#include "lost_in_space.h"
 #include "heads_up_display.h"
 
 /**
@@ -9,10 +10,6 @@
 
 using std::to_string;
 
-void load_resources()
-{
-    load_resource_bundle("game_bundle", "lost_in_space.txt");
-}
 
 /**
  * Entry point.
@@ -23,29 +20,16 @@ int main()
 {
     open_window("Lost In Space", 800, 800);
     load_resources();
-
-    player_data player;
-    power_up_data power_up;
-
-    player = new_player();
-    power_up = new_power_up(550, 550);
+    
+    game_data game { new_game() };
 
     while ( ! quit_requested() )
     {
-        // Handle input to adjust player movement
         process_events();
-        handle_input(player);
-
-        // Perform movement and update the camera
-        update_player(player);
-        update_power_up(power_up);
-
-        draw_heads_up_display(player);
-        // as well as the player who can move
-        draw_player(player);
-        draw_power_up(power_up);
-
-        refresh_screen(60);
+        handle_input(game.player);
+        
+        update_game(game);
+        draw_game(game);
     }
 
     return 0;

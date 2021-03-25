@@ -1,7 +1,5 @@
-#ifndef HEADS_UP_DISPLAY
-#define HEADS_UP_DISPLAY
-
 #include "splashkit.h"
+#include "lost_in_space.h"
 #include "player.h"
 #include "power_up.h"
 
@@ -19,14 +17,20 @@ string get_heads_up_display_cords_as_string(point_2d cords)
     return result;
 }
 
+void draw_hud(const vector<power_up_data> &power_ups)
+{
+    return;
+}
 
-void draw_heads_up_display_background() {
+void draw_heads_up_display_background(const game_data &game) {
     clear_screen(COLOR_BLACK);
     fill_rectangle(COLOR_DARK_SLATE_GRAY, 0, 0, 325, 150, option_to_screen());
+
+    draw_hud(game.power_ups);
     fill_rectangle(COLOR_BLACK, 200, 12.5, 100, 100, option_to_screen());
 }
 
-void draw_heads_up_display(const player_data &player) 
+void draw_heads_up_display(const game_data &game) 
 {
     // Redraw everything
     static const int x_dist { 5 };
@@ -37,25 +41,24 @@ void draw_heads_up_display(const player_data &player)
     power_up_drawing_constraints.scale_x = 0.35;
     power_up_drawing_constraints.scale_y = 0.35;
 
-    draw_heads_up_display_background();
+    draw_heads_up_display_background(game);
 
-    draw_text("SCORE: " + to_string(player.score), text_colour, "hud_font", font_size, x_dist, 5, option_to_screen());
-    draw_text("LOCATION: " + get_heads_up_display_cords_as_string(center_point(player.player_sprite)), text_colour, "hud_font", font_size, x_dist, 25, option_to_screen());
-    draw_text("TOTAL POWERUPS: " + to_string(player.total_power_ups), text_colour, "hud_font", font_size, x_dist, 45, option_to_screen());
+    draw_text("SCORE: " + to_string(game.player.score), text_colour, "hud_font", font_size, x_dist, 5, option_to_screen());
+    draw_text("LOCATION: " + get_heads_up_display_cords_as_string(center_point(game.player.player_sprite)), text_colour, "hud_font", font_size, x_dist, 25, option_to_screen());
+    draw_text("TOTAL POWERUPS: " + to_string(game.player.total_power_ups), text_colour, "hud_font", font_size, x_dist, 45, option_to_screen());
 
     draw_text("CURRENT POWERUP: ", text_colour, "hud_font", font_size, x_dist, 65, option_to_screen());
-    draw_bitmap(player.current_power_up, 90, 25, power_up_drawing_constraints);
+    draw_bitmap(game.player.current_power_up, 90, 25, power_up_drawing_constraints);
 
     /**
      * Handle drawing of the health bar
      */ 
     draw_text("HEALTH: ", text_colour, "hud_font", font_size, x_dist, 95, option_to_screen());
     draw_bitmap("empty", x_dist, bar_y, option_to_screen());
-    if ( ! player.invincible )
-        draw_bitmap("full", x_dist, 110, option_part_bmp(0, 0, (player.fuel_pct * bitmap_width("full")), bitmap_height("full"), option_to_screen())); 
+    if ( ! game.player.invincible )
+        draw_bitmap("full", x_dist, 110, option_part_bmp(0, 0, (game.player.fuel_pct * bitmap_width("full")), bitmap_height("full"), option_to_screen())); 
     else 
         draw_bitmap("purple_bar", x_dist, bar_y, option_to_screen());
     
 }
 
-#endif

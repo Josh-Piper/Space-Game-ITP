@@ -41,6 +41,7 @@ struct player_data
     int         total_power_ups;
     bitmap      current_power_up;
     bool        invincible;
+    double      power_up_counter;
 };
 
 /**

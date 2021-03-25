@@ -42,3 +42,5 @@ BITMAP, purple_bar, purple_bar.png
 ANIM,coins,coin_animation.txt
 FONT, valentime, Valentime.otf
 FONT, hud_font, Locanita.otf
+SOUND, pop, pop.flac
+

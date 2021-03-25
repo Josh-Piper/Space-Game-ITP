@@ -22,8 +22,8 @@ power_up_data new_power_up(double x, double y)
     result.kind =  static_cast<power_up_kind>(rnd(6));
     result.power_up_sprite = create_sprite ( power_up_bitmap(result.kind) );
     sprite_set_position(result.power_up_sprite, point_at(x, y));
-    sprite_set_dx(result.power_up_sprite, rnd() * 2 - 2); 
-    sprite_set_dy(result.power_up_sprite, rnd() * 5 - 1); 
+    sprite_set_dx(result.power_up_sprite, rnd() * 0.3 - 0.5); 
+    sprite_set_dy(result.power_up_sprite, rnd() * 0.3 - 0.5); 
     return result;
 }
 
