@@ -17,8 +17,15 @@ string get_heads_up_display_cords_as_string(point_2d cords)
     return result;
 }
 
-void draw_hud(const vector<power_up_data> &power_ups)
+point_2d mini_map_coordinate(const power_up_data &power_up)
 {
+    //loop through and draw_pixel onto colour pixel black minimap
+    //draw_pixel(clr, point2d)
+}
+
+void draw_mini_map(const vector<power_up_data> &power_ups)
+{
+    fill_rectangle(COLOR_BLACK, 200, 12.5, 100, 100, option_to_screen());
     return;
 }
 
@@ -26,8 +33,7 @@ void draw_heads_up_display_background(const game_data &game) {
     clear_screen(COLOR_BLACK);
     fill_rectangle(COLOR_DARK_SLATE_GRAY, 0, 0, 325, 150, option_to_screen());
 
-    draw_hud(game.power_ups);
-    fill_rectangle(COLOR_BLACK, 200, 12.5, 100, 100, option_to_screen());
+    draw_mini_map(game.power_ups);
 }
 
 void draw_heads_up_display(const game_data &game) 

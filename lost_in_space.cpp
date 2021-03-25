@@ -1,6 +1,7 @@
 #include "splashkit.h"
 #include "lost_in_space.h"
 #include "heads_up_display.h"
+#include "player.h"
 #include "power_up.h"
 #include <vector>
 

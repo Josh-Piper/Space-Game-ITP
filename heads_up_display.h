@@ -14,7 +14,9 @@
  */ 
 string get_heads_up_display_cords_as_string(point_2d cords);
 
-void draw_hud(const vector<power_up_data> &power_ups);
+point_2d mini_map_coordinate(const power_up_data &power_up);
+
+void draw_mini_map(const vector<power_up_data> &power_ups);
 
 void draw_heads_up_display_background(const game_data &game);
 

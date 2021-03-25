@@ -4,7 +4,6 @@
 #include "splashkit.h"
 #include "player.h"
 #include "power_up.h"
-#include "heads_up_display.h"
 #include <vector>
 
 using std::vector;

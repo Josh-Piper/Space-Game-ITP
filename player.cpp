@@ -102,7 +102,7 @@ void update_player(player_data &player_to_update)
 
     if (player_to_update.power_up_counter > 0.0) 
     {//counter only active when shield is accessed
-        player_to_update.power_up_counter -= 1.0 / (10.0 * 60.0);
+        player_to_update.power_up_counter -= 1.0 / (5.0 * 60.0);
         if (player_to_update.power_up_counter < 0.0)
             player_to_update.power_up_counter = 0;
     }
