@@ -18,6 +18,8 @@ game_data new_game()
 {
     game_data game;
     game.player = new_player();
+    game.game_timer = create_timer("GameTimer");
+    start_timer(game.game_timer);
     return game;
 }
 
@@ -29,7 +31,6 @@ void draw_power_ups(const vector<power_up_data> &powerups)
         draw_power_up(powerups[i]);
     }
 }
-
 
 void add_power_up(game_data &game)
 {
@@ -102,7 +103,7 @@ void update_game(game_data &game)
 {
     
     // Perform movement and update the camera
-    if (rnd(0, 1000) <= 400)
+    if (rnd(0, 1000) <= 30)
         add_power_up(game);
 
     check_collisions(game);

@@ -2,6 +2,7 @@
 #include "lost_in_space.h"
 #include "player.h"
 #include "power_up.h"
+#include "heads_up_display.h"
 
 const int MINI_MAP_SIZE = 100;
 const double MINI_MAP_X = 200.0; //200
@@ -23,6 +24,47 @@ string get_heads_up_display_cords_as_string(point_2d cords)
     result += x_cord + ", ";
     result += y_cord;
     return result;
+}
+
+string append_time_suffix(string result, time_data suffix)
+{
+    int index = result.find(".");  
+    result = result.substr(0, index + 2);
+    
+    switch (suffix)
+    {
+        case SECONDS:
+            result += " seconds";
+            break;
+        case MINUTES:
+            result += " minutes";
+            break;
+        case HOURS:
+            result += " hours";
+            break;
+        default:
+            break;
+    }
+    return result;
+}
+string convert_milliseconds_to_seconds(unsigned int ticks)
+{
+    time_data suffix = SECONDS;
+    double ans = ticks / 1000.0;
+
+    if (ans > 60 && suffix == SECONDS)
+    {
+        ans /= 60;
+        suffix = MINUTES;
+    }
+    if (ans > 60 && suffix == MINUTES)
+    {
+        ans /= 60;
+        suffix = HOURS;
+    }
+
+    return append_time_suffix( to_string(ans) , suffix);
+
 }
 
 point_2d mini_map_coordinate_player(double x, double y)
@@ -66,7 +108,7 @@ void draw_mini_map(const vector<power_up_data> &power_ups, const player_data &pl
 void draw_heads_up_display_background(const game_data &game) {
     clear_screen(COLOR_BLACK);
     
-    fill_rectangle(COLOR_DARK_SLATE_GRAY, 0, 0, 325, 150, option_to_screen());
+    fill_rectangle(COLOR_DARK_SLATE_GRAY, 0, 0, 325, 175, option_to_screen());
     draw_mini_map(game.power_ups, game.player);
 }
 
@@ -76,6 +118,7 @@ void draw_heads_up_display(const game_data &game)
     static const int x_dist { 5 };
     static const int font_size { 20 };
     static const int bar_y { 110 };
+    static const string font { "hud_font" };
     static const color text_colour { COLOR_WHITE };
     drawing_options power_up_drawing_constraints { option_to_screen() };
     power_up_drawing_constraints.scale_x = 0.35;
@@ -83,17 +126,20 @@ void draw_heads_up_display(const game_data &game)
 
     draw_heads_up_display_background(game);
 
-    draw_text("SCORE: " + to_string(game.player.score), text_colour, "hud_font", font_size, x_dist, 5, option_to_screen());
-    draw_text("LOCATION: " + get_heads_up_display_cords_as_string(center_point(game.player.player_sprite)), text_colour, "hud_font", font_size, x_dist, 25, option_to_screen());
-    draw_text("TOTAL POWERUPS: " + to_string(game.player.total_power_ups), text_colour, "hud_font", font_size, x_dist, 45, option_to_screen());
+    draw_text("SCORE: " + to_string(game.player.score), text_colour, font, font_size, x_dist, 5, option_to_screen());
+    draw_text("LOCATION: " + get_heads_up_display_cords_as_string(center_point(game.player.player_sprite)), text_colour, font, font_size, x_dist, 25, option_to_screen());
+    draw_text("TOTAL POWERUPS: " + to_string(game.player.total_power_ups), text_colour, font, font_size, x_dist, 45, option_to_screen());
 
-    draw_text("CURRENT POWERUP: ", text_colour, "hud_font", font_size, x_dist, 65, option_to_screen());
+    draw_text("CURRENT POWERUP: ", text_colour, font, font_size, x_dist, 65, option_to_screen());
     draw_bitmap(game.player.current_power_up, 90, 25, power_up_drawing_constraints);
+
+    string time_played = convert_milliseconds_to_seconds(timer_ticks( game.game_timer));
+    draw_text("TIME PLAYED: " + time_played, text_colour, font, font_size, x_dist, 152, option_to_screen() );
 
     /**
      * Handle drawing of the health bar
      */ 
-    draw_text("HEALTH: ", text_colour, "hud_font", font_size, x_dist, 95, option_to_screen());
+    draw_text("HEALTH: ", text_colour, font, font_size, x_dist, 95, option_to_screen());
     draw_bitmap("empty", x_dist, bar_y, option_to_screen());
     if ( ! game.player.invincible )
         draw_bitmap("full", x_dist, 110, option_part_bmp(0, 0, (game.player.fuel_pct * bitmap_width("full")), bitmap_height("full"), option_to_screen())); 

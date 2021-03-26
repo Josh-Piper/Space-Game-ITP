@@ -19,7 +19,7 @@ void load_resources();
  * 
  * @field   player          The user
  * @field   power_ups       Holds a vector of power_ups used to manage all power_ups within the game
- * @field   timer      Does somrthing
+ * @field   timer           The game timer is used to measure how long the game or action has transpired
  */ 
 struct game_data 
 {

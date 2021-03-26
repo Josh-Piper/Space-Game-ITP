@@ -2,7 +2,8 @@
     "files.associations": {
         "ios": "cpp",
         "xstring": "cpp",
-        "vector": "cpp"
+        "vector": "cpp",
+        "string": "cpp"
     },
     "shellLauncher.shells.linux": [
         {
