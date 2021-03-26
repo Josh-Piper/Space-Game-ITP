@@ -4,10 +4,13 @@
 #include "power_up.h"
 
 const int MINI_MAP_SIZE = 100;
-const double MINI_MAP_X = 200.0;
-const double MINI_MAP_Y = 12.5;
-const double GAME_WIDTH = 3000.0;
-
+const double MINI_MAP_X = 200.0; //200
+const double MINI_MAP_Y = 12.5; //12.5
+const double GAME_WIDTH = 3000.0; //changing the game width will make the game smaller, however, to accomodate this, you would need to move the location of the dots starting
+//so it lines up with the game.
+//The reason the draw_pixel leaves the screen isn't due to things spawning outside of the pixel but due to the trajectory set
+//note part 1 of the game sets the velocity in part 3
+const double GAME_OFFSET = 1500;
 string get_heads_up_display_cords_as_string(point_2d cords) 
 {
     string result;
@@ -24,6 +27,7 @@ string get_heads_up_display_cords_as_string(point_2d cords)
 
 point_2d mini_map_coordinate_player(double x, double y)
 {
+    
     double return_x = ( x + 1500.0 ) / GAME_WIDTH * MINI_MAP_SIZE + MINI_MAP_X;
     double return_y = ( y + 1500.0 ) / GAME_WIDTH * MINI_MAP_SIZE + MINI_MAP_Y;
 
@@ -33,24 +37,29 @@ point_2d mini_map_coordinate_player(double x, double y)
 point_2d mini_map_coordinate(const power_up_data &power_up)
 {
     //points escape left and top borders of the black box
-    float player_x = sprite_x(power_up.power_up_sprite);
-    float player_y = sprite_y(power_up.power_up_sprite);
+    float powerup_x = sprite_x(power_up.power_up_sprite);
+    float powerup_y = sprite_y(power_up.power_up_sprite);
 
-    double return_x = ( player_x + 1500.0 ) / GAME_WIDTH * MINI_MAP_SIZE + MINI_MAP_X;
-    double return_y = ( player_y + 1500.0 ) / GAME_WIDTH * MINI_MAP_SIZE + MINI_MAP_Y;
+    double return_x = ( powerup_x + GAME_OFFSET ) / GAME_WIDTH * MINI_MAP_SIZE + MINI_MAP_X;
+    double return_y = ( powerup_y + GAME_OFFSET ) / GAME_WIDTH * MINI_MAP_SIZE + MINI_MAP_Y;
 
     return point_at(return_x, return_y);
 }
 
-void draw_mini_map(const vector<power_up_data> &power_ups)
+void draw_mini_map(const vector<power_up_data> &power_ups, const player_data &player)
 {
 
     fill_rectangle(COLOR_BLACK, MINI_MAP_X, MINI_MAP_Y, MINI_MAP_SIZE, MINI_MAP_SIZE, option_to_screen());
+
     for (int i = 0; i < power_ups.size(); i++)
     {
         point_2d cords = mini_map_coordinate (power_ups[i]);
         if (cords.x >= 200 && cords.x <= 300 && cords.y >= 12.5 && cords.y <= 112.5) draw_pixel( rgba_color(199, 202, 203, 200), cords, option_to_screen() );
     }
+
+    //draw player
+    point_2d player_loca = mini_map_coordinate_player(sprite_x(player.player_sprite), sprite_y(player.player_sprite));
+    if (player_loca.x >= 200 && player_loca.x <= 300 && player_loca.y >= 12.5 && player_loca.y <= 112.5)  draw_pixel( COLOR_AQUA, player_loca, option_to_screen() );
 
 }
 
@@ -58,10 +67,7 @@ void draw_heads_up_display_background(const game_data &game) {
     clear_screen(COLOR_BLACK);
     
     fill_rectangle(COLOR_DARK_SLATE_GRAY, 0, 0, 325, 150, option_to_screen());
-    draw_mini_map(game.power_ups);
-    //draw player
-    draw_pixel( COLOR_AQUA, mini_map_coordinate_player(sprite_x(game.player.player_sprite), sprite_y(game.player.player_sprite)), option_to_screen() );
-    
+    draw_mini_map(game.power_ups, game.player);
 }
 
 void draw_heads_up_display(const game_data &game) 

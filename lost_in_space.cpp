@@ -6,7 +6,6 @@
 #include <vector>
 
 using std::vector;
-
 const int MINIMUM_SPACE_LOCATION = -1500;
 const int MAXIMUM_SPACE_LOCATION = 1500;
 
@@ -34,13 +33,13 @@ void draw_power_ups(const vector<power_up_data> &powerups)
 
 void add_power_up(game_data &game)
 {
-    const int x = rnd(MINIMUM_SPACE_LOCATION, MAXIMUM_SPACE_LOCATION);
-    const int y = rnd(MINIMUM_SPACE_LOCATION, MAXIMUM_SPACE_LOCATION);
+    int x = rnd(MINIMUM_SPACE_LOCATION, MAXIMUM_SPACE_LOCATION);
+    int y = rnd(MINIMUM_SPACE_LOCATION, MAXIMUM_SPACE_LOCATION);
     power_up_data result = new_power_up(x, y);
     game.power_ups.push_back( result );
 }
 
-void update_power_ups(vector<power_up_data> power_ups)
+void update_power_ups(vector<power_up_data> power_ups) //cannot be const
 {
     for (int i; i < power_ups.size(); i++)
         update_power_up(power_ups[i]);
@@ -103,7 +102,7 @@ void update_game(game_data &game)
 {
     
     // Perform movement and update the camera
-    if (rnd(0, 1000) <= 15)
+    if (rnd(0, 1000) <= 400)
         add_power_up(game);
 
     check_collisions(game);

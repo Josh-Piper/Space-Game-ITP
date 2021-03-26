@@ -14,13 +14,28 @@
  */ 
 string get_heads_up_display_cords_as_string(point_2d cords);
 
+/**
+ * @param power_up
+ * 
+ */ 
 point_2d mini_map_coordinate(const power_up_data &power_up);
 
+/**
+ * @param x 
+ * @param y
+ */ 
 point_2d mini_map_coordinate_player(double x, double y);
 
+/**
+ * @param power_ups
+ * 
+ */ 
+void draw_mini_map(const vector<power_up_data> &power_ups, const player_data &player);
 
-void draw_mini_map(const vector<power_up_data> &power_ups);
-
+/**
+ * @param game  
+ * 
+ */ 
 void draw_heads_up_display_background(const game_data &game);
 
 
