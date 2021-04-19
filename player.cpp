@@ -62,12 +62,9 @@ void draw_player(const player_data &player_to_draw)
     draw_sprite(player_to_draw.player_sprite);
 }
 
-void update_player(player_data &player_to_update)
+void update_player_camera(player_data &player_to_update)
 {
-    // Apply movement based on rotation and velocity in the sprite
-    update_sprite(player_to_update.player_sprite);
-
-    // Test edge of screen boundaries to adjust the camera
+   // Test edge of screen boundaries to adjust the camera
     double left_edge = camera_x() + SCREEN_BORDER;
     double right_edge = left_edge + screen_width() - 2 * SCREEN_BORDER;
     double top_edge = camera_y() + SCREEN_BORDER;
@@ -99,19 +96,29 @@ void update_player(player_data &player_to_update)
     {
         move_camera_by(sprite_center.x - right_edge, 0);
     }
+}
 
+void update_player(player_data &player_to_update)
+{
+    // Apply movement based on rotation and velocity in the sprite
+    update_sprite(player_to_update.player_sprite);
+
+    update_player_camera(player_to_update);
+
+    
     if (player_to_update.power_up_counter > 0.0) 
-    {//counter only active when shield is accessed
+    {
+        //counter only active when shield is accessed
         player_to_update.power_up_counter -= 1.0 / (5.0 * 60.0);
         if (player_to_update.power_up_counter < 0.0)
             player_to_update.power_up_counter = 0;
     }
     else 
     {
-        //player_to_update.fuel_pct = player_to_update.fuel_pct - 1.0 / (60.0 * 60.0);//  /fuel will last 60 seconds
+        player_to_update.fuel_pct = player_to_update.fuel_pct - 1.0 / (60.0 * 40.0);//  /fuel will last 40 seconds
     }
 
-    if (player_to_update.total_power_ups >= 100)
+    if (player_to_update.total_power_ups >= 1000)
         player_to_update.invincible = true;
 }
 

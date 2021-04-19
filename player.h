@@ -58,6 +58,9 @@ player_data new_player();
  */
 void draw_player(const player_data &player_to_draw);
 
+
+void update_player_camera(player_data &player_to_update);
+
 /**
  * Actions a step update of the player - moving them and adjusting the camera.
  * 
