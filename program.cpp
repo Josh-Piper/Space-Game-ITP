@@ -18,20 +18,6 @@ using std::to_string;
  */
 
 
-void handle_game()
-{
-    game_data game { new_game() };
-
-    while ( ! quit_requested() )
-    {
-        process_events();
-
-        handle_input(game.player);
-        update_game(game);
-        draw_game(game);
-        //if something break out of loop
-    }
-}
 
 void load_menu_resources()
 {
@@ -154,6 +140,40 @@ void draw_home_screen_background(const menu_handler_data &global_game_settings)
 }
 
 
+void handle_game()
+{
+    game_data game { new_game() };
+
+    while ( ! quit_requested() )
+    {
+        process_events();
+
+        handle_input(game.player);
+        update_game(game);
+        draw_game(game);
+        //if something break out of loop
+    }
+}
+
+
+void handle_menu_state(menu_handler_data &global_menu_handler) 
+{
+    switch (global_menu_handler.game_state) 
+    {
+        HOME_SCREEN:
+            draw_home_screen_background(global_menu_handler);
+            //handle_home_screen_actions(global_menu_handler);
+            break;
+        default:
+            break;
+    }
+    refresh_screen(60);
+}
+
+
+
+
+
 
 void handle_menu()
 {
@@ -162,15 +182,20 @@ void handle_menu()
     while ( ! quit_requested() )
     {
         clear_screen();
+        if (global_menu_handler.game_state == PLAY_GAME_SCREEN) break;
         
         draw_home_screen_background(global_menu_handler);
-        process_events();
 
+        process_events();
         
         refresh_screen();
 
     }
+
+    if (global_menu_handler.game_state == PLAY_GAME_SCREEN) handle_game();
 }
+
+
 
 int main()
 {
