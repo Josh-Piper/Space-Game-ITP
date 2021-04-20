@@ -1,3 +1,37 @@
+// MENU ASSETTS
+BITMAP,home_screen,home_screen.png
+BITMAP,default_settings_button,default_settings_button.png
+BITMAP,highlighted_settings_button,highlighted_settings_button.png
+BITMAP,default_play_game_button,default_play_game_button.png
+BITMAP,highlighted_play_game_button,highlighted_play_game_button.png
+BITMAP,default_leaderboard_button,default_leaderboard_button.png
+BITMAP,highlighted_leaderboard_button,highlighted_leaderboard_button.png
+BITMAP,default_information_button,default_information_button.png
+BITMAP,highlighted_information_button,highlighted_information_button.png
+BITMAP,settings_screen,settings_screen.png
+BITMAP,default_home_button,default_home_button.png
+BITMAP,highlighted_home_button,highlighted_home_button.png
+BITMAP,default_mute_button,default_mute_button.png
+BITMAP,highlighted_mute_button,highlighted_mute_button.png
+BITMAP,default_unmute_button,default_unmute_button.png
+BITMAP,highlighted_unmute_button,highlighted_unmute_button.png
+BITMAP,default_volume_down,default_volume_down.png
+BITMAP,highlighted_volume_down,highlighted_volume_down.png
+BITMAP,default_volume_up,default_volume_up.png
+BITMAP,highlighted_volume_up,highlighted_volume_up.png
+BITMAP,information_screen,information_screen.png
+BITMAP,default_repo_button,default_repo_button.png
+BITMAP,highlighted_repo_button,highlighted_repo_button.png
+BITMAP,leaderboard_screen,leaderboard_screen.png
+BITMAP,default_clear_leaderboard_button,default_clear_leaderboard_button.png
+BITMAP,highlighted_clear_leaderboard_button,highlighted_clear_leaderboard_button.png
+MUSIC,music1,music_ghost_beats.mp3
+MUSIC,music2, music_last_but_not_least.mp3
+MUSIC,music3,music_sam_barsh.mp3
+MUSIC,music4,music_spaceless_needle.mp3
+MUSIC,music5,music_sunkissed_remix.mp3
+
+// GAME ASSETS
 // Ships
 BITMAP,aquarii,Aquarii.png
 BITMAP,gliese,Gliese.png
@@ -43,4 +77,3 @@ ANIM,coins,coin_animation.txt
 FONT, valentime, Valentime.otf
 FONT, hud_font, Locanita.otf
 SOUND, pop, pop.flac
-
