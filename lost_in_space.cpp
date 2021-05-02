@@ -2,6 +2,7 @@
 #include "lost_in_space.h"
 #include "heads_up_display.h"
 #include "player.h"
+#include "menu.h"
 #include "power_up.h"
 #include <vector>
 
@@ -123,4 +124,46 @@ void draw_game(const game_data &game)
     refresh_screen(60);
 }
 
+void handle_game_paused(menu_handler_data &global_menu_handler)
+{
+    if (key_typed(ESCAPE_KEY))
+        {
+            bool exit_menu;
+            do 
+            {
+                process_events();
+                // Exit the game (go back to the menu screens) when the user clicks home in paused_screen_menu
+                exit_menu = paused_screen_menu(global_menu_handler);
+            } while ( ! exit_menu && ! quit_requested() );
+        }
+}
+
+game_state handle_game()
+{
+    menu_handler_data global_menu_handler = create_menu_handler();
+    global_menu_handler.game_state = PLAY_GAME_SCREEN;
+    game_data game { new_game() };
+
+    while ( ! quit_requested() )
+    {
+        process_events();
+
+        // Handle the looping of the game itself
+        handle_input(game.player);
+        update_game(game);
+        draw_game(game);
+
+
+        // When the user types the escape key, handle the in-game paused menu
+        handle_game_paused(global_menu_handler);
+
+        // Exit the game when not in playing game mode
+        if (global_menu_handler.game_state != PLAY_GAME_SCREEN) break;
+        
+    }
+
+    // If user wants to return the home screen. Then return it
+    if (global_menu_handler.game_state == HOME_SCREEN) return HOME_SCREEN;
+    return END_GAME;
+}
 

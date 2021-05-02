@@ -1,4 +1,7 @@
 // MENU ASSETTS
+BITMAP,paused_screen,paused_screen.png
+BITMAP,default_return_to_game_button,default_return_to_game_button.png
+BITMAP,highlighted_return_to_game_button,highlighted_return_to_game_button.png
 BITMAP,home_screen,home_screen.png
 BITMAP,default_settings_button,default_settings_button.png
 BITMAP,highlighted_settings_button,highlighted_settings_button.png

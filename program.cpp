@@ -1,10 +1,10 @@
 #include "./include/splashkit/splashkit.h"
 #include "player.h"
 #include "power_up.h"
+#include "menu.h"
 #include "lost_in_space.h"
 #include "heads_up_display.h"
 #include "music_player.h"
-#include "menu.h"
 
 
 int main()

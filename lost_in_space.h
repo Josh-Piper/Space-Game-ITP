@@ -3,6 +3,7 @@
 
 #include "splashkit.h"
 #include "player.h"
+#include "menu.h"
 #include "power_up.h"
 #include <vector>
 
@@ -90,6 +91,19 @@ void update_game(game_data &game);
  * @param   game
  */ 
 void draw_game(const game_data &game);
+
+/**
+ * Check if the game should be paused
+ * Then handle the pause menu
+ * @param global_menu_game_handler  
+ */ 
+void handle_game_paused(menu_handler_data &global_menu_handler);
+/**
+ * Will return the game_state once the game is finished, thus, bring the user back to the original menu
+ * or Quiting the game
+ * Handles the Space Game loop
+ */ 
+game_state handle_game();
 
 
 
