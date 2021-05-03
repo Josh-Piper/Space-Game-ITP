@@ -2,6 +2,8 @@
 #include "music_player.h"
 #include "menu.h"
 #include "lost_in_space.h"
+#include <fstream>
+#include <iostream>
 
 // Find what OS the user is using to allow C++ to open the corresponding GitHub repo using the OS's browser command
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(_WIN64) || defined(__NT__) 
@@ -78,6 +80,43 @@ void draw_home_screen_background(const menu_handler_data &global_game_settings)
     draw_menu(home_screen_buttons);
 }
 
+vector<string> read_information_text()
+{
+    string line;
+    vector<string> result;
+    ifstream info_text_file {"information.txt"};
+    if (info_text_file.is_open())
+    {
+        while ( getline (info_text_file, line) )
+        result.push_back(line);
+    }   
+    info_text_file.close();
+    return result;
+}   
+
+void draw_text_after_two_buttons(vector<string> reading_file)
+{
+    static const string font { "hud_font" };
+    static const int margin = 10; 
+    int start_y_location = 450, start_x_location = 25, font_size = INT_MAX;
+    int possible_size = font_size = 2000 / reading_file[1].length();
+    // Set the font size to 50 if there are more than 5 lines, to have a base size if the file is large
+    if (reading_file.size() > 5) font_size = 50;
+
+    // Set the font size according to the first lines length
+    if (reading_file.size() > 1) {
+        // Only change it if the size in regards to the length is smaller than the current font size
+        if (possible_size < font_size) font_size = possible_size;
+    } 
+    else{ font_size = 100 ;} // If no font size has been set, set it to 100 
+
+    // Print all the lines within the file
+    for (string text: reading_file)
+    {
+        draw_text(text, COLOR_WHITE_SMOKE, font, font_size, start_x_location, start_y_location, option_to_screen());
+        start_y_location += font_size + margin;
+    }
+}
 
 void draw_information_screen_background(const menu_handler_data &global_game_settings) 
 {
@@ -89,6 +128,10 @@ void draw_information_screen_background(const menu_handler_data &global_game_set
     append_vector_menu_buttons_to_highlight(global_game_settings, information_screen_buttons);
 
     draw_menu(information_screen_buttons);
+    
+    //Draw the information section from the information.txt file
+    vector<string> information_file = read_information_text();
+    draw_text_after_two_buttons(information_file);
 }
 
 void draw_leader_screen_background(const menu_handler_data &global_game_settings) 
@@ -101,6 +144,9 @@ void draw_leader_screen_background(const menu_handler_data &global_game_settings
     append_vector_menu_buttons_to_highlight(global_game_settings, information_screen_buttons);
 
     draw_menu(information_screen_buttons);
+
+    
+    
 }
 
 // Check if the mouse position is between two specific points

@@ -50,6 +50,21 @@ void draw_menu(const vector<string> menu);
 void draw_home_screen_background(const menu_handler_data &global_game_settings);
 
 /**
+ * Read in the information.text
+ * Return the text that for that file
+ * 
+ */ 
+vector<string> read_information_text();
+
+/**
+ * Write the text in a file to screen
+ * after the two buttons, meant to be used in the menus
+ * 
+ * @param                          reading_file            the file that is being written to screen
+ */ 
+void draw_text_after_two_buttons(vector<string> reading_file);
+
+/**
  * Draw the information screen
  * @param                          global_game_settings     Passed to handle highlighting of buttons
  * 
