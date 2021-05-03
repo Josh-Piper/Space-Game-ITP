@@ -1,3 +1,23 @@
-# Space-Game-ITP
-### TO DO
-Up to part 3. Add powerups
+# Space Game 
+## Description
+Lost in Space is a Space Game created for Introduction to Programming at Deakin University
+
+## Installation
+
+Space Game requires [SplashKit](https://www.splashkit.io/) and [MSYS2](https://www.msys2.org/) to run.
+
+Install the dependencies and and fork the repository. Once complete, navigate to the folder and enter the following commands into the msys2 Terminal.
+
+```sh
+skm resources
+skm clang++ program.cpp ./Source/GameData/*.cpp ./Source/MenuData/*.cpp ./Source/Utilities/*.cpp -o LostInSpace.exe
+./LostInSpace.exe
+```
+
+## TO DO
++ Ending Screen
++ Levels
++ Different Sound Effects
++ Difficulties
++ Enemies (that hurts your fuel)
++ Levelling System

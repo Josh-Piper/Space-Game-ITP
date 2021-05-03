@@ -1,1 +1,0 @@
-skm clang++ program.cpp ./Source/GameData/*.cpp ./Source/MenuData/*.cpp ./Source/Utilities/*.cpp -o LostInSpace.exe
