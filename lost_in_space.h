@@ -3,17 +3,10 @@
 
 #include "splashkit.h"
 #include "player.h"
-#include "menu.h"
 #include "power_up.h"
 #include <vector>
 
 using std::vector;
-
-/**
- * Load all game resources via a bundle
- * 
- */ 
-void load_resources();
 
 /**
  * Game Data is used to manage the overall flow of the game and keep saved data
@@ -28,6 +21,14 @@ struct game_data
     vector<power_up_data>       power_ups;      
     timer                       game_timer; 
 };  
+
+#include "menu.h" //required for compiling properly
+
+/**
+ * Load all game resources via a bundle
+ * 
+ */ 
+void load_resources();
 
 /**
  * Returns a new_game() with a new player and 0 powerups
@@ -97,7 +98,7 @@ void draw_game(const game_data &game);
  * Then handle the pause menu
  * @param global_menu_game_handler  
  */ 
-void handle_game_paused(menu_handler_data &global_menu_handler);
+void handle_game_paused(menu_handler_data &global_menu_handler, game_data &game);
 /**
  * Will return the game_state once the game is finished, thus, bring the user back to the original menu
  * or Quiting the game

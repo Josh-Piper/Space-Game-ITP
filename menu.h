@@ -18,65 +18,12 @@ struct menu_handler_data
 
 #include "lost_in_space.h"
 
-
 /**
  * Create a new home menu, thus, the game itself.
  * Used to handle any in-game changes such as music changes etc.
  * Will create and start playing the music for the game
  */ 
 menu_handler_data create_menu_handler();
-
-/**
- * Handle the highlighting of in-game buttons
- * 
- * @param                           global_game_settings    to check the button that the mouse is currently hovering over
- * @param                           menu                    the menu that needs to be appended dependent on the hovered button
- */ 
-void append_vector_menu_buttons_to_highlight(const menu_handler_data &global_game_settings, std::vector<string> &menu);
-
-/**
- * Draw the current screen dependent on the menu parameter
- * Menu holds the background and any buttons associated with it (only capable of handling 4 buttons)
- * 
- * @param                           menu
- */ 
-void draw_menu(const vector<string> menu);
-
-/**
- * Draw the home screen
- * @param                          global_game_settings     Passed to handle highlighting of buttons
- * 
- */ 
-void draw_home_screen_background(const menu_handler_data &global_game_settings);
-
-/**
- * Read in the information.text
- * Return the text that for that file
- * 
- */ 
-vector<string> read_information_text();
-
-/**
- * Write the text in a file to screen
- * after the two buttons, meant to be used in the menus
- * 
- * @param                          reading_file            the file that is being written to screen
- */ 
-void draw_text_after_two_buttons(vector<string> reading_file);
-
-/**
- * Draw the information screen
- * @param                          global_game_settings     Passed to handle highlighting of buttons
- * 
- */ 
-void draw_information_screen_background(const menu_handler_data &global_game_settings);
-
-/**
- * Draw the leaderboard screen
- * @param                          global_game_settings     Passed to handle highlighting of buttons
- * 
- */ 
-void draw_leader_screen_background(const menu_handler_data &global_game_settings);
 
 /**
  * Check if the mouse position is between two points. Note the parameters
@@ -120,12 +67,6 @@ bool is_mouse_in_fourth_button();
  */ 
 void handle_all_screnes_button_highlighting(menu_handler_data &global_menu_handler);
 
-/**
- * Draw the settings screen
- * @param                          global_menu_handler
- * 
- */ 
-void draw_settings_screen_background(menu_handler_data &global_menu_handler);
 
 /**
  * Handle any button presses from the setting screen
@@ -166,17 +107,10 @@ void handle_leaderboard_screen_actions(menu_handler_data &global_menu_handler);
 void handle_menu_state(menu_handler_data &global_menu_handler);
 
 /**
- * Draw the paused screen
- * @param                          global_game_settings     Passed to handle highlighting of buttons
- * 
- */ 
-void draw_settings_paused_screen_background(menu_handler_data &global_menu_handler);
-
-/**
  * Handle the play-game paused menu
  * 
  */ 
-bool paused_screen_menu(menu_handler_data &global_menu_handler);
+bool handle_paused_screen_menu(menu_handler_data &global_menu_handler, game_data &game);
 
 /**
  * Handle the menu itself

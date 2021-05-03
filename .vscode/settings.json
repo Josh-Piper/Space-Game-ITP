@@ -24,7 +24,8 @@
         "xmemory": "cpp",
         "xstddef": "cpp",
         "xtr1common": "cpp",
-        "xutility": "cpp"
+        "xutility": "cpp",
+        "ostream": "cpp"
     },
     "shellLauncher.shells.linux": [
         {
