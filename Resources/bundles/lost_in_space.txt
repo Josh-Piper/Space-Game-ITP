@@ -1,4 +1,7 @@
 // MENU ASSETTS
+BITMAP,highlighted_save_button,highlighted_save_button.png
+BITMAP,default_save_button,default_save_button.png
+BITMAP,ending_screen,ending_screen.png
 BITMAP,paused_screen,paused_screen.png
 BITMAP,default_return_to_game_button,default_return_to_game_button.png
 BITMAP,highlighted_return_to_game_button,highlighted_return_to_game_button.png
@@ -29,7 +32,7 @@ BITMAP,leaderboard_screen,leaderboard_screen.png
 BITMAP,default_clear_leaderboard_button,default_clear_leaderboard_button.png
 BITMAP,highlighted_clear_leaderboard_button,highlighted_clear_leaderboard_button.png
 MUSIC,music1,music_ghost_beats.mp3
-MUSIC,music2, music_last_but_not_least.mp3
+MUSIC,music2,music_last_but_not_least.mp3
 MUSIC,music3,music_sam_barsh.mp3
 MUSIC,music4,music_spaceless_needle.mp3
 MUSIC,music5,music_sunkissed_remix.mp3

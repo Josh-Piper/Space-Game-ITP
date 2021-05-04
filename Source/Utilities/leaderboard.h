@@ -11,6 +11,11 @@
 vector<string> read_information_text();
 
 /**
+ * Reset the leaderboard file
+ */ 
+void reset_leaderboard_file();
+
+/**
  * Add a new entry to the leaderboard file
  * @param                          name                     The name of the person
  * @param                          score                    The score the user achieved 
@@ -24,15 +29,5 @@ void add_new_leaderboard_entry(string name, int score);
  */ 
 vector<string> read_leaderboard_text();
 
-/**
- * Reset the leaderboard file
- */ 
-void reset_leaderboard_file();
-
-/**
- * Draw the leaderboard screen
- * @param                          global_game_settings     Passed to handle highlighting of buttons
- * 
- */ 
 
 #endif

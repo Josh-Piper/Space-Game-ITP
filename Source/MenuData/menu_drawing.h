@@ -42,6 +42,10 @@ void draw_home_screen_background(const menu_handler_data &global_game_settings);
  */ 
 void draw_information_screen_background(const menu_handler_data &global_game_settings);
 
+/**
+ * Draw the leaderboard screen
+ *@param                           global_game_settings
+ */ 
 void draw_leader_screen_background(const menu_handler_data &global_game_settings);
 
 /**
@@ -63,5 +67,12 @@ void draw_settings_paused_screen_background(menu_handler_data &global_menu_handl
  * @param                          game                     Passed to create a vector<string> as the paused menu information
  */ 
 vector<string> form_paused_menu_information(game_data &game);
+
+/**
+ * Draw the end game screen with the users score of the current playthrough
+ * @param                         global_menu_handler
+ * @param                         score                     players current score
+ */ 
+void draw_end_game_screen_background(menu_handler_data &global_menu_handler, int score);
 
 #endif

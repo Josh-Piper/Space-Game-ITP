@@ -14,6 +14,7 @@ struct menu_handler_data
     game_state                      game_state;
     highlighted_button_state        highlighted_button;
     music_handler_data              music_player;
+   
 };
 
 #include "../../Source/GameData/lost_in_space.h"
@@ -111,6 +112,14 @@ void handle_menu_state(menu_handler_data &global_menu_handler);
  * 
  */ 
 bool handle_paused_screen_menu(menu_handler_data &global_menu_handler, game_data &game);
+
+/**
+ * Handle the end game sequence
+ * Allow the user to save their score of the current play through
+ * @param                          global_menu_handler      used to end the game or move to a particular menu after the ending
+ * @param                          game                     used for the players current score
+ */ 
+bool handle_end_game_menu(menu_handler_data &global_menu_handler, game_data &game);
 
 /**
  * Handle the menu itself

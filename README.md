@@ -9,13 +9,12 @@ Space Game requires [SplashKit](https://www.splashkit.io/) and [MSYS2](https://w
 Install the dependencies and and fork the repository. Once complete, navigate to the folder and enter the following commands into the msys2 Terminal.
 
 ```sh
-skm resources
+skm new c++
 skm clang++ program.cpp ./Source/GameData/*.cpp ./Source/MenuData/*.cpp ./Source/Utilities/*.cpp -o LostInSpace.exe
 ./LostInSpace.exe
 ```
 
 ## TO DO
-+ Ending Screen
 + Levels
 + Different Sound Effects
 + Difficulties

@@ -18,12 +18,13 @@ vector<string> read_information_text()
 
     ifstream info_text_file { INFORMATION_FILE_LOCATION };
 
-
+    // Read from the file if it exists
     if (info_text_file.is_open())
     {
         while ( getline (info_text_file, line) )
         result.push_back(line);
     }   
+    // Create a new file to read from if one does not exist
     else if (info_text_file.fail())
     {
         ofstream new_file( INFORMATION_FILE_LOCATION );
@@ -35,22 +36,29 @@ vector<string> read_information_text()
     return result;
 }   
 
-void add_new_leaderboard_entry(string name, int score)
-{
-    string entry = name + "                  -> Current Score: " + to_string(score);
-
-    ofstream leaderboard_file;
-    leaderboard_file.open(LEADERBOARD_FILE_LOCATION, std::ios_base::app);
-
-    leaderboard_file << endl << entry;
-    leaderboard_file.close();
-}
-
 void reset_leaderboard_file()
 {
+    write_line("reset leaderboar in [FUNCTION]");
+
     ofstream new_file( LEADERBOARD_FILE_LOCATION );
     new_file << "Leader Board";
     new_file.close();
+}
+
+void add_new_leaderboard_entry(string name, int score)
+{
+    string entry = name + "                  -> Current Score: " + to_string(score);
+    ofstream leaderboard_file;
+
+    // Append to leaderboard file
+    leaderboard_file.open(LEADERBOARD_FILE_LOCATION, std::ios_base::app);
+
+    // If the user tries to add to a leaderboard file that doesn't exist. Note this is
+    // an edge case for when the user plays the game first, thus, no file was genned.
+    if (leaderboard_file.fail()) reset_leaderboard_file();
+    leaderboard_file << endl << entry;
+
+    leaderboard_file.close();
 }
 
 vector<string> read_leaderboard_text()
@@ -63,13 +71,13 @@ vector<string> read_leaderboard_text()
     {
         while ( getline (leaderboard_file, line) )
         result.push_back(line);
-    }   
-    // if leaderboard does not exist. Create one
-    else if ( leaderboard_file.fail() )
+    } 
+    else
     {
+        // if leaderboard does not exist. Create one
         reset_leaderboard_file();
     }
-
+    
     leaderboard_file.close();
     return result;
 }

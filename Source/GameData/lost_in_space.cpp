@@ -145,11 +145,8 @@ void handle_end_game(menu_handler_data &global_menu_handler, game_data &game)
         do
         {
             process_events();
-            if (key_typed(P_KEY)) 
-            {
-                global_menu_handler.game_state = HOME_SCREEN;
-                exit_menu = true;
-            }
+            exit_menu = handle_end_game_menu(global_menu_handler, game);
+
         } while ( ! exit_menu && ! quit_requested() );
         
     }

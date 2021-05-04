@@ -49,11 +49,8 @@ string return_next_song(string current_song)
     return current_song.substr(0, current_song.length() - 1).append(new_number);
 }
 
-
-
 void handle_music(music_handler_data &music_handler) 
-{
- 
+{   
     // once a song finishes, transition to play the next song
     if ( ! music_playing() ) 
     {

@@ -69,20 +69,30 @@ void handle_all_screnes_button_highlighting(menu_handler_data &global_menu_handl
 
 void handle_settings_screen_actions(menu_handler_data &global_menu_handler) 
 {
-
+    static int delay_left_mouse = 0;
     handle_all_screnes_button_highlighting(global_menu_handler);
 
     // Go back to the home screen
-    if (is_mouse_in_first_button() && mouse_clicked(LEFT_BUTTON)) global_menu_handler.game_state = HOME_SCREEN;
+    if (is_mouse_in_first_button() && mouse_clicked(LEFT_BUTTON)) 
+    {
+        delay_left_mouse = 0; 
+        global_menu_handler.game_state = HOME_SCREEN;
+    }
 
      // Pause / Mute the current music
     if (is_mouse_in_second_button() && mouse_clicked(LEFT_BUTTON)) (global_menu_handler.music_player.is_muted) ? global_menu_handler.music_player.is_muted = false : global_menu_handler.music_player.is_muted = true;
 
      // Decrease the volume of the current music
     if (is_mouse_in_third_button() && mouse_clicked(LEFT_BUTTON)) 
-    {
-        decrease_volume(global_menu_handler.music_player);
-        global_menu_handler.music_player.changed_volume_required = true;
+    {   
+        delay_left_mouse++;
+        // Fix the double mouse click issue from home screen to another screen 
+        if (delay_left_mouse > 1) 
+        {
+            write_line("called");
+            decrease_volume(global_menu_handler.music_player);
+            global_menu_handler.music_player.changed_volume_required = true;
+        }
     }
 
      // Increase the volume of the current music
@@ -102,7 +112,7 @@ void handle_home_screen_actions(menu_handler_data &global_menu_handler)
 
      // Goto the leaderboard screen
     if (is_mouse_in_second_button() && mouse_down(LEFT_BUTTON)) global_menu_handler.game_state = LEADERBOARD_SCREEN;
-
+    
      //  Goto the settings screen
     if (is_mouse_in_third_button() && mouse_down(LEFT_BUTTON)) global_menu_handler.game_state = SETTINGS_SCREEN;
 
@@ -132,14 +142,29 @@ void handle_information_screen_actions(menu_handler_data &global_menu_handler)
 
 void handle_leaderboard_screen_actions(menu_handler_data &global_menu_handler)
 {
+    static int delay_left_click = 0;
     handle_all_screnes_button_highlighting(global_menu_handler);
     
-     //  Goto the home screen when the first button is pressed
-    if (is_mouse_in_first_button() && mouse_clicked(LEFT_BUTTON)) global_menu_handler.game_state = HOME_SCREEN;
+    //  Goto the home screen when the first button is pressed
+    if (is_mouse_in_first_button() && mouse_clicked(LEFT_BUTTON)) 
+    {
+        delay_left_click = 0;
+        global_menu_handler.game_state = HOME_SCREEN;
+    }
 
-    if (is_mouse_in_second_button() && mouse_clicked(LEFT_BUTTON)) reset_leaderboard_file();
-    
+    if (is_mouse_in_second_button() && mouse_clicked(LEFT_BUTTON))
+    {
+        delay_left_click+= 1;
+        // Prevent the double bufferring issue of rendering a second click when accessed from the home menu
+        if (delay_left_click > 1) 
+        {
+            write_line("Left Click in Leaderboard");
+            reset_leaderboard_file();
+        }
+    }
+
 }
+
 
 void handle_menu_state(menu_handler_data &global_menu_handler) 
 {
@@ -186,6 +211,97 @@ bool handle_paused_screen_menu(menu_handler_data &global_menu_handler, game_data
         return true;
     }
 
+    // Iterate again
+    return false;
+}
+
+bool handle_end_game_menu(menu_handler_data &global_menu_handler, game_data &game)
+{
+    static bool has_entered_entry = false;
+    static const font default_font = font_named("hud_font");
+    static const int rectangle_x = 90;
+    static const int rectangle_y = 675;
+    static const int game_over_font_size = 25;
+
+    clear_screen();
+
+    // Handle the basics
+    handle_all_screnes_button_highlighting(global_menu_handler);
+    draw_end_game_screen_background(global_menu_handler, game.player.score);
+
+    // Return the user back to the home menu
+    if (is_mouse_in_first_button() && mouse_clicked(LEFT_BUTTON)) 
+    {
+        // Send the user to the home screen
+        global_menu_handler.game_state = HOME_SCREEN;
+
+        // Reset the entry entered when the user returns to the home screen. Allows them to enter their leaderboard entry once per round
+        has_entered_entry = false;
+        return true;
+    }
+
+    // When the user wants to add a leaderboard entry
+    if (is_mouse_in_second_button() && mouse_clicked(LEFT_BUTTON))
+    {
+        rectangle rect = rectangle_from(rectangle_x, rectangle_y, 600.0, 80.0);
+        start_reading_text(rect);
+        static const int max_entry_name_length = 20;
+        string name = "";
+
+        if ( ! has_entered_entry)
+        {
+            // Handle reading text (based on https://www.splashkit.io/articles/guides/tags/starter/reading-text/)
+            while ( ! quit_requested() )
+            {
+                process_events();
+                clear_screen();
+                
+                draw_end_game_screen_background(global_menu_handler, game.player.score);
+                draw_text("Enter Your Name & Hit Enter", COLOR_AQUAMARINE, default_font, game_over_font_size, 90, 640);
+                fill_rectangle(COLOR_BLACK, rect);
+                
+                draw_text(name, COLOR_WHITE, default_font, game_over_font_size + 10, (rectangle_x + 5), (rectangle_y + 5));
+            
+                if (text_entry_cancelled() ) 
+                {
+                    break;
+                } 
+                else
+                {
+                    name = text_input();
+                } 
+
+                if (name.length() >= max_entry_name_length)
+                {
+                    name = name.substr(0, max_entry_name_length);
+                    draw_text("Max name is 20 characters", COLOR_RED, default_font, game_over_font_size - 5, rectangle_x + 5, rectangle_y + 40);
+                }
+
+                // Save the users progress to the leaderboard!
+                if (mouse_clicked(LEFT_BUTTON))
+                {
+                    // Exit the writing leaderboard text 
+                    break;
+                }
+                else if ( key_typed(RETURN_KEY) ) 
+                {
+                    // Prevent the user from adding another entry in the same session
+                    add_new_leaderboard_entry(name, game.player.score);
+                    has_entered_entry = true;
+                    end_reading_text();
+                    break;
+                }
+                   
+                refresh_screen();
+            }
+        }
+    }
+    else if ( has_entered_entry )
+    {
+        draw_text("You have submitted your entry!", COLOR_BROWN, default_font, game_over_font_size + 10, rectangle_x + 5, rectangle_y + 40);
+    }
+
+    refresh_screen();
     // Iterate again
     return false;
 }

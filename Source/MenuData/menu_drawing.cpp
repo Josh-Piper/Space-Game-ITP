@@ -141,3 +141,23 @@ vector<string> form_paused_menu_information(game_data &game)
     result.push_back("Your Current Score is: " + to_string(game.player.score) );
     return result;
 }
+
+void draw_end_game_screen_background(menu_handler_data &global_menu_handler, int score)
+{
+    std::vector<string> information_screen_buttons 
+    {
+    "ending_screen", "default_home_button", "default_save_button"
+    };
+
+    append_vector_menu_buttons_to_highlight(global_menu_handler, information_screen_buttons);
+
+    draw_menu(information_screen_buttons);
+
+    vector<string> end_messages {
+        "Is this a High Score?",
+        "Click Save to submit your Score to the Leaderboards",
+        "Your Score Was: " + to_string(score)
+    };
+
+    draw_text_after_two_buttons(end_messages);
+}
