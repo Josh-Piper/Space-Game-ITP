@@ -1,4 +1,5 @@
 // MENU ASSETTS
+BITMAP,default_sorting_button,default_sorting_button.png
 BITMAP,highlighted_save_button,highlighted_save_button.png
 BITMAP,default_save_button,default_save_button.png
 BITMAP,ending_screen,ending_screen.png
@@ -77,9 +78,10 @@ BITMAP,gold_coin,gold_coin.png,26,26,6,1,6
 BITMAP,box,box.png
 BITMAP,empty,empty.png
 BITMAP,full,full.png
-BITMAP, placeholder, placeholder.png
-BITMAP, purple_bar, purple_bar.png
+BITMAP,placeholder,placeholder.png
+BITMAP,purple_bar,purple_bar.png
 ANIM,coins,coin_animation.txt
-FONT, valentime, Valentime.otf
-FONT, hud_font, Locanita.otf
-SOUND, pop, pop.flac
+FONT,valentime,Valentime.otf
+FONT,Audacity,Audacity.otf
+FONT,hud_font,Locanita.otf
+SOUND,pop,pop.flac

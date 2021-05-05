@@ -28,6 +28,7 @@ menu_handler_data create_menu_handler()
     result.game_state = HOME_SCREEN;
     result.highlighted_button = NONE;
     result.music_player = create_music_handler();
+    result.sorting_method = ALPHA_ASCENDING;
     return result;
 }
 
@@ -89,7 +90,6 @@ void handle_settings_screen_actions(menu_handler_data &global_menu_handler)
         // Fix the double mouse click issue from home screen to another screen 
         if (delay_left_mouse > 1) 
         {
-            write_line("called");
             decrease_volume(global_menu_handler.music_player);
             global_menu_handler.music_player.changed_volume_required = true;
         }
@@ -158,11 +158,12 @@ void handle_leaderboard_screen_actions(menu_handler_data &global_menu_handler)
         // Prevent the double bufferring issue of rendering a second click when accessed from the home menu
         if (delay_left_click > 1) 
         {
-            write_line("Left Click in Leaderboard");
             reset_leaderboard_file();
         }
     }
 
+    // Changing the sorting if the sorting button is clicked
+    if (is_mouse_between_two_points(560, 750, 790, 800)  && mouse_clicked(LEFT_BUTTON)) global_menu_handler.sorting_method = change_type(global_menu_handler.sorting_method);
 }
 
 

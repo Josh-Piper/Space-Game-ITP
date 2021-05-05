@@ -3,6 +3,7 @@
 
 #include "splashkit.h"
 #include "../../Source/Utilities/music_player.h"
+#include "../../Source/Utilities/leaderboard.h"
 #include <vector>
 
 enum operating_system { WINDOWS, APPLE, LINUX, UNIX, UNIDENTIFIED };
@@ -14,7 +15,7 @@ struct menu_handler_data
     game_state                      game_state;
     highlighted_button_state        highlighted_button;
     music_handler_data              music_player;
-   
+    sort_type                       sorting_method;
 };
 
 #include "../../Source/GameData/lost_in_space.h"
