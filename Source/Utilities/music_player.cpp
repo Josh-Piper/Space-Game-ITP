@@ -29,7 +29,6 @@ music_handler_data create_music_handler()
     return result;
 }
 
-
 int get_next_song_number(string original_number) 
 {
     static const int MAX_SONGS = 5;

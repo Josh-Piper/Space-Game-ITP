@@ -20,3 +20,5 @@ skm clang++ program.cpp ./Source/GameData/*.cpp ./Source/MenuData/*.cpp ./Source
 + Difficulties
 + Enemies (that hurts your fuel)
 + Levelling System
++ Refactor leaderboard file to csv system
++ Input Validation for the Leaderboard Entries

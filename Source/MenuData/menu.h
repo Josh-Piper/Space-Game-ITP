@@ -7,9 +7,16 @@
 #include <vector>
 
 enum operating_system { WINDOWS, APPLE, LINUX, UNIX, UNIDENTIFIED };
-enum game_state { END_GAME, HOME_SCREEN, PLAY_GAME_SCREEN, LEADERBOARD_SCREEN, SETTINGS_SCREEN, INFORMATION_SCREEN };
+enum game_state { END_GAME, HOME_SCREEN, PLAY_GAME_SCREEN, LEADERBOARD_SCREEN, SETTINGS_SCREEN, INFORMATION_SCREEN }; // the different states of the game
 enum highlighted_button_state { NONE, FIRST, SECOND, THIRD, FOURTH };
 
+/**
+ * The menu data
+ * @param                          game_state               The current state of the application
+ * @param                          highlighted_button       Which button is currently highlighted within the menus
+ * @param                          music_player             The music player to keep playing music throughout the game
+ * @param                          sort_type                Used for sorting data for the leaderboard. Can be extended to other parts of the application
+ */ 
 struct menu_handler_data
 {
     game_state                      game_state;
@@ -18,7 +25,7 @@ struct menu_handler_data
     sort_type                       sorting_method;
 };
 
-#include "../../Source/GameData/lost_in_space.h"
+#include "../../Source/GameData/lost_in_space.h" // to allow the program to compile correctly
 
 /**
  * Create a new home menu, thus, the game itself.
@@ -65,7 +72,6 @@ bool is_mouse_in_fourth_button();
 /**
  * Changes the highlighted button stored in global_menu_handler depending where the mouse position is located
  * @param                          global_menu_handler
- * 
  */ 
 void handle_all_screnes_button_highlighting(menu_handler_data &global_menu_handler);
 
@@ -74,7 +80,6 @@ void handle_all_screnes_button_highlighting(menu_handler_data &global_menu_handl
  * Handle any button presses from the setting screen
  * Handles any music related settings etc.
  * @param                          global_menu_handler
- * 
  */ 
 void handle_settings_screen_actions(menu_handler_data &global_menu_handler);
 
@@ -82,21 +87,18 @@ void handle_settings_screen_actions(menu_handler_data &global_menu_handler);
  * Handle any button presses from the home screen 
  * Allows the user to play the game and to navigate to other screens
  * @param                          global_menu_handler
- * 
  */ 
 void handle_home_screen_actions(menu_handler_data &global_menu_handler);
 
 /**
  * Handle any button presses from the information screen
  * @param                          global_menu_handler
- * 
  */ 
 void handle_information_screen_actions(menu_handler_data &global_menu_handler);
 
 /**
  * Handle any button presses from the leaderboard screen
  * @param                          global_menu_handler
- * 
  */ 
 void handle_leaderboard_screen_actions(menu_handler_data &global_menu_handler);
 
@@ -104,13 +106,15 @@ void handle_leaderboard_screen_actions(menu_handler_data &global_menu_handler);
  * Update the game depending on the game_state stored in global_menu_handler
  * Allows the game to change and handle the necessary screens
  * @param                          global_menu_handler
- * 
  */ 
 void handle_menu_state(menu_handler_data &global_menu_handler);
 
 /**
  * Handle the play-game paused menu
- * 
+ * Read the users actions within the pause screen,
+ * thus allow the user to quit or resume the game
+ * @param                          global_menu_handler
+ * @param                          game
  */ 
 bool handle_paused_screen_menu(menu_handler_data &global_menu_handler, game_data &game);
 

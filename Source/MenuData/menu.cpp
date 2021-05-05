@@ -5,7 +5,7 @@
 #include "../../Source/Utilities/leaderboard.h"
 #include "../../Source/GameData/lost_in_space.h"
 
-// Find what OS the user is using to allow C++ to open the corresponding GitHub repo using the OS's browser command
+// Find what OS the user is using to allow C++ to open the corresponding GitHub repo using the OS's default browser
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(_WIN64) || defined(__NT__) 
     #include <windows.h>
     #include <shellapi.h>
@@ -135,14 +135,29 @@ void handle_information_screen_actions(menu_handler_data &global_menu_handler)
         if (OPERATING_SYSTEM == WINDOWS) ShellExecuteW(0, 0, (L"https://github.com/PandaPlaysAll/Space-Game-ITP"), 0, 0 , SW_SHOWNORMAL ); 
         if (OPERATING_SYSTEM == LINUX) system("xdg-open https://github.com/PandaPlaysAll/Space-Game-ITP");
         if (OPERATING_SYSTEM == UNIX) system("firefox https://github.com/PandaPlaysAll/Space-Game-ITP");
-        if (OPERATING_SYSTEM == APPLE);
+        if (OPERATING_SYSTEM == APPLE)
+        {
+            // --  TO DO -- 
+            // MAJOR ISSUE WITH COMPILING. Important to fix this if wanted cross platform compiling...
+            // string url_str = "https://github.com/PandaPlaysAll/Space-Game-ITP";
+            // CFURLRef url = CFURLCreateWithBytes (
+            //     NULL,                        
+            //     (UInt8*)url_str.c_str(),     
+            //     url_str.length(),            
+            //     kCFStringEncodingASCII,      
+            //     NULL                        
+            // );
+            // LSOpenCFURLRef(url,0);
+            // CFRelease(url);
+        }
         if (OPERATING_SYSTEM == UNIDENTIFIED) write_line("[WARNING] OS could not be detected!. Please contact leave a issue in https://github.com/PandaPlaysAll/Space-Game-ITP");
     }
 }
 
 void handle_leaderboard_screen_actions(menu_handler_data &global_menu_handler)
 {
-    static int delay_left_click = 0;
+    static int delay_left_click = 0; // Prevent the double bufferring issue of rendering a second click when accessed the button from the home menu
+
     handle_all_screnes_button_highlighting(global_menu_handler);
     
     //  Goto the home screen when the first button is pressed
@@ -155,7 +170,7 @@ void handle_leaderboard_screen_actions(menu_handler_data &global_menu_handler)
     if (is_mouse_in_second_button() && mouse_clicked(LEFT_BUTTON))
     {
         delay_left_click+= 1;
-        // Prevent the double bufferring issue of rendering a second click when accessed from the home menu
+        
         if (delay_left_click > 1) 
         {
             reset_leaderboard_file();
@@ -166,7 +181,7 @@ void handle_leaderboard_screen_actions(menu_handler_data &global_menu_handler)
     if (is_mouse_between_two_points(560, 750, 790, 800)  && mouse_clicked(LEFT_BUTTON)) global_menu_handler.sorting_method = change_type(global_menu_handler.sorting_method);
 }
 
-
+// Handle all menu's
 void handle_menu_state(menu_handler_data &global_menu_handler) 
 {
     switch (global_menu_handler.game_state) 
@@ -195,11 +210,12 @@ void handle_menu_state(menu_handler_data &global_menu_handler)
 
 bool handle_paused_screen_menu(menu_handler_data &global_menu_handler, game_data &game)
 {
+    // Handle the basic menu flow
     handle_all_screnes_button_highlighting(global_menu_handler);
     draw_settings_paused_screen_background(global_menu_handler);
 
+    // Draw paused screen user information
     draw_text_after_two_buttons(form_paused_menu_information(game));
-    
     refresh_screen();
 
     // Resume the game, hence return true to end the pause menu
@@ -212,7 +228,7 @@ bool handle_paused_screen_menu(menu_handler_data &global_menu_handler, game_data
         return true;
     }
 
-    // Iterate again
+    // Return false, thus, stay in paused menu
     return false;
 }
 
@@ -258,10 +274,10 @@ bool handle_end_game_menu(menu_handler_data &global_menu_handler, game_data &gam
                 clear_screen();
                 
                 draw_end_game_screen_background(global_menu_handler, game.player.score);
-                draw_text("Enter Your Name & Hit Enter", COLOR_AQUAMARINE, default_font, game_over_font_size, 90, 640);
-                fill_rectangle(COLOR_BLACK, rect);
+                draw_text("Enter Your Name & Hit Enter", COLOR_AQUAMARINE, default_font, game_over_font_size, 90, 640, option_to_screen() );
+                fill_rectangle(COLOR_BLACK, rect, option_to_screen());
                 
-                draw_text(name, COLOR_WHITE, default_font, game_over_font_size + 10, (rectangle_x + 5), (rectangle_y + 5));
+                draw_text(name, COLOR_WHITE, default_font, game_over_font_size + 10, (rectangle_x + 5), (rectangle_y + 5), option_to_screen());
             
                 if (text_entry_cancelled() ) 
                 {
@@ -275,10 +291,10 @@ bool handle_end_game_menu(menu_handler_data &global_menu_handler, game_data &gam
                 if (name.length() >= max_entry_name_length)
                 {
                     name = name.substr(0, max_entry_name_length);
-                    draw_text("Max name is 20 characters", COLOR_RED, default_font, game_over_font_size - 5, rectangle_x + 5, rectangle_y + 40);
+                    draw_text("Max name is 20 characters", COLOR_RED, default_font, game_over_font_size - 5, rectangle_x + 5, rectangle_y + 40, option_to_screen());
                 }
 
-                // Save the users progress to the leaderboard!
+                // Save the users progress to the leaderboard or exit the adding the entry!
                 if (mouse_clicked(LEFT_BUTTON))
                 {
                     // Exit the writing leaderboard text 
@@ -299,7 +315,7 @@ bool handle_end_game_menu(menu_handler_data &global_menu_handler, game_data &gam
     }
     else if ( has_entered_entry )
     {
-        draw_text("You have submitted your entry!", COLOR_BROWN, default_font, game_over_font_size + 10, rectangle_x + 5, rectangle_y + 40);
+        draw_text("You have submitted your entry!", COLOR_BROWN, default_font, game_over_font_size + 10, rectangle_x + 5, rectangle_y + 40, option_to_screen() );
     }
 
     refresh_screen();
@@ -313,13 +329,13 @@ void handle_menu()
 
     while ( ! quit_requested() )
     {
-        // Start the game
+        // Start the game when the menu game item is selected
         if (global_menu_handler.game_state == PLAY_GAME_SCREEN) global_menu_handler.game_state = handle_game();
 
-        // Exit the game when the game state is end game
+        // Exit the global menu when the game should end
         if (global_menu_handler.game_state == END_GAME) break;
 
-        // Handle the menu looping itself
+        // Else deal with the menu actions
         clear_screen();
         handle_music(global_menu_handler.music_player);
         handle_menu_state(global_menu_handler);

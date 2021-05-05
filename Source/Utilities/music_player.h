@@ -3,9 +3,12 @@
 
 #include "splashkit.h"
 
+/**
+ * Music handler data object
+ */ 
 struct music_handler_data
 {
-    string          current_song;
+    string          current_song;       
     float           current_volume;
     bool            changed_volume_required;
     bool            is_muted;
