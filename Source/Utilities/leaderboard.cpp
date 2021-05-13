@@ -103,7 +103,7 @@ vector<leaderboard_entry_data> create_leaderboard_vector_from_file()
     for (string complete_message: leaderboard_data)
     {
         // Append the message from the file. Note the delimeter >> seperates the message and date uploaded
-        int time_delim_location = complete_message.find(">>"), score_delim_location = complete_message.find("Score: ") + 7;
+        int time_delim_location = complete_message.find(">>"), score_delim_location = complete_message.find("Score: ") + 7; //+ 7 to cater for the Score text and spacing
         leaderboard_entry_data entry;
 
         entry.message = complete_message.substr(0, time_delim_location);

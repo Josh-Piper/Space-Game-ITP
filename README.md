@@ -21,4 +21,14 @@ skm clang++ program.cpp ./Source/GameData/*.cpp ./Source/MenuData/*.cpp ./Source
 + Enemies (that hurts your fuel)
 + Levelling System
 + Refactor leaderboard file to csv system
-+ Input Validation for the Leaderboard Entries
++ With the levels - add planets, and more planets spawn the greater the level
++ with the end message, have it change the text dependending on what the user got. So its depending on the scenarioo
++ Have a stay clear message,
++ Have enemies that navigate towards you and attack
++ Paused Menu hooked into the Settings Menu - to allow muting and changing of the volume
++ Different messages depndent on the users score
++ A shooting powerup
++ Only allow the user to change speeds when they have certain things, and make them slow down depending on the fuel
++ Different Worlds
++ When the user clicks Play give them an option of level and difficulty
++ Fix the issue with the music
