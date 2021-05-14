@@ -20,9 +20,11 @@ struct game_data
     player_data                 player;
     vector<power_up_data>       power_ups;      
     timer                       game_timer; 
+    timer                       level_up_timer_cooldown;
+    int                         game_level;
 };  
 
-#include "../../Source/MenuData/menu.h" //required for compiling properly
+#include "../../Source/MenuData/menu_logic.h" //required for compiling properly
 
 /**
  * Load all game resources via a bundle
@@ -81,17 +83,24 @@ void remove_power_up(game_data &game, int index);
 void check_collisions(game_data &game);
 
 /**
+ * Get the rate of occurrene powerups should spawn based on the game level
+ * @param   game
+ */ 
+int get_power_up_occurence_limitation(const game_data &game);
+
+
+/**
+ * Update the current level of the game dependent on the game timer in ticks
+ * @param   game
+ */ 
+void update_level(game_data &game);
+
+/**
  * Handle updating the pre-existing drawn images
  * @param   game
  */ 
 void update_game(game_data &game);
 
-/**
- * Draw the game,
- * thus handle drawing the HUD, player and all powerups
- * @param   game
- */ 
-void draw_game(const game_data &game);
 
 /**
  * Check if the game should be paused

@@ -1,7 +1,7 @@
 #ifndef MAIN_MENU_DRAWING
 #define MAIN_MENU_DRAWING
 #include "splashkit.h"
-#include "menu.h"
+#include "menu_logic.h"
 #include <vector>
 
 /**
@@ -69,10 +69,23 @@ void draw_settings_paused_screen_background(menu_handler_data &global_menu_handl
 vector<string> form_paused_menu_information(game_data &game);
 
 /**
+ * Insert the default end game messages
+ * @param                          vec
+ */ 
+void insert_end_game_messages(vector<string> &vec);
+
+/**
+ * Insert the end message dependent on players level
+ * @param                         level
+ */ 
+string get_end_message_from_level(int level);
+
+/**
  * Draw the end game screen with the users score of the current playthrough
  * @param                         global_menu_handler
  * @param                         score                     players current score
+ * @param                         level                     c
  */ 
-void draw_end_game_screen_background(menu_handler_data &global_menu_handler, int score);
+void draw_end_game_screen_background(menu_handler_data &global_menu_handler, int score, int level);
 
 #endif

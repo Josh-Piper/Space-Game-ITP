@@ -50,7 +50,7 @@ string append_time_suffix(string result, time_data suffix)
 string convert_milliseconds_to_seconds(unsigned int ticks)
 {
     time_data suffix = SECONDS;
-    double ans = ticks / 1000.0;
+    double ans = ticks / 1000.0; // Convert milliseconds to seconds
 
     if (ans > 60 && suffix == SECONDS)
     {
@@ -127,9 +127,8 @@ void draw_heads_up_display(const game_data &game)
     draw_heads_up_display_background(game);
 
     draw_text("SCORE: " + to_string(game.player.score), text_colour, font, font_size, x_dist, 5, option_to_screen());
-    draw_text("LOCATION: " + get_heads_up_display_cords_as_string(center_point(game.player.player_sprite)), text_colour, font, font_size, x_dist, 25, option_to_screen());
-    draw_text("TOTAL POWERUPS: " + to_string(game.player.total_power_ups), text_colour, font, font_size, x_dist, 45, option_to_screen());
-
+    draw_text("CURRENT LEVEL: " + to_string(game.game_level), text_colour, font, font_size, x_dist, 25, option_to_screen());
+    draw_text("LOCATION: " + get_heads_up_display_cords_as_string(center_point(game.player.player_sprite)), text_colour, font, font_size, x_dist, 45, option_to_screen());
     draw_text("CURRENT POWERUP: ", text_colour, font, font_size, x_dist, 65, option_to_screen());
     draw_bitmap(game.player.current_power_up, 90, 25, power_up_drawing_constraints);
 

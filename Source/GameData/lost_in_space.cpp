@@ -2,8 +2,9 @@
 #include "lost_in_space.h"
 #include "heads_up_display.h"
 #include "player.h"
-#include "../../Source/MenuData/menu.h"
+#include "../../Source/MenuData/menu_logic.h"
 #include "power_up.h"
+#include "lost_in_space_drawing.h"
 #include <vector>
 
 using std::vector;
@@ -19,18 +20,11 @@ game_data new_game()
 {
     game_data game;
     game.player = new_player();
+    game.game_level = 1;
     game.game_timer = create_timer("GameTimer");
+    game.level_up_timer_cooldown = create_timer("CoolDownTimer");
     start_timer(game.game_timer);
     return game;
-}
-
-
-void draw_power_ups(const vector<power_up_data> &powerups)
-{
-    for (int i = 0; i < powerups.size(); i++)
-    {
-        draw_power_up(powerups[i]);
-    }
 }
 
 void add_power_up(game_data &game)
@@ -51,7 +45,7 @@ void apply_power_up(game_data  &game, power_up_kind kind)
 {
     if (kind == FUEL)
     {
-        game.player.fuel_pct *=  1.25;
+        game.player.fuel_pct +=  0.20;
         if (game.player.fuel_pct >= 1.0)
             game.player.fuel_pct = 1.0;
         
@@ -87,7 +81,7 @@ void remove_power_up(game_data &game, int index)
     game.power_ups.pop_back();
 }
 
-void check_collisions(game_data &game) //causes segmentations faults
+void check_collisions(game_data &game) 
 {
     for (int index = game.power_ups.size() - 1; index >= 0; index--)
     {
@@ -100,27 +94,84 @@ void check_collisions(game_data &game) //causes segmentations faults
     }
 }
 
-void update_game(game_data &game)
+int get_power_up_occurence_limitation(const game_data &game)
 {
+    int result;
+    switch (game.game_level)
+    {
+        case 1: result = 30; break;
+        case 2: result = 28; break;
+        case 3: result = 26; break;
+        case 4: result = 24; break;
+        case 5: result = 22; break;
+        case 6: result = 18; break;
+        case 7: result = 15; break;
+        case 8: result = 13; break;
+        case 9: result = 10; break;
+        default: result = 5; break;
+    }
+    return result;
+}
+
+void update_level_per_minute(game_data &game)
+{
+    // Change level every 10 seconds CURRENT
+    double game_timer_in_seconds = (timer_ticks(game.game_timer) / 1000.0); // Convert milliseconds to seconds
+    double game_level_per_10_secs = game.game_level * 5;  // Change to 60 to make per 60 seconds
+    double draw_next_level_cooldown = (timer_ticks(game.level_up_timer_cooldown) / 1000.0);
+    //write_line("Game Level per 10 Seconds: " + to_string(game_level_per_10_secs) + "\nGame Timer Minutes: " + to_string(game_timer_in_seconds) + "\n");
+    if (game_timer_in_seconds >= game_level_per_10_secs) 
+    {
+        game.game_level++;
+        game.power_ups.clear(); // reset powerups
+        start_timer( game.level_up_timer_cooldown ); // Draw the next level information
+    }
+
+    if (draw_next_level_cooldown > 3.0) // if the draw next level has drawn for longer than 3 seconds
+    {
+        reset_timer(game.level_up_timer_cooldown);
+        stop_timer(game.level_up_timer_cooldown);
+    }
+}
+
+void update_level(game_data &game)
+{
+    // Normal Level
+    if (game.game_level % 5 != 0)
+    {
+        update_level_per_minute(game);
+    }
+    // Boss Level - every 5 
+    else 
+    {
+        // do nothing
+    }  
+}
+
+void update_game(game_data &game)
+{   
+    int power_up_occurence_limitation = get_power_up_occurence_limitation(game);
+
+    // Check for the level of the game here
+    update_level(game);
+
+
+    // Add enemies for level 2, 
+
+
+    // Have stuff pop up 
+
+
+
     
     // Perform movement and update the camera
-    if (rnd(0, 1000) <= 30)
+    if (rnd(0, 1000) <= power_up_occurence_limitation)
         add_power_up(game);
 
     check_collisions(game);
 
     update_player(game.player);
     update_power_ups(game.power_ups);
-}
-
-void draw_game(const game_data &game)
-{
-    draw_heads_up_display(game);
-
-    draw_power_ups(game.power_ups);
-    draw_player(game.player);
-
-    refresh_screen(60);
 }
 
 void handle_game_paused(menu_handler_data &global_menu_handler, game_data &game)
@@ -164,8 +215,8 @@ game_state handle_game()
 
         // Handle the looping of the game itself
         handle_input(game.player);
-        update_game(game);
         draw_game(game);
+        update_game(game);
         handle_end_game(global_menu_handler, game);
 
 

@@ -1,6 +1,6 @@
 #include "splashkit.h"
 #include "./Source/GameData/lost_in_space.h"
-#include "./Source/MenuData/menu.h"
+#include "./Source/MenuData/menu_logic.h"
 
 int main()
 {

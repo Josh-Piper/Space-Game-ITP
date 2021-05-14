@@ -1,5 +1,5 @@
 #include "splashkit.h"
-#include "menu.h"
+#include "menu_logic.h"
 #include "../../Source/Utilities/leaderboard.h"
 #include <vector>
 #include <algorithm>
@@ -168,22 +168,51 @@ vector<string> form_paused_menu_information(game_data &game) // could do with a 
     return result;
 }
 
-void draw_end_game_screen_background(menu_handler_data &global_menu_handler, int score)
+string get_end_message_from_level(int level)
 {
-    std::vector<string> information_screen_buttons 
+    static const std::map<int, string> level_message 
     {
-    "ending_screen", "default_home_button", "default_save_button"
+        { 1, "Keep Trying! - You're Getting Better" },
+        { 2, "Good Job! Improving Already" },
+        { 3, "Excellent... Its Getting Tough" },
+        { 4, "Impressive, Are You Elon Musk?" },
+        { 5, "Uncharted Territory is Dangerous... Be Careful Next Time" },
+        { 6, "I Almost Thought You Were An Alien... Great Job" },
+        { 7, "Wow... What Did You Do To Annoy the Aliens" },
+        { 8, "Excellent Work Soldier" },
+        { 9, "You Might Just Be the Best At This" },
+        { 10, "You Almost Died as a Legend" },
+        { 11, "You're Renown Amounst the Galaxy... Truly An Unfortunate Death" }
     };
+
+    // Return the message dependent on the level
+    auto result = level_message.find(level);
+    if (result != level_message.end())
+    {
+        return result->second;
+    }
+    
+    // If they key isnt in the level_message map, then the player has exceed the levels
+    return "They Call You... A Legend Amounst Legends...";
+}
+
+void insert_end_game_messages(vector<string> &vec)
+{
+    vec.push_back("Is this your Highest Score?");
+    vec.push_back("Click Save to submit your Score to the Leaderboards");
+}
+
+void draw_end_game_screen_background(menu_handler_data &global_menu_handler, int score, int level)
+{
+    vector<string> information_screen_buttons { "ending_screen", "default_home_button", "default_save_button" }, end_messages;
 
     append_vector_menu_buttons_to_highlight(global_menu_handler, information_screen_buttons);
 
     draw_menu(information_screen_buttons);
 
-    vector<string> end_messages {
-        "Is this your Highest Score?",
-        "Click Save to submit your Score to the Leaderboards",
-        "Your Score Was: " + to_string(score)
-    };
+    end_messages.push_back(get_end_message_from_level(level));
+    insert_end_game_messages(end_messages);
+    end_messages.push_back("Your Score Was: " + to_string(score));
 
     draw_text_after_two_buttons(end_messages);
 }

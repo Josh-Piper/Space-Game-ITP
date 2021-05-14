@@ -26,7 +26,6 @@ music_handler_data create_music_handler()
     result.current_volume = 0.0f; //Change back to play the current music
     result.changed_volume_required = false;
     result.is_muted = false;
-    write_line("song name: " + result.current_song);
     return result;
 }
 

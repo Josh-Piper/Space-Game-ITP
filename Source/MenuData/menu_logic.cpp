@@ -1,7 +1,7 @@
 #include "splashkit.h"
 #include "../../Source/Utilities/music_player.h"
 #include "menu_drawing.h"
-#include "menu.h"
+#include "menu_logic.h"
 #include "../../Source/Utilities/leaderboard.h"
 #include "../../Source/GameData/lost_in_space.h"
 
@@ -244,7 +244,7 @@ bool handle_end_game_menu(menu_handler_data &global_menu_handler, game_data &gam
 
     // Handle the basics
     handle_all_screnes_button_highlighting(global_menu_handler);
-    draw_end_game_screen_background(global_menu_handler, game.player.score);
+    draw_end_game_screen_background(global_menu_handler, game.player.score, game.game_level);
 
     // Return the user back to the home menu
     if (is_mouse_in_first_button() && mouse_clicked(LEFT_BUTTON)) 
@@ -273,7 +273,7 @@ bool handle_end_game_menu(menu_handler_data &global_menu_handler, game_data &gam
                 process_events();
                 clear_screen();
                 
-                draw_end_game_screen_background(global_menu_handler, game.player.score);
+                draw_end_game_screen_background(global_menu_handler, game.player.score, game.game_level);
                 draw_text("Enter Your Name & Hit Enter", COLOR_AQUAMARINE, default_font, game_over_font_size, 90, 640, option_to_screen() );
                 fill_rectangle(COLOR_BLACK, rect, option_to_screen());
                 
