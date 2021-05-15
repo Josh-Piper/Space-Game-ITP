@@ -21,22 +21,22 @@ std::string get_current_volume_as_percentage(music_handler_data &music_player)
 
 music_handler_data create_music_handler()
 {
-    music_handler_data result;
-    result.current_song = "music4"; // initialise to no song and let handle_music deal with which song is played
-    result.current_volume = 0.0f; //Change back to play the current music
-    result.changed_volume_required = false;
-    result.is_muted = false;
-    return result;
+    music_handler_data music_handler;
+    music_handler.current_song = "music4"; // initialise to no song and let handle_music deal with which song is played
+    music_handler.current_volume = 0.0f; //Change back to play the current music
+    music_handler.changed_volume_required = false;
+    music_handler.is_muted = false;
+    return music_handler;
 }
 
 int get_next_song_number(string original_number) 
 {
     static const int MAX_SONGS = 5;
-    int song_number { std::stoi(original_number) }, return_number;    
+    int current_song_number { std::stoi(original_number) }, new_song_number;    
 
     // If the next song number is greater than the max song number, then return the first song number
-    (song_number + 1 < MAX_SONGS) ? return_number = song_number + 1 : return_number = 1;
-    return return_number;
+    (current_song_number + 1 < MAX_SONGS) ? new_song_number = current_song_number + 1 : new_song_number = 1;
+    return new_song_number;
 }
 
 

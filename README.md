@@ -31,3 +31,6 @@ skm clang++ program.cpp ./Source/GameData/*.cpp ./Source/MenuData/*.cpp ./Source
 
 ## CURRENTLY IMPLEMENTING
 + Enemies
+- Space Fighter collision checking
+- Space Fighter following user
+- Space Fighter attacking

@@ -32,7 +32,6 @@ vector<string> read_information_text() // could be renamed to read_information_f
     vector<string> result;
     ifstream info_text_file { INFORMATION_FILE_LOCATION };
 
-    // Read from the file if it exists
     if (info_text_file.is_open())
     {
         while ( getline (info_text_file, line) )
@@ -54,7 +53,6 @@ vector<string> read_information_text() // could be renamed to read_information_f
 void reset_leaderboard_file()
 {
     ofstream new_file( LEADERBOARD_FILE_LOCATION );
-    new_file << LEADERBOARD_DEFAULT_MESSAGE;
     new_file.close();
 }
 
@@ -70,7 +68,7 @@ void add_new_leaderboard_entry(string name, int score)
     // If the user tries to add to a leaderboard file that doesn't exist. Note this is
     // an edge case for when the user plays the game first, thus, no file was genned.
     if (leaderboard_file.fail()) reset_leaderboard_file();
-    leaderboard_file << endl << entry; // Append the entry
+    leaderboard_file << entry << endl; // Append the entry
     leaderboard_file.close();
 }
 
@@ -82,13 +80,12 @@ vector<string> read_leaderboard_text() // Could be renamed to read leaderboard f
 
     if (leaderboard_file.is_open())
     {
-        // Loop through each line in leaderboard file
         while ( getline (leaderboard_file, line) )
             result.push_back(line);   
     } 
     else
     {
-        reset_leaderboard_file(); // if leaderboard file does not exist. Create one
+        reset_leaderboard_file(); 
     }
     
     leaderboard_file.close();
@@ -102,18 +99,21 @@ vector<leaderboard_entry_data> create_leaderboard_vector_from_file()
 
     for (string complete_message: leaderboard_data)
     {
-        // Append the message from the file. Note the delimeter >> seperates the message and date uploaded
-        int time_delim_location = complete_message.find(">>"), score_delim_location = complete_message.find("Score: ") + 7; //+ 7 to cater for the Score text and spacing
         leaderboard_entry_data entry;
+        int time_delim_location = complete_message.find(">>"), score_delim_location = complete_message.find("Score: ") + 7; //+ 7 to cater for the Score text and spacing
 
         entry.message = complete_message.substr(0, time_delim_location);
         entry.time_uploaded = complete_message.substr(time_delim_location + 2, complete_message.length() - 1); // Could add error checking here for the default leaderboard message
         
         // Error Checking
-        if (entry.message == LEADERBOARD_DEFAULT_MESSAGE)
-            entry.score = 0;
-        else
+        try
+        {
             entry.score = std::stoll ( complete_message.substr( score_delim_location, time_delim_location - 1 ) ); // Convert the score to a long long int.
+        }
+        catch (int exception) 
+        {
+             entry.score = 0;
+        }
 
         result.push_back(entry);
     }
@@ -128,9 +128,9 @@ bool sort_leaderboard_date_ascending(const leaderboard_entry_data &lhs, const le
 
 bool sort_leaderboard_date_descending(const leaderboard_entry_data &lhs, const leaderboard_entry_data &rhs) { return lhs.time_uploaded > rhs.time_uploaded; }
 
-bool sort_leaderboard_score_ascending(const leaderboard_entry_data &lhs, const leaderboard_entry_data &rhs) { return lhs.score > rhs.score; }
+bool sort_leaderboard_score_ascending(const leaderboard_entry_data &lhs, const leaderboard_entry_data &rhs) { return lhs.score < rhs.score; }
 
-bool sort_leaderboard_score_descending(const leaderboard_entry_data &lhs, const leaderboard_entry_data &rhs) { return lhs.score < rhs.score; }
+bool sort_leaderboard_score_descending(const leaderboard_entry_data &lhs, const leaderboard_entry_data &rhs) { return lhs.score > rhs.score; }
 
 void return_leaderboard_sorted(vector<leaderboard_entry_data> &my_vec, sort_type sorting_method)
 {
@@ -150,20 +150,9 @@ vector<string> convert_leaderboard_entry_vector_to_string_vector(const vector<le
 {
     vector<string> result;
 
-    // Put the Leader Board message at the top of the file and then append the sorting data
-
-    // Append the Leader Board message
+    result.push_back(LEADERBOARD_DEFAULT_MESSAGE);
     for (leaderboard_entry_data data: my_vec)
-    {
-        if (data.message == LEADERBOARD_DEFAULT_MESSAGE) result.push_back(data.message);
-    }
-
-    // Append the Data
-    for (leaderboard_entry_data data: my_vec)
-    {
-        if (data.message == LEADERBOARD_DEFAULT_MESSAGE) continue; // skip over the leader board message
         result.push_back(data.message);
-    }
 
     return result;
 }

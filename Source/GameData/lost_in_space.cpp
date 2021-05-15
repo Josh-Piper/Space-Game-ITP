@@ -1,10 +1,12 @@
 #include "splashkit.h"
+#include "enemies.h"
 #include "lost_in_space.h"
 #include "heads_up_display.h"
 #include "player.h"
 #include "../../Source/MenuData/menu_logic.h"
 #include "power_up.h"
 #include "lost_in_space_drawing.h"
+
 #include <vector>
 
 using std::vector;
@@ -12,7 +14,7 @@ const int MINIMUM_SPACE_LOCATION = -1500;
 const int MAXIMUM_SPACE_LOCATION = 1500;
 
 void load_resources()
-{
+{   
     load_resource_bundle("game_bundle", "lost_in_space.txt");
 }
 
@@ -92,6 +94,32 @@ void check_collisions(game_data &game)
             remove_power_up(game, index);
         }
     }
+
+
+    // Prevent collisions with space fighter enemy
+    for_all_space_fighters(game.enemies.space_fighters, [&] (space_fighter_data space_fighter)
+    {
+        sprite player_sprite = game.player.player_sprite;
+        sprite fighter_sprite = space_fighter.space_fighter_sprite;
+
+        double player_left_x = sprite_x(player_sprite);
+        double player_top_y = sprite_y(player_sprite);
+        double player_right_x = player_left_x + sprite_width(player_sprite);
+        double player_bottom_y = player_top_y + sprite_height(player_sprite);
+
+        double fighter_left_x = sprite_x(fighter_sprite);
+        double fighter_top_y = sprite_y(fighter_sprite);
+        double fighter_right_x = fighter_left_x + sprite_width(fighter_sprite);
+        double fighter_bottom_y = fighter_top_y + sprite_height(fighter_sprite);
+
+        if ( sprite_collision ( player_sprite, fighter_sprite ) )
+        {
+            write_line("collision detected with fighter");
+            if (player_left_x > fighter_left_x)
+                sprite_set_x(player_sprite, (player_left_x - sprite_width(player_sprite) - 5));
+            
+        }
+    });
 }
 
 int get_power_up_occurence_limitation(const game_data &game)
@@ -117,7 +145,7 @@ void update_level_per_minute(game_data &game)
 {
     // Change level every 10 seconds CURRENT
     double game_timer_in_seconds = (timer_ticks(game.game_timer) / 1000.0); // Convert milliseconds to seconds
-    double game_level_per_10_secs = game.game_level * 5;  // Change to 60 to make per 60 seconds
+    double game_level_per_10_secs = game.game_level * 60;  // Change to 60 to make per 60 seconds
     double draw_next_level_cooldown = (timer_ticks(game.level_up_timer_cooldown) / 1000.0);
     //write_line("Game Level per 10 Seconds: " + to_string(game_level_per_10_secs) + "\nGame Timer Minutes: " + to_string(game_timer_in_seconds) + "\n");
     if (game_timer_in_seconds >= game_level_per_10_secs) 
@@ -172,6 +200,8 @@ void update_game(game_data &game)
 
     update_player(game.player);
     update_power_ups(game.power_ups);
+
+    update_all_enemies(game.enemies);
 }
 
 void handle_game_paused(menu_handler_data &global_menu_handler, game_data &game)
@@ -209,9 +239,23 @@ game_state handle_game()
     global_menu_handler.game_state = PLAY_GAME_SCREEN;
     game_data game { new_game() };
 
+
+
+    add_space_fighter_to_game(game.enemies.space_fighters, 400, 400);
+    
     while ( ! quit_requested() )
     {
         process_events();
+
+        if ( key_typed (RIGHT_SHIFT_KEY) )
+        {
+            game.game_level++;
+        }
+
+        if ( key_typed (P_KEY) )
+        {
+            game.player.fuel_pct = 0.0;
+        }
 
         // Handle the looping of the game itself
         handle_input(game.player);

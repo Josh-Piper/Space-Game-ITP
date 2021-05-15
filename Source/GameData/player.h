@@ -45,6 +45,17 @@ struct player_data
 };
 
 /**
+ * The ship bitmap function converts a ship kind into a 
+ * bitmap that can be used.
+ * 
+ * Not exposed by the header.
+ * 
+ * @param kind  The kind of ship you want the bitmap of
+ * @return      The bitmap matching this ship kind
+ */
+bitmap ship_bitmap(ship_kind kind);
+
+/**
  * Creates a new player in the centre of the screen with the default ship.
  * 
  * @returns     The new player data

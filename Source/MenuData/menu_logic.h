@@ -119,6 +119,14 @@ void handle_menu_state(menu_handler_data &global_menu_handler);
 bool handle_paused_screen_menu(menu_handler_data &global_menu_handler, game_data &game);
 
 /**
+ * Handle adding a leaderboard entry via. text input
+ * @param                          global_menu_handler
+ * @param                          game
+ * @param                          has_entered_entry check if leaderboard entry has been submitted
+ */ 
+void check_end_game_add_leaderboard_entry(menu_handler_data &global_menu_handler, game_data &game, bool &has_entered_entry);
+
+/**
  * Handle the end game sequence
  * Allow the user to save their score of the current play through
  * @param                          global_menu_handler      used to end the game or move to a particular menu after the ending

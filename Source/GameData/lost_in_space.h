@@ -4,6 +4,7 @@
 #include "splashkit.h"
 #include "player.h"
 #include "power_up.h"
+#include "enemies.h"
 #include <vector>
 
 using std::vector;
@@ -14,6 +15,8 @@ using std::vector;
  * @field   player          The user
  * @field   power_ups       Holds a vector of power_ups used to manage all power_ups within the game
  * @field   timer           The game timer is used to measure how long the game or action has transpired
+ * @field   game_level      The level of the current game
+ * @field   enemies         All enemies in the game
  */ 
 struct game_data 
 {
@@ -22,6 +25,7 @@ struct game_data
     timer                       game_timer; 
     timer                       level_up_timer_cooldown;
     int                         game_level;
+    enemy_handler_data          enemies;
 };  
 
 #include "../../Source/MenuData/menu_logic.h" //required for compiling properly
@@ -50,12 +54,6 @@ void add_power_up(game_data &game);
  * @param   power_ups
  */ 
 void update_power_ups(const vector<power_up_data> power_ups);
-
-/**
- * Draw all existing sprites in the game
- * @param   powerups
- */ 
-void draw_power_ups(const vector<power_up_data> &powerups);
 
 /**
  * Apply the powerup to the ingame character,

@@ -86,3 +86,4 @@ FONT,valentime,Valentime.otf
 FONT,Audacity,Audacity.otf
 FONT,hud_font,Locanita.otf
 SOUND,pop,pop.flac
+BITMAP,icon,icon.png

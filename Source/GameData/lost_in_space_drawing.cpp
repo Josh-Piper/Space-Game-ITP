@@ -2,7 +2,7 @@
 #include "heads_up_display.h"
 #include "lost_in_space.h"
 #include "power_up.h"
-
+#include "enemies.h"
 void draw_next_level_information(const game_data &game)
 {
     double timer_in_second = (timer_ticks(game.level_up_timer_cooldown) / 1000.0); 
@@ -33,6 +33,8 @@ void draw_game(const game_data &game)
     draw_player(game.player);
 
     draw_next_level_information(game);
+
+    draw_all_enemies(game.enemies);
 
     refresh_screen(60);
 }

@@ -1,15 +1,7 @@
 #include "player.h"
 #include "splashkit.h"
 
-/**
- * The ship bitmap function converts a ship kind into a 
- * bitmap that can be used.
- * 
- * Not exposed by the header.
- * 
- * @param kind  The kind of ship you want the bitmap of
- * @return      The bitmap matching this ship kind
- */
+
 bitmap ship_bitmap(ship_kind kind)
 {
     switch (kind)
@@ -21,7 +13,6 @@ bitmap ship_bitmap(ship_kind kind)
     default:
         return bitmap_named("pegasi");
     }
-    
 }
 
 player_data new_player()
@@ -40,13 +31,6 @@ player_data new_player()
     // Create the sprite with 3 layers - we can turn on and off based
     // on the ship kind selected
     result.player_sprite = create_sprite(default_bitmap);
-
-    sprite_add_layer(result.player_sprite, ship_bitmap(GLIESE), "GLIESE");
-    sprite_add_layer(result.player_sprite, ship_bitmap(PEGASI), "PEGASI");
-
-    // Default to layer 0 = Aquarii so hide others
-    sprite_hide_layer(result.player_sprite, 1);
-    sprite_hide_layer(result.player_sprite, 2);
 
     result.kind = AQUARII;
 
@@ -122,33 +106,8 @@ void update_player(player_data &player_to_update)
         player_to_update.invincible = true;
 }
 
-/**
- * Switch the ship kind - will adjust which layer is hidden/shown
- */
-void player_switch_to_ship(player_data &player, ship_kind target)
-{
-    // only do this if there is a change
-    if (player.kind != target)
-    {
-        // show then hide layers
-        sprite_show_layer(player.player_sprite, static_cast<int>(target));
-        sprite_hide_layer(player.player_sprite, static_cast<int>(player.kind));
-
-        // remember what is currently shown
-        player.kind = target;
-    }
-}
-
 void handle_input(player_data &player)
 {
-    // Allow the player to switch ships
-    if (key_typed(NUM_1_KEY))
-        player_switch_to_ship(player, AQUARII);
-    if (key_typed(NUM_2_KEY))
-        player_switch_to_ship(player, GLIESE);
-    if (key_typed(NUM_3_KEY))
-        player_switch_to_ship(player, PEGASI);
-
     // Handle movement - rotating left/right and moving forward/back
     float dx = sprite_dx(player.player_sprite);
     float rotation = sprite_rotation(player.player_sprite);

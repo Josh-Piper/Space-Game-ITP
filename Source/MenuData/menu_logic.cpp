@@ -7,29 +7,41 @@
 
 // Find what OS the user is using to allow C++ to open the corresponding GitHub repo using the OS's default browser
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(_WIN64) || defined(__NT__) 
-    #include <windows.h>
-    #include <shellapi.h>
-    const operating_system OPERATING_SYSTEM = WINDOWS;
+    void open_github_repo()
+    {
+        system("explorer \"https://github.com/PandaPlaysAll/Space-Game-ITP\"");
+    }
 #elif __APPLE__
-    #include <CoreFoundation/CFBundle.h>
-    #include <ApplicationServices/ApplicationServices.h>
-    const operating_system OPERATING_SYSTEM = APPLE;
+    void open_github_repo()
+    {
+        system("open https://github.com/PandaPlaysAll/Space-Game-ITP");
+    }
 #elif __linux__
-    const operating_system OPERATING_SYSTEM = LINUX;
+    void open_github_repo()
+    {
+       system("xdg-open https://github.com/PandaPlaysAll/Space-Game-ITP");
+    }
 #elif __unix__
-    const operating_system OPERATING_SYSTEM = UNIX;
+    void open_github_repo()
+    {
+        system("firefox https://github.com/PandaPlaysAll/Space-Game-ITP");
+    }
+    
 #else
-    const operating_system OPERATING_SYSTEM = UNIDENTIFIED;
+    void open_github_repo()
+    {
+        write_line("[WARNING] OS could not be detected!. Please leave a issue in https://github.com/PandaPlaysAll/Space-Game-ITP");
+    }
 #endif
 
 menu_handler_data create_menu_handler()
 {
-    menu_handler_data result;
-    result.game_state = HOME_SCREEN;
-    result.highlighted_button = NONE;
-    result.music_player = create_music_handler();
-    result.sorting_method = ALPHA_ASCENDING;
-    return result;
+    menu_handler_data menu_handler;
+    menu_handler.game_state = HOME_SCREEN;
+    menu_handler.highlighted_button = NONE;
+    menu_handler.music_player = create_music_handler();
+    menu_handler.sorting_method = ALPHA_ASCENDING;
+    return menu_handler;
 }
 
 // Check if the mouse position is between two specific points
@@ -128,35 +140,15 @@ void handle_information_screen_actions(menu_handler_data &global_menu_handler)
     //  Goto the home screen when the first button is pressed
     if (is_mouse_in_first_button() && mouse_clicked(LEFT_BUTTON)) global_menu_handler.game_state = HOME_SCREEN;
 
+
     // If the user clicks the second button, open the GitHub repository
-    if (is_mouse_in_second_button() && mouse_clicked(LEFT_BUTTON))
-    {
-        // Tried concatonating with a constant string, however, issues with conversions with LCPWSTRING and const char[SET_SIZE] due to compiler?
-        if (OPERATING_SYSTEM == WINDOWS) ShellExecuteW(0, 0, (L"https://github.com/PandaPlaysAll/Space-Game-ITP"), 0, 0 , SW_SHOWNORMAL ); 
-        if (OPERATING_SYSTEM == LINUX) system("xdg-open https://github.com/PandaPlaysAll/Space-Game-ITP");
-        if (OPERATING_SYSTEM == UNIX) system("firefox https://github.com/PandaPlaysAll/Space-Game-ITP");
-        if (OPERATING_SYSTEM == APPLE)
-        {
-            // --  TO DO -- 
-            // MAJOR ISSUE WITH COMPILING. Important to fix this if wanted cross platform compiling...
-            // string url_str = "https://github.com/PandaPlaysAll/Space-Game-ITP";
-            // CFURLRef url = CFURLCreateWithBytes (
-            //     NULL,                        
-            //     (UInt8*)url_str.c_str(),     
-            //     url_str.length(),            
-            //     kCFStringEncodingASCII,      
-            //     NULL                        
-            // );
-            // LSOpenCFURLRef(url,0);
-            // CFRelease(url);
-        }
-        if (OPERATING_SYSTEM == UNIDENTIFIED) write_line("[WARNING] OS could not be detected!. Please contact leave a issue in https://github.com/PandaPlaysAll/Space-Game-ITP");
-    }
+    if (is_mouse_in_second_button() && mouse_clicked(LEFT_BUTTON)) open_github_repo(); 
 }
 
 void handle_leaderboard_screen_actions(menu_handler_data &global_menu_handler)
 {
     static int delay_left_click = 0; // Prevent the double bufferring issue of rendering a second click when accessed the button from the home menu
+    static const int delay_click_limitter = 1;
 
     handle_all_screnes_button_highlighting(global_menu_handler);
     
@@ -169,9 +161,9 @@ void handle_leaderboard_screen_actions(menu_handler_data &global_menu_handler)
 
     if (is_mouse_in_second_button() && mouse_clicked(LEFT_BUTTON))
     {
-        delay_left_click+= 1;
+        delay_left_click++;
         
-        if (delay_left_click > 1) 
+        if (delay_left_click > delay_click_limitter) 
         {
             reset_leaderboard_file();
         }
@@ -232,30 +224,13 @@ bool handle_paused_screen_menu(menu_handler_data &global_menu_handler, game_data
     return false;
 }
 
-bool handle_end_game_menu(menu_handler_data &global_menu_handler, game_data &game)
+void check_end_game_add_leaderboard_entry(menu_handler_data &global_menu_handler, game_data &game, bool &has_entered_entry)
 {
-    static bool has_entered_entry = false;
     static const font default_font = font_named("hud_font");
-    static const int rectangle_x = 90;
-    static const int rectangle_y = 675;
-    static const int game_over_font_size = 25;
+    static const int rectangle_x = 90, rectangle_y = 675, game_over_font_size = 25;
 
-    clear_screen();
-
-    // Handle the basics
-    handle_all_screnes_button_highlighting(global_menu_handler);
-    draw_end_game_screen_background(global_menu_handler, game.player.score, game.game_level);
-
-    // Return the user back to the home menu
-    if (is_mouse_in_first_button() && mouse_clicked(LEFT_BUTTON)) 
-    {
-        // Send the user to the home screen
-        global_menu_handler.game_state = HOME_SCREEN;
-
-        // Reset the entry entered when the user returns to the home screen. Allows them to enter their leaderboard entry once per round
-        has_entered_entry = false;
-        return true;
-    }
+    if ( has_entered_entry )
+        draw_text("You have submitted your entry!", COLOR_BROWN, default_font, game_over_font_size + 10, rectangle_x + 5, rectangle_y + 40, option_to_screen() );
 
     // When the user wants to add a leaderboard entry
     if (is_mouse_in_second_button() && mouse_clicked(LEFT_BUTTON))
@@ -313,10 +288,24 @@ bool handle_end_game_menu(menu_handler_data &global_menu_handler, game_data &gam
             }
         }
     }
-    else if ( has_entered_entry )
+}
+
+bool handle_end_game_menu(menu_handler_data &global_menu_handler, game_data &game)
+{
+    static bool has_entered_entry = false;
+
+    clear_screen();
+    handle_all_screnes_button_highlighting(global_menu_handler);
+    draw_end_game_screen_background(global_menu_handler, game.player.score, game.game_level);
+
+    if (is_mouse_in_first_button() && mouse_clicked(LEFT_BUTTON)) 
     {
-        draw_text("You have submitted your entry!", COLOR_BROWN, default_font, game_over_font_size + 10, rectangle_x + 5, rectangle_y + 40, option_to_screen() );
+        global_menu_handler.game_state = HOME_SCREEN;
+        has_entered_entry = false; // Reset the entry entered when the user returns to the home screen. Allows them to enter their leaderboard entry once per round
+        return true;
     }
+
+    check_end_game_add_leaderboard_entry(global_menu_handler, game, has_entered_entry);
 
     refresh_screen();
     // Iterate again
