@@ -47,10 +47,16 @@ string append_time_suffix(string result, time_data suffix)
     }
     return result;
 }
+
+double get_ticks_as_milliseconds(unsigned int ticks)
+{
+    return ticks / 1000.0;
+}
+
 string convert_milliseconds_to_seconds(unsigned int ticks)
 {
     time_data suffix = SECONDS;
-    double ans = ticks / 1000.0; // Convert milliseconds to seconds
+    double ans = get_ticks_as_milliseconds(ticks); // Convert milliseconds to seconds
 
     if (ans > 60 && suffix == SECONDS)
     {

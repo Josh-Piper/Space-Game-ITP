@@ -128,9 +128,9 @@ bool sort_leaderboard_date_ascending(const leaderboard_entry_data &lhs, const le
 
 bool sort_leaderboard_date_descending(const leaderboard_entry_data &lhs, const leaderboard_entry_data &rhs) { return lhs.time_uploaded > rhs.time_uploaded; }
 
-bool sort_leaderboard_score_ascending(const leaderboard_entry_data &lhs, const leaderboard_entry_data &rhs) { return lhs.score < rhs.score; }
+bool sort_leaderboard_score_ascending(const leaderboard_entry_data &lhs, const leaderboard_entry_data &rhs) { return lhs.score > rhs.score; }
 
-bool sort_leaderboard_score_descending(const leaderboard_entry_data &lhs, const leaderboard_entry_data &rhs) { return lhs.score > rhs.score; }
+bool sort_leaderboard_score_descending(const leaderboard_entry_data &lhs, const leaderboard_entry_data &rhs) { return lhs.score < rhs.score; }
 
 void return_leaderboard_sorted(vector<leaderboard_entry_data> &my_vec, sort_type sorting_method)
 {

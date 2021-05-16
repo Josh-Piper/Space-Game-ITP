@@ -3,6 +3,7 @@
 #include "lost_in_space.h"
 #include "power_up.h"
 #include "enemies.h"
+
 void draw_next_level_information(const game_data &game)
 {
     double timer_in_second = (timer_ticks(game.level_up_timer_cooldown) / 1000.0); 

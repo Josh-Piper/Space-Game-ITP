@@ -31,6 +31,12 @@ string get_heads_up_display_cords_as_string(point_2d cords);
 string append_time_suffix(string result, time_data suffix);
 
 /**
+ * Convert ticks to milliseconds
+ * @param ticks
+ */ 
+double get_ticks_as_milliseconds(unsigned int ticks);
+
+/**
  * Convert millisecond to seconds
  * @param   ticks
  */

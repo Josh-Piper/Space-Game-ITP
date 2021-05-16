@@ -99,11 +99,13 @@ void update_player(player_data &player_to_update)
     }
     else 
     {
-        player_to_update.fuel_pct = player_to_update.fuel_pct - 1.0 / (60.0 * 50.0);//  /fuel will last 50 seconds
+        if (!player_to_update.invincible) player_to_update.fuel_pct = player_to_update.fuel_pct - 1.0 / (60.0 * 50.0);//  /fuel will last 50 seconds
     }
 
     if (player_to_update.total_power_ups >= 1000)
-        player_to_update.invincible = true;
+    {
+           player_to_update.invincible = true;
+    }
 }
 
 void handle_input(player_data &player)
