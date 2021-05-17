@@ -1,4 +1,6 @@
 Lost in Space
 An action packed Space Adventure game!
-Venture around the World!
-Explore New Dimensions
+Note - you can only kill space fighters when you have a shield
+Level 1 - Survive for 60 Seconds
+Level 2 - Survive from Space Fighters for 60 Seconds
+Level 3 - Not Implemented Yet.

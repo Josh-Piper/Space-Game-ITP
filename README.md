@@ -17,8 +17,6 @@ skm clang++ program.cpp ./Source/GameData/*.cpp ./Source/MenuData/*.cpp ./Source
 ## TO DO
 + Different Sound Effects
 + Difficulties
-+ Enemies (that hurts your fuel)
-+ Refactor leaderboard file to csv system
 + With the levels - add planets, and more planets spawn the greater the level
 + Have a stay clear message,
 + Have enemies that navigate towards you and attack
@@ -28,9 +26,9 @@ skm clang++ program.cpp ./Source/GameData/*.cpp ./Source/MenuData/*.cpp ./Source
 + Only allow the user to change speeds when they have certain things, and make them slow down depending on the fuel
 + Different Worlds
 + When the user clicks Play give them an option of level and difficulty
++ Space Leader - Laser
++ Planet
++ Dying Sun
 
 ## CURRENTLY IMPLEMENTING
-+ Enemies
-- Space Fighter following user
-- Space Fighter attacking
-- Create planet
+- Space Fighter attacking - bullet

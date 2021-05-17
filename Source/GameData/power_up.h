@@ -1,7 +1,6 @@
 #ifndef POWER_UPS_FOR_PLAYER
 #define POWER_UPS_FOR_PLAYER
 
-
 #include "splashkit.h"
 
 /**

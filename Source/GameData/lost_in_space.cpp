@@ -1,5 +1,6 @@
 #include "splashkit.h"
 #include <vector>
+#include <algorithm>
 #include "enemies.h"
 #include "lost_in_space.h"
 #include "heads_up_display.h"
@@ -25,33 +26,23 @@ game_data new_game()
     return game;
 }
 
+#include <iostream>
+using namespace std;
+
 void check_collisions(game_data &game) 
 {
-    for (int index = game.power_ups.size() - 1; index >= 0; index--)
-    {
-        if (sprite_collision(game.player.player_sprite, game.power_ups[index].power_up_sprite))
-        {
-            play_sound_effect("pop");
-            apply_power_up(game.player, game.power_ups[index].kind);
-            remove_power_up(game.power_ups, index);
-        }
-    }
-
-    // Prevent collisions with space fighter enemy
-    for_all_space_fighters(game.enemies.space_fighters, [&] (space_fighter_data space_fighter)
-    {
-        check_entity_collision(game.player, space_fighter.space_fighter_sprite);
-    });
+    handle_collisions_player_and_powerup(game.power_ups, game.player);
+    handle_collisions_player_and_space_fighters(game.enemies.space_fighters, game.player);
 }
 
 void update_level_per_minute(game_data &game)
 {
     // Change level every 10 seconds CURRENT
     double game_timer_in_seconds = get_ticks_as_milliseconds( timer_ticks(game.game_timer) ); // Convert milliseconds to seconds
-    double game_level_per_10_secs = game.game_level * 60;  // Change to 60 to make per 60 seconds
+    double game_level_per_60_secs = game.game_level * 60;  // Change to 60 to make per 60 seconds
     double draw_next_level_cooldown = get_ticks_as_milliseconds ( timer_ticks(game.level_up_timer_cooldown) );
 
-    if (game_timer_in_seconds >= game_level_per_10_secs) 
+    if (game_timer_in_seconds >= game_level_per_60_secs) 
     {
         game.game_level++;
         game.power_ups.clear(); 
@@ -81,7 +72,7 @@ void update_level(game_data &game)
 
 void update_game(game_data &game)
 {   
-    int power_up_occurence_limitation = get_power_up_occurence_limitation(game.game_level);
+    
 
     // Check for the level of the game here
     update_level(game);
@@ -93,18 +84,15 @@ void update_game(game_data &game)
     // Have stuff pop up 
 
 
-
     
-    // Perform movement and update the camera
-    if (rnd(0, 1000) <= power_up_occurence_limitation)
-        add_power_up(game.power_ups);
+    generate_entities(game.power_ups, game.enemies, game.game_level);
 
     check_collisions(game);
 
     update_player(game.player);
     update_power_ups(game.power_ups);
-
-    update_all_enemies(game.enemies);
+    
+    update_all_enemies(game.enemies, game.player);
 }
 
 void handle_game_paused(menu_handler_data &global_menu_handler, game_data &game)
@@ -151,6 +139,7 @@ game_state handle_game()
         if (key_typed(M_KEY)) game.player.invincible = true;
         if (key_typed(N_KEY)) game.player.invincible = false;
 
+        if (key_typed(L_KEY)) game.player.power_up_counter = 3;
         if ( key_typed (RIGHT_SHIFT_KEY) )
         {
             game.game_level++;
@@ -164,6 +153,7 @@ game_state handle_game()
         // Handle the looping of the game itself
         handle_input(game.player);
         draw_game(game);
+
         update_game(game);
         handle_end_game(global_menu_handler, game);
 

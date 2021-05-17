@@ -72,12 +72,28 @@ void add_new_leaderboard_entry(string name, int score)
     leaderboard_file.close();
 }
 
+bool is_leaderboard_file_valid(vector<string> leaderboard)
+{
+    for (string msg: leaderboard)
+    {
+        int time_delim_location = msg.find(">>"), score_delim_location = msg.find("Score: ") + 7;
+
+        // File does not contain the delimeters
+        if (time_delim_location == string::npos || score_delim_location == string::npos)
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
 vector<string> read_leaderboard_text() // Could be renamed to read leaderboard file
 {
     string line;
     vector<string> result;
     ifstream leaderboard_file { LEADERBOARD_FILE_LOCATION };
 
+    // Check if file exists
     if (leaderboard_file.is_open())
     {
         while ( getline (leaderboard_file, line) )
@@ -89,6 +105,14 @@ vector<string> read_leaderboard_text() // Could be renamed to read leaderboard f
     }
     
     leaderboard_file.close();
+
+    // Leaderboard file validation
+    if (! is_leaderboard_file_valid(result)) 
+    {
+        reset_leaderboard_file();
+        return { }; 
+    }
+
     return result;
 }
 
@@ -100,7 +124,7 @@ vector<leaderboard_entry_data> create_leaderboard_vector_from_file()
     for (string complete_message: leaderboard_data)
     {
         leaderboard_entry_data entry;
-        int time_delim_location = complete_message.find(">>"), score_delim_location = complete_message.find("Score: ") + 7; //+ 7 to cater for the Score text and spacing
+        int time_delim_location = complete_message.find(">>"), score_delim_location = complete_message.find("Score: ") + 7; //+ 7 to cater for the Score text and spacing   ; 
 
         entry.message = complete_message.substr(0, time_delim_location);
         entry.time_uploaded = complete_message.substr(time_delim_location + 2, complete_message.length() - 1); // Could add error checking here for the default leaderboard message

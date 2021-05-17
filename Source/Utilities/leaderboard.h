@@ -50,6 +50,12 @@ void reset_leaderboard_file();
 void add_new_leaderboard_entry(string name, int score);
 
 /**
+ * Return if the leaderboard file is valid
+ * @param                          leaderboard              The leaderboard file in array string format
+ */ 
+bool is_leaderboard_file_valid(vector<string> leaderboard);
+
+/**
  * Read the leaderboard information
  * Create a new leaderboard if non-existent
  * Then return the lines within the file as a vector<string>

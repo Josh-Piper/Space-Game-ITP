@@ -24,7 +24,6 @@ player_data new_player()
     result.total_power_ups = 0;
     result.score = 0;
     result.power_up_counter = 0;
-    //custom
     result.invincible = false;
     result.current_power_up = bitmap_named("placeholder");
 

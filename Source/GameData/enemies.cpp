@@ -7,13 +7,20 @@
 typedef std::function<void(space_fighter_data)> space_fighter_function;
 typedef std::function<void(void)> all_enemies_function;
 
+
+bullet new_bullet(double x, double y)
+{   bullet result;
+    result.image = bitmap_named("bullet");
+    result.location.x = x;
+    result.location.y = y;
+    return result;
+}
+
 space_fighter_data create_enemy_space_fighter(double x, double y)
 {
     space_fighter_data result;
-    result.space_fighter_sprite = create_sprite ( bitmap_named("pegasi") ); //ship_bitmap(PEGASI)
-    
+    result.space_fighter_sprite = create_sprite ( ship_bitmap(PEGASI) ); 
     sprite_set_position(result.space_fighter_sprite, point_at(x, y));
-
     return result;
 }
 
@@ -25,12 +32,8 @@ void add_space_fighter_to_game(vector<space_fighter_data> &space_fighters, doubl
 
 void for_all_space_fighters(vector<space_fighter_data> space_fighters, space_fighter_function fn)
 {
-   // write_line("for all space fighters");
     for (space_fighter_data space_fighter: space_fighters)
-    {
-        //write_line("Atleast 1 enemy");
         fn(space_fighter);
-    }
 }
 
 void draw_enemy_space_fighter(const space_fighter_data &entity)
@@ -48,15 +51,46 @@ void draw_all_enemies(const enemy_handler_data &enemies)
     for_all_space_fighters(enemies.space_fighters, draw_enemy_space_fighter);
 }
 
-void update_all_enemies(const enemy_handler_data &enemies)
+void update_all_space_fighters(vector<space_fighter_data> &space_fighters, player_data &player)
 {
-    for_all_space_fighters(enemies.space_fighters, update_enemy_space_fighter);
+    // Allow the space fighters to move towards the user
+    for_all_space_fighters(space_fighters, [&] (space_fighter_data fighter)
+    {
+        static const double FIGHTER_SPEED = 0.5, MOVE_BOTTOM_LEFT = 135.0, MOVE_BOTTOM_RIGHT = 45.0, MOVE_TOP_LEFT = 225.0, MOVE_TOP_RIGHT = 315.0;
+        double new_fighter_x_location = sprite_x(fighter.space_fighter_sprite);
+        double new_fighter_y_location = sprite_y(fighter.space_fighter_sprite);
+        bool is_player_on_left_side_of_fighter = (sprite_x(fighter.space_fighter_sprite) < sprite_x(player.player_sprite) );
+        bool is_player_on_bottom_side_of_fighter = ( sprite_y(fighter.space_fighter_sprite) < sprite_y(player.player_sprite) );
+
+        // Move the fighter towards the player and set the rotation of the fighter to face towards the player
+        ( is_player_on_left_side_of_fighter ) ? new_fighter_x_location += FIGHTER_SPEED : new_fighter_x_location -= FIGHTER_SPEED;
+        
+        if ( is_player_on_bottom_side_of_fighter ) 
+        {
+            new_fighter_y_location += FIGHTER_SPEED;
+            
+            ( is_player_on_left_side_of_fighter ) ? sprite_set_rotation(fighter.space_fighter_sprite, MOVE_BOTTOM_RIGHT) : sprite_set_rotation(fighter.space_fighter_sprite, MOVE_BOTTOM_LEFT); 
+        }  
+        else
+        {
+            new_fighter_y_location -= FIGHTER_SPEED;
+            ( is_player_on_left_side_of_fighter ) ? sprite_set_rotation(fighter.space_fighter_sprite, MOVE_TOP_RIGHT) : sprite_set_rotation(fighter.space_fighter_sprite, MOVE_TOP_LEFT); 
+        }
+
+        // Move the sprite
+        sprite_set_x(fighter.space_fighter_sprite, new_fighter_x_location); 
+        sprite_set_y(fighter.space_fighter_sprite, new_fighter_y_location);
+
+    });
+
+    // Update the space fighters moving
+    for_all_space_fighters(space_fighters, update_enemy_space_fighter);
 }
 
-
-
-
-
+void update_all_enemies(enemy_handler_data &enemies, player_data &player)
+{
+    update_all_space_fighters(enemies.space_fighters, player);
+}
 
 
 
