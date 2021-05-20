@@ -9,24 +9,28 @@
 
 /**
  * A bullet that entities can shoot and use
- * @param                                          location
- * @param                                          image
+ * @param                                          original_location
+ * @param                                          bullet_sprite
  */ 
 struct bullet
 {
-    point_2d                                       location;
-    bitmap                                         image;
+    point_2d                                       original_location;
+    sprite                                         bullet_sprite;
 };
 
 /**
  * A basic enemy - power level of 1
  * Shoots slow bullets towards the user
  * @param                                          space_fighter_sprite
+ * @param                                          spawn_bullet_counter
+ * @param                                          bullet_timer_id
  * @param                                          bullets
  */ 
 struct space_fighter_data
 {
     sprite                                         space_fighter_sprite;
+    timer                                          spawn_bullet_counter;
+    string                                         bullet_timer_id;
     vector<bullet>                                 bullets;                     
 };
 
@@ -91,7 +95,9 @@ struct enemy_handler_data
  */ 
 point_2d generate_random_point_in_game();
 
-typedef std::function<void(space_fighter_data)> space_fighter_function;
+typedef std::function<void(space_fighter_data&)> space_fighter_function;
+typedef std::function<void(space_fighter_data&, player_data&)> space_fighter_and_player_function;
+typedef std::function<void(void)> all_enemies_function;
 
 /**
  * Create a space fighter located at x, y
@@ -115,7 +121,15 @@ void add_space_fighter_to_game(vector<space_fighter_data> &space_fighters, doubl
  * @param                                          space_fighters
  * @param                                          fn
  */ 
-void for_all_space_fighters(vector<space_fighter_data> space_fighters, space_fighter_function fn);
+void for_all_space_fighters(vector<space_fighter_data> &space_fighters, space_fighter_function fn);
+
+/**
+ * Apply a function to every space fighter in a vector of them passing by CONSTANT.
+ * 
+ * @param                                          space_fighters
+ * @param                                          fn
+ */ 
+void for_all_space_fighters_drawing(const vector<space_fighter_data> &space_fighters, space_fighter_function fn);
 
 /**
  * Draw a space fighter
@@ -128,6 +142,22 @@ void draw_enemy_space_fighter(const space_fighter_data &entity);
  * @param                                          entity
  */ 
 void update_enemy_space_fighter(const space_fighter_data &entity);
+
+/**
+ * Update the space fighter to move towards a player
+ * @param                                          fighter
+ * @param                                          player
+ */ 
+void move_enemy_space_fighter_location_towards_player(space_fighter_data &fighter, player_data &player);
+
+/**
+ * Perform a space_player_and_fighter function that affects each space fighter and player
+ * @param                                          space_fighters
+ * @param                                          player
+ * @param                                          space_fighter_and_player_fn
+ */ 
+void for_all_space_fighters_and_player(vector<space_fighter_data> &space_fighters, player_data &player, space_fighter_and_player_function space_fighter_and_player_fn);
+
 
 /**
  * Draw all the enemies in the game

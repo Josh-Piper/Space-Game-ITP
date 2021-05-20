@@ -43,10 +43,16 @@ void draw_home_screen_background(const menu_handler_data &global_game_settings);
 void draw_information_screen_background(const menu_handler_data &global_game_settings);
 
 /**
+ * Draw leaderboard sorting button depending on the sorting method
+ * @param                          sorting_method
+ */ 
+void draw_leaderboard_sorting_button(sort_type sorting_method);
+
+/**
  * Draw the leaderboard screen
  *@param                           global_game_settings
  */ 
-void draw_leader_screen_background(const menu_handler_data &global_game_settings);
+void draw_leaderboard_screen_background(const menu_handler_data &global_game_settings);
 
 /**
  * Draw the settings screen

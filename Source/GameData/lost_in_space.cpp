@@ -38,9 +38,9 @@ void check_collisions(game_data &game)
 void update_level_per_minute(game_data &game)
 {
     // Change level every 10 seconds CURRENT
-    double game_timer_in_seconds = get_ticks_as_milliseconds( timer_ticks(game.game_timer) ); // Convert milliseconds to seconds
+    double game_timer_in_seconds = get_ticks_as_seconds( timer_ticks(game.game_timer) ); // Convert milliseconds to seconds
     double game_level_per_60_secs = game.game_level * 60;  // Change to 60 to make per 60 seconds
-    double draw_next_level_cooldown = get_ticks_as_milliseconds ( timer_ticks(game.level_up_timer_cooldown) );
+    double draw_next_level_cooldown = get_ticks_as_seconds ( timer_ticks(game.level_up_timer_cooldown) );
 
     if (game_timer_in_seconds >= game_level_per_60_secs) 
     {
@@ -111,7 +111,9 @@ void handle_game_paused(menu_handler_data &global_menu_handler, game_data &game)
 
 void handle_end_game(menu_handler_data &global_menu_handler, game_data &game)
 {
-    if (game.player.fuel_pct < 0.0)
+    static const double PLAYER_DEATH_HEALTH = 0.0285;
+
+    if (game.player.fuel_pct <= PLAYER_DEATH_HEALTH)
     {
         bool exit_menu = false;
         do
@@ -149,7 +151,9 @@ game_state handle_game()
         {
             game.player.fuel_pct = 0.0;
         }
-
+        
+        if (key_typed (K_KEY))
+            game.player.fuel_pct = 0.1;
         // Handle the looping of the game itself
         handle_input(game.player);
         draw_game(game);

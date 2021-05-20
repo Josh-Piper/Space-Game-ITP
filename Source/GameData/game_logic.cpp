@@ -24,42 +24,42 @@ void add_power_up(vector<power_up_data> &power_ups)
     power_ups.push_back( result );
 }
 
+void apply_fuel_power_up_to_player(player_data &player)
+{
+    player.fuel_pct +=  0.20;
+    if (player.fuel_pct >= 1.0) player.fuel_pct = 1.0;
+}
+
 void apply_power_up(player_data &player, power_up_kind kind)
 {
-    if (kind == FUEL)
-    {
-        player.fuel_pct +=  0.20;
-        if (player.fuel_pct >= 1.0) player.fuel_pct = 1.0;
-    } 
-    else if (kind == SHIELD)
-    {
-        player.power_up_counter = 1.0;
-    }
-    else if (kind == POTION && player.power_up_counter == 0.0)
-    {
-        player.fuel_pct -= 0.15;
-    }
-    else if (kind == DROPS)
-    {
-        player.score += 5;
-    }
-    else if (kind == DIAMOND)
-    {
-        player.score += 50;
-    } 
-    else if (kind == COIN) 
-    {   
-        player.score += 1;
-    }
 
-    player.total_power_ups += 1;
-    player.current_power_up = power_up_bitmap(kind);
+    // Apply the different power up effects to a user
+    if (kind == FUEL)
+        apply_fuel_power_up_to_player(player);
+    
+    else if (kind == SHIELD)    
+        player.power_up_counter = 1.0;
+
+    else if (kind == POTION && player.power_up_counter == 0.0)
+        player.fuel_pct -= 0.15;
+    
+    else if (kind == DROPS)
+        player.score += 5;
+    
+    else if (kind == DIAMOND)
+        player.score += 50;
+     
+    else if (kind == COIN) 
+        player.score += 1;
+
+    increment_player_power_up_count(player);
+    set_player_current_power_up_image(player, power_up_bitmap(kind));
 }
 
 void update_power_ups(vector<power_up_data> &power_ups) 
 {
-    for (int i; i < power_ups.size(); i++)
-        update_power_up(power_ups[i]);
+    for (int powerup; powerup < power_ups.size(); powerup++)
+        update_power_up(power_ups[powerup]);
 }
 
 void remove_power_up(vector<power_up_data> &power_ups, int index)
@@ -125,7 +125,7 @@ int get_space_fighter_occurence_limitation(int game_level)
 {
     static const map<int, int> SPACE_FIGHTERS_OCCURRENCES
     {
-        { 1, 0 },
+        { 1, -1 },
         { 2, 1 },
         { 3, 3 },
         { 4, 5 },
@@ -137,15 +137,21 @@ int get_space_fighter_occurence_limitation(int game_level)
         { 10, 45 },
     };
 
-    return SPACE_FIGHTERS_OCCURRENCES.at(game_level);
+    auto result = SPACE_FIGHTERS_OCCURRENCES.find(game_level);
+    if (result != SPACE_FIGHTERS_OCCURRENCES.end())
+    {
+        return result->second;
+    }
+
+    return 50;
 }
 
 void generate_entities(vector<power_up_data> &power_ups, enemy_handler_data &enemies ,int game_level)
 {
-    // Create powerups
     static const int RANDOM_MIN = 0, RANDOM_MAX = 1000; 
     int power_up_occurence_limitation = get_power_up_occurence_limitation(game_level), space_fighter_occurence_limitation = get_space_fighter_occurence_limitation(game_level);
 
+    // Create powerups
     if (rnd(RANDOM_MIN, RANDOM_MAX) <= power_up_occurence_limitation)
         add_power_up(power_ups);
 
@@ -181,13 +187,8 @@ void handle_collisions_player_and_space_fighters(vector<space_fighter_data> &spa
             // if the player is invincible or has a shield a activated, then remove the space fighter from the game
            if (player.invincible || player.power_up_counter > 0)
            {
-               // incase out of bounds exception
-               try
-               {
-                    if (space_fighters.size() > 1) space_fighters.at(index_of_current_fighter) = space_fighters.back();
-                    space_fighters.pop_back();
-               }
-               catch (int e) {} 
+                if (space_fighters.size() > 1) space_fighters.at(index_of_current_fighter) = space_fighters.at(space_fighters.size() - 1);
+                space_fighters.pop_back();
            }    
         }
         index_of_current_fighter++;

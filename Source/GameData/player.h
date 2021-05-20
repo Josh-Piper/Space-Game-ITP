@@ -63,6 +63,18 @@ bitmap ship_bitmap(ship_kind kind);
 player_data new_player();
 
 /**
+ * Increment the player's power up count
+ * @param player
+ */ 
+void increment_player_power_up_count(player_data &player);
+
+/**
+ * Change the player's current power up bitmap image
+ * @param player
+ */ 
+void set_player_current_power_up_image(player_data &player, bitmap new_powerup_bitmap);
+
+/**
  * Draws the player to the screen. 
  * 
  * @param player_to_draw    The player to draw to the screen

@@ -17,18 +17,25 @@ void draw_next_level_information(const game_data &game)
         fill_rectangle(COLOR_DARK_GRAY, LEVEL_UP_BOX_X, LEVEL_UP_BOX_Y, 385, 50, option_to_screen());
         draw_text(LEVEL_UP_TEXT + to_string(game.game_level), TEXT_COLOR, FONT, TEXT_SIZE, LEVEL_UP_BOX_X + 5, LEVEL_UP_BOX_Y + 5, option_to_screen());
 
+        // Display the different level messages 
         if (game.game_level == 2)
         {
             fill_rectangle(COLOR_DARK_GRAY, LEVEL_UP_BOX_X, LEVEL_UP_BOX_Y + 55, 385, 30, option_to_screen());
             draw_text(" Space Fighters will not Spawn! Be Careful...", TEXT_COLOR, FONT, TEXT_SIZE - 10, LEVEL_UP_BOX_X + 5, LEVEL_UP_BOX_Y + 56, option_to_screen());
+        }
+
+        if (game.game_level == 3)
+        {
+            fill_rectangle(COLOR_DARK_GRAY, LEVEL_UP_BOX_X, LEVEL_UP_BOX_Y + 55, 385, 30, option_to_screen());
+            draw_text(" Level is Unsupported. Alpha Testing Mode ", TEXT_COLOR, FONT, TEXT_SIZE - 10, LEVEL_UP_BOX_X + 5, LEVEL_UP_BOX_Y + 56, option_to_screen());
         }
     }
 }
 
 void draw_power_ups(const vector<power_up_data> &powerups)
 {
-    for (int i = 0; i < powerups.size(); i++)
-        draw_power_up(powerups[i]);
+    for (int power_up_index = 0; power_up_index < powerups.size(); power_up_index++)
+        draw_power_up(powerups[power_up_index]);
 }
 
 void draw_game(const game_data &game)

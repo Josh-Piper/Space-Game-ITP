@@ -31,11 +31,16 @@ enum sort_type {
 string get_current_time();
 
 /**
+ * Reset the information file
+ */ 
+void reset_information_file();
+
+/**
  * Read in the information.text
  * Return the text that for that file
  * 
  */ 
-vector<string> read_information_text();
+vector<string> read_information_file();
 
 /**
  * Reset the leaderboard file
@@ -132,6 +137,6 @@ vector<string> convert_leaderboard_entry_vector_to_string_vector(const vector<le
  * Change the type of the sorting
  * @param                           current
  */
-sort_type change_type(sort_type current);
+sort_type change_sorting_type(sort_type current);
 
 #endif

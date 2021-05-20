@@ -14,15 +14,35 @@ struct music_handler_data
     bool            is_muted;
 };
 
-bool is_increase_new_volume_valid(float volume);
+/**
+ * Is the new increased volume valid
+ * @param          volume
+ */ 
+bool is_music_new_increase_volume_valid(float volume);
 
-bool is_decrease_new_volume_valid(float volume);
+/**
+ * Is the new decreased volume valid
+ * @param          volume
+ */ 
+bool is_music_new_decrease_volume_valid(float volume);
 
-// Increase the volume of a given music_player if the next volume is valid
-void increase_volume(music_handler_data &music_player);
+/**
+ * Handling music pausing and unpausing
+ * @param          music_player
+ */ 
+void handle_music_pausing(music_handler_data &music_player);
 
-// Decrease the volume of a given music_player if the next volume is valid
-void decrease_volume(music_handler_data &music_player);
+/**
+ * Increase music volume
+ * @param          music_player
+ */ 
+void increase_music_volume(music_handler_data &music_player);
+
+/**
+ * Decrease music volume
+ * @param          music_player
+ */ 
+void decrease_music_volume(music_handler_data &music_player);
 
 std::string get_current_volume_as_percentage(music_handler_data &music_player);
 

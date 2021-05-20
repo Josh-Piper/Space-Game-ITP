@@ -27,10 +27,7 @@ player_data new_player()
     result.invincible = false;
     result.current_power_up = bitmap_named("placeholder");
 
-    // Create the sprite with 3 layers - we can turn on and off based
-    // on the ship kind selected
     result.player_sprite = create_sprite(default_bitmap);
-
     result.kind = AQUARII;
 
     // Position in the centre of the initial screen
@@ -38,6 +35,16 @@ player_data new_player()
     sprite_set_y(result.player_sprite, (screen_height() - (sprite_height(result.player_sprite))) / 2);
 
     return result;
+}
+
+void increment_player_power_up_count(player_data &player)
+{
+    player.total_power_ups++;
+}
+
+void set_player_current_power_up_image(player_data &player, bitmap new_powerup_bitmap)
+{
+    player.current_power_up = new_powerup_bitmap;
 }
 
 void draw_player(const player_data &player_to_draw)
@@ -56,11 +63,7 @@ void update_player_camera(player_data &player_to_update)
     // Get the center of the player
     point_2d sprite_center = center_point(player_to_update.player_sprite);
 
-    // Test if the player is outside the area and move the camera
-    // the player will appear to stay still and everything else
-    // will appear to move :)
-
-    // Test top/bottom of screen
+    // Allow the game screen to follow where the player moves
     if (sprite_center.y < top_edge)
     {
         move_camera_by(0, sprite_center.y - top_edge);
@@ -119,7 +122,7 @@ void handle_input(player_data &player)
     if (key_down(RIGHT_KEY))
         sprite_set_rotation(player.player_sprite, rotation + PLAYER_ROTATE_SPEED);
 
-    // Increase speed with up/down keys - typed to give step increases
+    // Increase speed with up/down keys
     if (key_typed(DOWN_KEY))
         sprite_set_dx(player.player_sprite, dx - PLAYER_SPEED);
     if (key_typed(UP_KEY))

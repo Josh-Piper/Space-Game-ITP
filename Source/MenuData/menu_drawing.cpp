@@ -7,24 +7,24 @@
 
 void append_vector_menu_buttons_to_highlight(const menu_handler_data &global_game_settings, std::vector<string> &menu) 
 {
+    static const int DEFAULT_KEYWORD_FIRST_INDEX = 0;
+    static const int DEFAULT_KEYWORD_LAST_INDEX = 7;
     highlighted_button_state button = global_game_settings.highlighted_button;
 
-    // Highlight a button by replacing default with highlight for the bitmap
     if (button != NONE) 
     {
-        menu[button].erase(0,7);
-        menu[button].insert(0, "highlighted");
+        menu[button].erase(DEFAULT_KEYWORD_FIRST_INDEX, DEFAULT_KEYWORD_LAST_INDEX);
+        menu[button].insert(DEFAULT_KEYWORD_FIRST_INDEX, "highlighted");
     }
 }
 
 void draw_menu(const vector<string> menu) 
 {
-    draw_bitmap(menu.at(0), 0, 0, option_to_screen()); // draw the background image
+    static const int BACKGROUND_IMAGE_INDEX = 0, BACKGROUND_IMAGE_LOCATION = 0;
 
-    // start location for x, y of the first button.
+    draw_bitmap(menu.at(BACKGROUND_IMAGE_INDEX), BACKGROUND_IMAGE_LOCATION, BACKGROUND_IMAGE_LOCATION, option_to_screen());
     int x_location { 101 }, y_location { 165 };
 
-    // if we have buttons to draw, draw them.
     if (menu.size() > 1) 
     {
         for (int button = 1; button < menu.size(); button++) 
@@ -48,23 +48,16 @@ void draw_text_after_two_buttons(vector<string> reading_file)
     static const int margin = 10; 
     int start_y_location = 450, start_x_location = 25, font_size = INT_MAX;
 
-     // Find the element with the longest length in the file
     auto longest_string_in_file_location = std::max_element(reading_file.begin(), reading_file.end(), [] (const string &a, const string &b) 
     { 
         return a.length() < b.length(); 
     });
 
-    int possible_size = font_size = 1800 / reading_file.at( std::distance ( reading_file.begin(), longest_string_in_file_location) ).length(); // Set the possible size of the text dependent on the longest line within the file
+    int font_size_depending_on_longest_string = 1800 / reading_file.at( std::distance ( reading_file.begin(), longest_string_in_file_location) ).length(); 
 
-    if (reading_file.size() > 5) font_size = 50; // Set the font size to 50 if there are more than 5 lines, to have a base size if the file is large
+    if (reading_file.size() > 5) font_size = 50;
+    if (font_size_depending_on_longest_string < font_size) font_size = font_size_depending_on_longest_string;
 
-    if (reading_file.size() > 1) {
-        // Only change it if the size in regards to the length is smaller than the current font size
-        if (possible_size < font_size) font_size = possible_size;
-    } 
-    else { font_size = 100 ;} // If no font size has been set, set it to 100 
-
-    // Draw the text
     for (string text: reading_file)
     {
         draw_text(text, COLOR_WHITE_SMOKE, font, font_size, start_x_location, start_y_location, option_to_screen());
@@ -94,15 +87,18 @@ void draw_information_screen_background(const menu_handler_data &global_game_set
     append_vector_menu_buttons_to_highlight(global_game_settings, information_screen_buttons);
 
     draw_menu(information_screen_buttons);
-    
-    //Draw the information section from the information.txt file
-    vector<string> information_file = read_information_text();
+
+    vector<string> information_file = read_information_file();
     draw_text_after_two_buttons(information_file);
 }
 
-void draw_leader_screen_background(const menu_handler_data &global_game_settings) 
+void draw_leaderboard_sorting_button(sort_type sorting_method)
 {
-    // mapping from the sorting method to its string equivalent. This is used to display the sorting method visually
+    static const string SORTING_BUTTON_BITMAP = "default_sorting_button";
+    static const color SORTING_BUTTON_COLOR = COLOR_BEIGE;
+    static const font SORTING_BUTTON_FONT = font_named("Audacity");
+    static const int sorting_button_x = 560, sorting_button_y = 730, font_size = 20;
+
     static const std::map<sort_type, string> draw_sort 
     {
         { ALPHA_ASCENDING, "Alpha Ascending" },
@@ -112,8 +108,17 @@ void draw_leader_screen_background(const menu_handler_data &global_game_settings
         { SCORE_ASCENDING, "Score Ascending" },
         { SCORE_DESCENDING, "Score Descending" }
     };
-    static const int sorting_button_x = 560, sorting_button_y = 730, font_size = 20;
-    
+
+    vector<leaderboard_entry_data> leaderboard_file = create_leaderboard_vector_from_file(); 
+    return_leaderboard_sorted(leaderboard_file, sorting_method); 
+    draw_text_after_two_buttons( convert_leaderboard_entry_vector_to_string_vector(leaderboard_file) ); 
+
+    draw_bitmap(SORTING_BUTTON_BITMAP, sorting_button_x, sorting_button_y, option_to_screen());
+    draw_text(draw_sort.at(sorting_method), SORTING_BUTTON_COLOR, SORTING_BUTTON_FONT, font_size, sorting_button_x + 90, sorting_button_y + 18, option_to_screen());
+}
+
+void draw_leaderboard_screen_background(const menu_handler_data &global_game_settings) 
+{    
     std::vector<string> information_screen_buttons 
     {
         "leaderboard_screen", "default_home_button", "default_clear_leaderboard_button"
@@ -123,14 +128,7 @@ void draw_leader_screen_background(const menu_handler_data &global_game_settings
 
     draw_menu(information_screen_buttons);
 
-    // Read and Display the leaderboard details
-    vector<leaderboard_entry_data> leaderboard_file = create_leaderboard_vector_from_file(); // Read the leaderboard file into a vector of leader board entries
-    return_leaderboard_sorted(leaderboard_file, global_game_settings.sorting_method); // Sort the leaderboard depending on the menu sorting method
-    draw_text_after_two_buttons( convert_leaderboard_entry_vector_to_string_vector(leaderboard_file) ); // Draw the leaderboard messages (thus, ignore the data details from the file)
-
-    // Draw the sorting button and label
-    draw_bitmap("default_sorting_button", sorting_button_x, sorting_button_y, option_to_screen());
-    draw_text(draw_sort.at(global_game_settings.sorting_method), COLOR_BEIGE, font_named("Audacity"), font_size, sorting_button_x + 90, sorting_button_y + 18, option_to_screen());
+    draw_leaderboard_sorting_button(global_game_settings.leaderboard_sorting_method);
 }
 
 void draw_settings_screen_background(menu_handler_data &global_menu_handler) 
@@ -139,6 +137,7 @@ void draw_settings_screen_background(menu_handler_data &global_menu_handler)
     {
         "settings_screen", "default_home_button"
     };
+
     (global_menu_handler.music_player.is_muted) ? settings_screen_buttons.push_back("default_unmute_button") : settings_screen_buttons.push_back("default_mute_button");
     settings_screen_buttons.push_back("default_volume_down");
     settings_screen_buttons.push_back("default_volume_up");
@@ -192,7 +191,6 @@ string get_end_message_from_level(int level)
         return result->second;
     }
     
-    // If they key isnt in the level_message map, then the player has exceed the levels
     return "They Call You... A Legend Amounst Legends...";
 }
 

@@ -20,13 +20,22 @@ static const string LEADERBOARD_DEFAULT_MESSAGE = "Leader Board";
 
 string get_current_time()
 {
-    time_t _current_time = time(0); // Get the current date and time
-    char current_time [100]; // The new current time object
-    strftime(current_time, sizeof(current_time), "%c", std::localtime(&_current_time)); // Convert the date to be comparable for the leaderboard. Format is mm/dd/yy hh:mm:ss 
-    return current_time;
+    time_t todays_date_time = time(0); 
+    char todays_date_time_formatted [100]; 
+    strftime(todays_date_time_formatted, sizeof(todays_date_time_formatted), "%c", std::localtime(&todays_date_time)); // Convert the date to be comparable for the leaderboard. Format is mm/dd/yy hh:mm:ss 
+
+    return todays_date_time_formatted;
 }
 
-vector<string> read_information_text() // could be renamed to read_information_file()
+void reset_information_file()
+{
+    ofstream new_file( INFORMATION_FILE_LOCATION );
+    new_file << "Lost in Space";
+    new_file << "More Information Will Be Added Soon!";
+    new_file.close();
+}
+
+vector<string> read_information_file() 
 {
     string line;
     vector<string> result;
@@ -37,13 +46,10 @@ vector<string> read_information_text() // could be renamed to read_information_f
         while ( getline (info_text_file, line) )
             result.push_back(line);
     }   
-    // Create a new file to read from if one does not exist
+
     else if (info_text_file.fail())
     {
-        ofstream new_file( INFORMATION_FILE_LOCATION );
-        new_file << "Lost in Space";
-        new_file << "More Information Will Be Added Soon!";
-        new_file.close();
+        reset_information_file();
     }
 
     info_text_file.close();
@@ -62,13 +68,12 @@ void add_new_leaderboard_entry(string name, int score)
     string entry = name + "                  -> Current Score: " + to_string(score) + ">>" + get_current_time();
     ofstream leaderboard_file;
 
-    // Append to leaderboard file
     leaderboard_file.open(LEADERBOARD_FILE_LOCATION, std::ios_base::app);
 
     // If the user tries to add to a leaderboard file that doesn't exist. Note this is
     // an edge case for when the user plays the game first, thus, no file was genned.
     if (leaderboard_file.fail()) reset_leaderboard_file();
-    leaderboard_file << entry << endl; // Append the entry
+    leaderboard_file << entry << endl; 
     leaderboard_file.close();
 }
 
@@ -93,7 +98,6 @@ vector<string> read_leaderboard_text() // Could be renamed to read leaderboard f
     vector<string> result;
     ifstream leaderboard_file { LEADERBOARD_FILE_LOCATION };
 
-    // Check if file exists
     if (leaderboard_file.is_open())
     {
         while ( getline (leaderboard_file, line) )
@@ -106,7 +110,6 @@ vector<string> read_leaderboard_text() // Could be renamed to read leaderboard f
     
     leaderboard_file.close();
 
-    // Leaderboard file validation
     if (! is_leaderboard_file_valid(result)) 
     {
         reset_leaderboard_file();
@@ -124,12 +127,11 @@ vector<leaderboard_entry_data> create_leaderboard_vector_from_file()
     for (string complete_message: leaderboard_data)
     {
         leaderboard_entry_data entry;
-        int time_delim_location = complete_message.find(">>"), score_delim_location = complete_message.find("Score: ") + 7; //+ 7 to cater for the Score text and spacing   ; 
+        int time_delim_location = complete_message.find(">>"), score_delim_location = complete_message.find("Score: ") + 7; //+ 7 to cater for the Score text and spacing
 
         entry.message = complete_message.substr(0, time_delim_location);
-        entry.time_uploaded = complete_message.substr(time_delim_location + 2, complete_message.length() - 1); // Could add error checking here for the default leaderboard message
+        entry.time_uploaded = complete_message.substr(time_delim_location + 2, complete_message.length() - 1); 
         
-        // Error Checking
         try
         {
             entry.score = std::stoll ( complete_message.substr( score_delim_location, time_delim_location - 1 ) ); // Convert the score to a long long int.
@@ -181,7 +183,7 @@ vector<string> convert_leaderboard_entry_vector_to_string_vector(const vector<le
     return result;
 }
 
-sort_type change_type(sort_type current)
+sort_type change_sorting_type(sort_type current)
 {
     sort_type result = ALPHA_ASCENDING;  
 

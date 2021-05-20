@@ -17,6 +17,12 @@ enum time_data
 };
 
 /**
+ * Remove the cords prefix filler text, i.e. @pt ...
+ * @param                                           cords
+ */ 
+string remove_cords_prefix_filler_text(string cords);
+
+/**
  * Convert the cords string to one decimal place
  * Remove the filler symbols.
  * @param cords     the x and y cords to be converted
@@ -24,17 +30,24 @@ enum time_data
 string get_heads_up_display_cords_as_string(point_2d cords);
 
 /**
- * Add a suffix to a time, i.e. seconds, minutes etc.
- * @param   result      The current text
- * @param   suffix      The suffix to add to the end of result
+ * Convert a number to two decimal point
+ * @param                                           number
  */ 
-string append_time_suffix(string result, time_data suffix);
+string convert_number_to_two_dp(string number);
+
 
 /**
- * Convert ticks to milliseconds
- * @param ticks
+ * Add a suffix to a time, i.e. seconds, minutes etc.
+ * @param                                           current_time      The current text
+ * @param                                           suffix          The suffix to add to the end of result
+ */     
+string append_time_suffix(string current_time, time_data suffix);
+
+/**
+ * Convert ticks to seconds
+ * @param                                           ticks
  */ 
-double get_ticks_as_milliseconds(unsigned int ticks);
+double get_ticks_as_seconds(unsigned int ticks);
 
 /**
  * Convert millisecond to seconds

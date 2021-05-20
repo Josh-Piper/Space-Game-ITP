@@ -26,6 +26,12 @@ struct sprite_collision_data
 void add_power_up(vector<power_up_data> &power_ups);
 
 /**
+ * Apply the fuel power up to a player
+ * @param   player
+ */ 
+void apply_fuel_power_up_to_player(player_data &player);
+
+/**
  * Apply the powerup to the ingame character,
  * this is done by editing the player's value
  * as per the power_ups kind
