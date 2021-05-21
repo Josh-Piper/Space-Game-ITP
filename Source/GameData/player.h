@@ -23,14 +23,13 @@ enum ship_kind
 
 /**
  * The player data keeps track of all of the information related to the player.
- * 
- * @field   player_sprite       The player's sprite - used to track position and movement
- * @field   score               The current score for the player
- * @field   kind                Current kind of player ship
- * @field   fuel_pct            Handles the drawing of the fuel capacity
- * @field   total_power_ups     The total power ups collected
- * @field   current_power_up    Bitmap to draw the current powerup the user has
- * @field   invincible          Handles the user's infinite health or not
+ * @field                                          player_sprite       The player's sprite - used to track position and movement
+ * @field                                          score               The current score for the player
+ * @field                                          kind                Current kind of player ship
+ * @field                                          fuel_pct            Handles the drawing of the fuel capacity
+ * @field                                          total_power_ups     The total power ups collected
+ * @field                                          current_power_up    Bitmap to draw the current powerup the user has
+ * @field                                          invincible          Handles the user's infinite health or not
  */
 struct player_data
 {
@@ -50,7 +49,7 @@ struct player_data
  * 
  * Not exposed by the header.
  * 
- * @param kind  The kind of ship you want the bitmap of
+ * @param                                          kind  The kind of ship you want the bitmap of
  * @return      The bitmap matching this ship kind
  */
 bitmap ship_bitmap(ship_kind kind);
@@ -64,37 +63,38 @@ player_data new_player();
 
 /**
  * Increment the player's power up count
- * @param player
+ * @param                                          player
  */ 
 void increment_player_power_up_count(player_data &player);
 
 /**
  * Change the player's current power up bitmap image
- * @param player
+ * @param                                          player
+ * @param                                          new_powerup_bitmap
  */ 
 void set_player_current_power_up_image(player_data &player, bitmap new_powerup_bitmap);
 
 /**
  * Draws the player to the screen. 
- * 
- * @param player_to_draw    The player to draw to the screen
+ * @param                                          player_to_draw    The player to draw to the screen
  */
 void draw_player(const player_data &player_to_draw);
 
-
+/**
+ * Update the players camera angle depending on the dimensions of the map
+ * @param                                          player_to_update
+ */ 
 void update_player_camera(player_data &player_to_update);
 
 /**
  * Actions a step update of the player - moving them and adjusting the camera.
- * 
- * @param player_to_update      The player being updated
+ * @param                                          player_to_update      The player being updated
  */
 void update_player(player_data &player_to_update);
 
 /**
  * Read user input and update the player based on this interaction.
- * 
- * @param player    The player to update
+ * @param                                          player    The player to update
  */
 void handle_input(player_data &player);
 

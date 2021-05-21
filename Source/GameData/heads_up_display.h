@@ -18,7 +18,7 @@ enum time_data
 
 /**
  * Remove the cords prefix filler text, i.e. @pt ...
- * @param                                           cords
+ * @param                                          cords
  */ 
 string remove_cords_prefix_filler_text(string cords);
 
@@ -31,61 +31,61 @@ string get_heads_up_display_cords_as_string(point_2d cords);
 
 /**
  * Convert a number to two decimal point
- * @param                                           number
+ * @param                                          number
  */ 
 string convert_number_to_two_dp(string number);
 
 
 /**
  * Add a suffix to a time, i.e. seconds, minutes etc.
- * @param                                           current_time      The current text
- * @param                                           suffix          The suffix to add to the end of result
+ * @param                                          current_time      The current text
+ * @param                                          suffix          The suffix to add to the end of result
  */     
 string append_time_suffix(string current_time, time_data suffix);
 
 /**
  * Convert ticks to seconds
- * @param                                           ticks
+ * @param                                          ticks
  */ 
 double get_ticks_as_seconds(unsigned int ticks);
 
 /**
  * Convert millisecond to seconds
- * @param   ticks
+ * @param                                          ticks
  */
 string convert_milliseconds_to_seconds(unsigned int ticks);
 
 
 /**
  * Get the mini map coordinates of a power_up
- * @param power_up
+ * @param                                          power_up
  */ 
 point_2d mini_map_coordinate(const power_up_data &power_up);
 
 /**
  * Get the mini map coordinates of a player
- * @param x 
- * @param y
+ * @param                                          x 
+ * @param                                          y
  */ 
 point_2d mini_map_coordinate_player(double x, double y);
 
 /**
  * Draw the minimap
- * @param power_ups
+ * @param                                          power_ups
  * 
  */ 
 void draw_mini_map(const vector<power_up_data> &power_ups, const player_data &player);
 
 /**
- * Draw the HUD
- * @param game  
+ * Draw the HUD background
+ * @param                                          game  
  */ 
 void draw_heads_up_display_background(const game_data &game);
 
 
 /**
  * Handle the drawing of the HUD
- * @param player    The player object, requires its details for the HUD screen
+ * @param                                          game    
  */ 
 void draw_heads_up_display(const game_data &game);
 

@@ -48,6 +48,4 @@ THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH RE
 + Dying Sun
 
 ## CURRENTLY IMPLEMENTING - THEN FINISHED
-- Space Fighter attacking - bullet
 - Different sound effects per item
-+ Refactor draw and update enemies

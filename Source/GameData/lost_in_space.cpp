@@ -33,13 +33,14 @@ void check_collisions(game_data &game)
 {
     handle_collisions_player_and_powerup(game.power_ups, game.player);
     handle_collisions_player_and_space_fighters(game.enemies.space_fighters, game.player);
+    handle_collisions_bullets_and_power_ups(game.enemies.space_fighters, game.power_ups);
+    handle_collisions_player_and_bullets(game.enemies.space_fighters, game.player);
 }
 
 void update_level_per_minute(game_data &game)
 {
-    // Change level every 10 seconds CURRENT
-    double game_timer_in_seconds = get_ticks_as_seconds( timer_ticks(game.game_timer) ); // Convert milliseconds to seconds
-    double game_level_per_60_secs = game.game_level * 60;  // Change to 60 to make per 60 seconds
+    double game_timer_in_seconds = get_ticks_as_seconds( timer_ticks(game.game_timer) ); 
+    double game_level_per_60_secs = game.game_level * 60;
     double draw_next_level_cooldown = get_ticks_as_seconds ( timer_ticks(game.level_up_timer_cooldown) );
 
     if (game_timer_in_seconds >= game_level_per_60_secs) 
@@ -49,7 +50,7 @@ void update_level_per_minute(game_data &game)
         start_timer( game.level_up_timer_cooldown ); // Draw the next level information
     }
 
-    if (draw_next_level_cooldown > 3.0) // if the draw next level has drawn for longer than 3 seconds
+    if (draw_next_level_cooldown > 3.0) // if the draw next level has drawn for longer than 3 seconds then reset.
     {
         reset_timer(game.level_up_timer_cooldown);
         stop_timer(game.level_up_timer_cooldown);
@@ -66,7 +67,8 @@ void update_level(game_data &game)
     // Boss Level - every 5 
     else 
     {
-        // do nothing
+        update_level_per_minute(game);
+        // To Implement.
     }  
 }
 
@@ -76,14 +78,6 @@ void update_game(game_data &game)
 
     // Check for the level of the game here
     update_level(game);
-
-
-    // Add enemies for level 2, 
-
-
-    // Have stuff pop up 
-
-
     
     generate_entities(game.power_ups, game.enemies, game.game_level);
 
@@ -91,7 +85,7 @@ void update_game(game_data &game)
 
     update_player(game.player);
     update_power_ups(game.power_ups);
-    
+
     update_all_enemies(game.enemies, game.player);
 }
 

@@ -7,20 +7,20 @@
 
 /**
  * Draw the level up screen
- * @param   game
+ * @param                                          game
  */ 
 void draw_next_level_information(const game_data &game);
 
 /**
  * Draw all existing sprites in the game
- * @param   powerups
+ * @param                                          powerups
  */ 
 void draw_power_ups(const vector<power_up_data> &powerups);
 
 /**
  * Draw the game,
  * thus handle drawing the HUD, player and all powerups
- * @param   game
+ * @param                                          game
  */ 
 void draw_game(const game_data &game);
 

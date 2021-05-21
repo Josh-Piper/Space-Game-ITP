@@ -7,9 +7,9 @@
 
 using std::to_string;
 
-bullet new_bullet(double x, double y, int space_fighters_rotation)
+bullet new_bullet(double x, double y, float rotation)
 {   
-    int dx, dy;
+    float sprite_direction = rotation + 90;
     bullet result;
 
     result.bullet_sprite = create_sprite(bitmap_named("bullet"));
@@ -20,23 +20,15 @@ bullet new_bullet(double x, double y, int space_fighters_rotation)
     sprite_set_y(result.bullet_sprite, y);
 
     result.original_location = point_at(x, y);
-
-    sprite_set_rotation(result.bullet_sprite, space_fighters_rotation + 90);
-
-
-    // set dx - 1 if moing to the right, -1 if mving to the left
-    // dy - 1 if moving down, -1 if moving towards the top
-    sprite_set_dx(result.bullet_sprite, 1.0);
-    sprite_set_dy(result.bullet_sprite, 1.0);
-
-    //write_line(space_fighters_rotation);
-    // 0 -> Facing directly towards the right, 
-    // 90 -> Facing directly down
-    // 270 -> Facing to the left
-    // 360 -> Facing directly up
-    
-
+    sprite_set_rotation(result.bullet_sprite, sprite_direction);
+ 
     return result;
+}
+
+void delete_bullet(vector<bullet> &bullets, int id)
+{
+    if (bullets.size() > 1) bullets.at(id) = bullets.at(bullets.size() - 1);
+    bullets.pop_back();
 }
 
 void add_bullet_to_space_fighter(space_fighter_data &space_fighter)
@@ -49,17 +41,17 @@ void add_bullet_to_space_fighter(space_fighter_data &space_fighter)
 
 space_fighter_data create_enemy_space_fighter(double x, double y)
 {
-    // Keep track of how many space fighters have spawned to make each timer unique
-    static int current_fighter_id = 0;
+    static int current_fighter_id = 0; // Keep track of how many space fighters have spawned to make each timer unique
+
     space_fighter_data result;
     result.space_fighter_sprite = create_sprite ( ship_bitmap(PEGASI) ); 
     result.bullet_timer_id = "bullet_counter_" + to_string(current_fighter_id);
     result.spawn_bullet_counter = create_timer(result.bullet_timer_id);
+
     start_timer(result.bullet_timer_id);
     sprite_set_position(result.space_fighter_sprite, point_at(x, y));
 
-    // Increase the fighter id to maintain a new id for the next space fighter
-    current_fighter_id++;
+    current_fighter_id++; // Increase the fighter id to maintain a new id for the next space fighter
     return result;
 }
 
@@ -124,19 +116,103 @@ void move_enemy_space_fighter_location_towards_player(space_fighter_data &fighte
     sprite_set_y(fighter.space_fighter_sprite, new_fighter_y_location); 
 }
 
+void for_all_space_fighters_bullets(vector<space_fighter_data> &space_fighters, bullet_function fn)
+{
+    for_all_space_fighters(space_fighters, [&] (space_fighter_data &space_fighter) 
+    {
+        for (bullet bullet: space_fighter.bullets)
+        {
+            fn(bullet);
+        }    
+    });
+}
+
+void for_all_space_fighters_bullets_drawing(const vector<space_fighter_data> &space_fighters, bullet_function fn)
+{
+    for_all_space_fighters_drawing(space_fighters, [&] (space_fighter_data &space_fighter)
+    {
+        for (bullet bullet: space_fighter.bullets)
+        {
+            fn(bullet);
+        }
+    });
+}
+
+void draw_bullet(const bullet &bullet)
+{
+    draw_sprite(bullet.bullet_sprite);
+}
+
+void update_bullet(const bullet &bullet)
+{
+    update_sprite(bullet.bullet_sprite);
+}
+
+void update_bullet_location(bullet &bullet)
+{
+    static const int SPEED_INCREMENT = 5; 
+    sprite *bullet_sprite = &(bullet.bullet_sprite);
+    int new_x = sprite_x(*bullet_sprite), new_y = sprite_y(*bullet_sprite);
+    float sprite_direction = ( sprite_rotation(*bullet_sprite) - 90 < 0) ? 315 : sprite_rotation(*bullet_sprite) - 90;
+    bool facing_towards_right_side_of_game = (sprite_direction >= 270 && sprite_direction <= 360) || (sprite_direction >= 0 && sprite_direction <= 90);
+    bool facing_towards_top_half_of_game = sprite_direction >= 180 && sprite_direction <= 360;
+
+    // Set x coordinate
+    if ( facing_towards_right_side_of_game )
+        new_x += SPEED_INCREMENT;
+    else
+        new_x -= SPEED_INCREMENT;
+
+    // Set y coordinate
+    if ( facing_towards_top_half_of_game )
+        new_y -= SPEED_INCREMENT;
+    else
+        new_y += SPEED_INCREMENT;
+
+    sprite_set_x(*bullet_sprite, new_x);
+    sprite_set_y(*bullet_sprite, new_y);
+}
+
+void generate_space_fighter_bullets(vector<space_fighter_data> &space_fighters)
+{
+    static const int BULLET_COOLDOWN_IN_SECONDS = 3;
+    for_all_space_fighters(space_fighters, [&] (space_fighter_data &space_fighter)
+    {
+        int bullet_timer_in_seconds = get_ticks_as_seconds( timer_ticks( space_fighter.bullet_timer_id ) );
+
+        if ( bullet_timer_in_seconds > BULLET_COOLDOWN_IN_SECONDS )
+        {
+            add_bullet_to_space_fighter(space_fighter);
+            reset_timer(space_fighter.bullet_timer_id);
+        }
+    });
+}
+
+void handle_space_fighter_bullet_boundaries(vector<space_fighter_data> &space_fighters)
+{
+    for_all_space_fighters(space_fighters, [&] (space_fighter_data &space_fighter)
+    {
+        for (int bullet_id = 0; bullet_id < space_fighter.bullets.size(); bullet_id++)
+        {
+            // check that new location is within the limits before deleting bullet
+            point_2d *bullet_location = &(space_fighter.bullets[bullet_id].original_location);
+            sprite *bullet_sprite = &(space_fighter.bullets[bullet_id].bullet_sprite);
+            double bullet_x = (*bullet_location).x, bullet_y = (*bullet_location).y; 
+            static const int RADIUS = 1000; 
+            int min_x = bullet_x - RADIUS, max_x = bullet_x + RADIUS;
+            int min_y = bullet_y - RADIUS, max_y = bullet_y + RADIUS;
+
+            if (sprite_x(*bullet_sprite) < min_x || sprite_x(*bullet_sprite)  > max_x || sprite_y(*bullet_sprite)  < min_y || sprite_y(*bullet_sprite)  > max_y)
+                delete_bullet(space_fighter.bullets, bullet_id);
+        }
+    });
+}
 
 void draw_all_enemies(const enemy_handler_data &enemies)
 {
     for_all_space_fighters_drawing(enemies.space_fighters, draw_enemy_space_fighter);
 
-    // Draw all bullets
-    for_all_space_fighters_drawing(enemies.space_fighters, [&] (const space_fighter_data &space_fighter) 
-    {
-        for (bullet individual_bullet: space_fighter.bullets)
-        {
-            draw_sprite(individual_bullet.bullet_sprite);
-        }
-    });
+    for_all_space_fighters_bullets_drawing(enemies.space_fighters, draw_bullet);
 }
 
 void update_all_space_fighters(vector<space_fighter_data> &space_fighters, player_data &player)
@@ -145,148 +221,16 @@ void update_all_space_fighters(vector<space_fighter_data> &space_fighters, playe
 
     for_all_space_fighters(space_fighters, update_enemy_space_fighter);
 
-
-
-    for_all_space_fighters(space_fighters, [&] (space_fighter_data &space_fighter)
-    {
-        int bullet_timer_in_seconds = get_ticks_as_seconds( timer_ticks( space_fighter.bullet_timer_id ) );
-
-        int x = sprite_x(space_fighter.space_fighter_sprite), y = sprite_y(space_fighter.space_fighter_sprite);
-        write_line ( "Sprite Location X: " + to_string(x) + "Sprite Location Y: " + to_string(y) );
-        if ( bullet_timer_in_seconds > 3 )
-        {
-            
-            //write_line("Created a bullet");
-            int x = sprite_x(space_fighter.space_fighter_sprite), y = sprite_y(space_fighter.space_fighter_sprite);
-            write_line();
-            write_line ( "SPRITE LOCATION X: " + to_string(x) + "SPRITE LOCATION Y: " + to_string(y) );
-            write_line();   
-
-            add_bullet_to_space_fighter(space_fighter);
-            //write_line("Added bullet to space fighter, total bullets: " + to_string(space_fighter.bullets.size()));
-            reset_timer(space_fighter.bullet_timer_id);
-            
-        }
-
-        for (bullet individual_bullet: space_fighter.bullets)
-        {
-            //write_line("Looking at a bullet");
-            update_sprite(individual_bullet.bullet_sprite);
-        }
-            
-        // Implement the bullet system
-
-
-
-        // Add and Shoot a bullet every minute or so via a counter in the space_fighter user
-
-
-        // if bullet current location is outside the scope of original location +- 100 radius, then kill the bullet to prevent it from continuing forever.
-
-
-        // Reset its clock every time a bulet is shot using space_fighter.bullet_timer_id
-        
-    });
+    for_all_space_fighters_bullets(space_fighters, update_bullet);
+    
+    for_all_space_fighters_bullets(space_fighters, update_bullet_location);
+    
+    generate_space_fighter_bullets(space_fighters);
+  
+    handle_space_fighter_bullet_boundaries(space_fighters);
 }
 
 void update_all_enemies(enemy_handler_data &enemies, player_data &player)
 {
     update_all_space_fighters(enemies.space_fighters, player);
-
- 
 }
-
-
-
-
-
-
-
-
-// space_leader_data create_enemy_space_leaader(double x, double y)
-// {
-//     space_leader_data result;
-//     result.space_leader_sprite = create_sprite ( ship_bitmap(GLIESE) );
-
-//     sprite_set_position(result.space_leader_sprite, point_at(x, y));
-
-//     return result;
-// }
-
-// planet_warefare_data create_enemy_planet(double x, double y)
-// {
-//     planet_warefare_data result;
-//     sprite_set_position(result.planet_warefare_sprite, point_at(x, y));
-
-//     return result;
-// }
-
-// dying_sun_data create_enemy_dying_sun(double x, double y)
-// {
-//     dying_sun_data result;
-//     sprite_set_position(result.dying_sun_sprite, point_at(x, y));
-
-//     return result;
-// }
-
-
-
-
-
-
-
-
-
-
-
-
-
-// power_up_data new_power_up(double x, double y) 
-// {
-//     power_up_data result;
-//     result.kind =  static_cast<power_up_kind>(rnd(6));
-//     result.power_up_sprite = create_sprite ( power_up_bitmap(result.kind) );
-//     sprite_set_position(result.power_up_sprite, point_at(x, y));
-//     sprite_set_dx(result.power_up_sprite, rnd() * 0.3 - 0.5); 
-//     sprite_set_dy(result.power_up_sprite, rnd() * 0.3 - 0.5); 
-//     return result;
-// }
-
-// void draw_power_up(const power_up_data &power_up)
-// {
-//     draw_sprite(power_up.power_up_sprite);
-// }
-
-// void update_power_up(power_up_data &power_up)
-// {
-//     update_sprite(power_up.power_up_sprite);
-// }
-
-
-    // // Allow the player to switch ships
-    // if (key_typed(NUM_1_KEY))
-    //     player_switch_to_ship(player, AQUARII);
-    // if (key_typed(NUM_2_KEY))
-    //     player_switch_to_ship(player, GLIESE);
-    // if (key_typed(NUM_3_KEY))
-    //     player_switch_to_ship(player, PEGASI);
-
-    // sprite_add_layer(result.player_sprite, ship_bitmap(GLIESE), "GLIESE");
-    // sprite_add_layer(result.player_sprite, ship_bitmap(PEGASI), "PEGASI");
-
-    // // Default to layer 0 = Aquarii so hide others
-    // sprite_hide_layer(result.player_sprite, 1);
-    // sprite_hide_layer(result.player_sprite, 2);
-
-//     bitmap ship_bitmap(ship_kind kind)
-// {
-//     switch (kind)
-//     {
-//     case AQUARII:
-//         return bitmap_named("aquarii");
-//     case GLIESE:
-//         return bitmap_named("gliese");
-//     default:
-//         return bitmap_named("pegasi");
-//     }
-// }

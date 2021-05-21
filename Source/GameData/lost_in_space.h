@@ -11,12 +11,11 @@ using std::vector;
 
 /**
  * Game Data is used to manage the overall flow of the game and keep saved data
- * 
- * @field   player          The user
- * @field   power_ups       Holds a vector of power_ups used to manage all power_ups within the game
- * @field   timer           The game timer is used to measure how long the game or action has transpired
- * @field   game_level      The level of the current game
- * @field   enemies         All enemies in the game
+ * @field                                          player          The user
+ * @field                                          power_ups       Holds a vector of power_ups used to manage all power_ups within the game
+ * @field                                          timer           The game timer is used to measure how long the game or action has transpired
+ * @field                                          game_level      The level of the current game
+ * @field                                          enemies         All enemies in the game
  */ 
 struct game_data 
 {
@@ -45,34 +44,33 @@ game_data new_game();
 /**
  * Check in-game collisions between any in-game powerup and the player
  * if true it will access apply_power_up and remove_power_up to give the in-game user effects
- * @param   game    Use the game's power_ups and player to check for collisions
- * 
+ * @param                                          game    Use the game's power_ups and player to check for collisions
  */ 
 void check_collisions(game_data &game);
 
 /**
  * Update the current level of the game dependent on the game timer in ticks
- * @param   game
+ * @param                                          game
  */ 
 void update_level(game_data &game);
 
 /**
  * Handle updating the pre-existing drawn images
- * @param   game
+ * @param                                          game
  */ 
 void update_game(game_data &game);
 
 /**
  * Check if the game should be paused
  * Then handle the pause menu
- * @param global_menu_game_handler  
+ * @param                                          global_menu_game_handler  
  */ 
 void handle_game_paused(menu_handler_data &global_menu_handler, game_data &game);
 
 /**
  * Handle the ending game scene
- * @param global_menu_handler
- * @param game
+ * @param                                          global_menu_handler
+ * @param                                          game
  */ 
 void handle_end_game(menu_handler_data &global_menu_handler, game_data &game);
 

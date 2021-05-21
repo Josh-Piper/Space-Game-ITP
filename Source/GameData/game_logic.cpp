@@ -28,29 +28,55 @@ void apply_fuel_power_up_to_player(player_data &player)
 {
     player.fuel_pct +=  0.20;
     if (player.fuel_pct >= 1.0) player.fuel_pct = 1.0;
+    play_sound_effect("pop");
+}
+
+void apply_shield_power_up_to_player(player_data &player)
+{
+    player.power_up_counter = 1.0;
+}
+
+void apply_potion_power_up_to_player(player_data &player)
+{
+    player.fuel_pct -= 0.15;
+   
+}
+
+void apply_drops_power_up_to_player(player_data &player)
+{
+    player.score += 5;
+}
+
+void apply_diamond_power_up_to_player(player_data &player)
+{
+    player.score += 50;
+}
+
+void apply_coin_power_up_to_player(player_data &player)
+{
+    player.score += 1;
 }
 
 void apply_power_up(player_data &player, power_up_kind kind)
 {
-
     // Apply the different power up effects to a user
     if (kind == FUEL)
         apply_fuel_power_up_to_player(player);
     
     else if (kind == SHIELD)    
-        player.power_up_counter = 1.0;
+        apply_shield_power_up_to_player(player);
 
-    else if (kind == POTION && player.power_up_counter == 0.0)
-        player.fuel_pct -= 0.15;
+    else if (kind == POTION && player.power_up_counter == 0.0 && !(player.invincible))
+        apply_potion_power_up_to_player(player);
     
     else if (kind == DROPS)
-        player.score += 5;
+        apply_drops_power_up_to_player(player);
     
     else if (kind == DIAMOND)
-        player.score += 50;
+        apply_diamond_power_up_to_player(player);
      
     else if (kind == COIN) 
-        player.score += 1;
+        apply_coin_power_up_to_player(player);
 
     increment_player_power_up_count(player);
     set_player_current_power_up_image(player, power_up_bitmap(kind));
@@ -169,7 +195,6 @@ void handle_collisions_player_and_powerup(vector<power_up_data> &power_ups, play
     {
         if (sprite_collision(player.player_sprite, power_ups[index].power_up_sprite))
         {
-            play_sound_effect("pop");
             apply_power_up(player, power_ups[index].kind);
             remove_power_up(power_ups, index);
         }
@@ -192,5 +217,39 @@ void handle_collisions_player_and_space_fighters(vector<space_fighter_data> &spa
            }    
         }
         index_of_current_fighter++;
+    });
+}
+
+void handle_collisions_bullets_and_power_ups(vector<space_fighter_data> &space_fighters, vector<power_up_data> &power_ups)
+{
+    // delete_power_up_on_bullet_impact
+    for_all_space_fighters_bullets(space_fighters, [&] (bullet &bullet)
+    {
+        for (int power_up_index = 0; power_up_index < power_ups.size(); power_up_index++)
+        {
+            if (sprite_collision(bullet.bullet_sprite, power_ups[power_up_index].power_up_sprite))
+            {
+                remove_power_up(power_ups, power_up_index);
+            }
+        }
+    });
+}
+
+void handle_collisions_player_and_bullets(vector<space_fighter_data> &space_fighters, player_data &player)
+{
+    // delete_power_up_on_bullet_impact
+    for_all_space_fighters(space_fighters, [&] (space_fighter_data &space_fighter) 
+    {
+        for (int bullet_index = 0; bullet_index < space_fighter.bullets.size(); bullet_index++)
+        {
+            if ( check_entity_collision (player, space_fighter.bullets[bullet_index].bullet_sprite) )
+            {
+                // if the player is invincible or has a shield a activated, then remove the bullet from the game
+                if (player.invincible || player.power_up_counter > 0)
+                    delete_bullet(space_fighter.bullets, bullet_index);  
+                else
+                    player.fuel_pct -= 0.25;
+            }
+        }
     });
 }
