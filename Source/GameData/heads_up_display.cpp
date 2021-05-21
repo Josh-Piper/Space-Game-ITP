@@ -6,10 +6,10 @@
 #include "./Entities/space_fighter.h"
 
 const int MINI_MAP_SIZE = 100;
+const int MINI_MAP_X_END = 300;
 const double MINI_MAP_X = 200.0; 
 const double MINI_MAP_Y = 12.5; 
-const int MINI_MAP_X_END = 300;
-const int MINI_MAP_Y_END = 112.5;
+const double MINI_MAP_Y_END = 112.5;
 const double GAME_WIDTH = 3000.0; 
 const double GAME_OFFSET = 1500;
 
