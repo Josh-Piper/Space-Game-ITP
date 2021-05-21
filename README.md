@@ -19,6 +19,7 @@ Install the dependencies and and fork the repository. Once complete, navigate to
 
 ### Setup
 ```sh
+chmod -x ./LostInSpace # Required for Linux and MacOS
 ./LostInSpace setup
 ./LostInSpace.exe # Run the application
 ```
