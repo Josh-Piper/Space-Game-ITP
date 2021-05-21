@@ -81,6 +81,4 @@ void handle_end_game(menu_handler_data &global_menu_handler, game_data &game);
  */ 
 game_state handle_game();
 
-
-
 #endif

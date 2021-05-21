@@ -116,18 +116,6 @@ void handle_end_game(menu_handler_data &global_menu_handler, game_data &game)
     }
 }
 
-void admin_cmds(game_data &game)
-{
-    if (key_typed(O_KEY))
-    {
-        game.player.invincible = true;
-    }
-    if (key_typed(RIGHT_SHIFT_KEY))
-    {
-        game.game_level++;
-    }
-}
-
 game_state handle_game()
 {
     menu_handler_data global_menu_handler = create_menu_handler();
@@ -137,8 +125,6 @@ game_state handle_game()
     while ( ! quit_requested() )
     {
         process_events();
-
-        admin_cmds(game);
 
         handle_input(game.player);
         draw_game(game);
