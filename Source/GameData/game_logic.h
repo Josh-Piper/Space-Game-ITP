@@ -4,8 +4,8 @@
 
 #include <vector>
 #include "splashkit.h"
-#include "power_up.h"
-#include "player.h"
+#include "./Entities/power_up.h"
+#include "./Entities/player.h"
 #include "enemies.h"
 
 /**

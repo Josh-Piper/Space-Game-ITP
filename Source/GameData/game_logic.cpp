@@ -1,10 +1,10 @@
 #include "splashkit.h"
+#include "./Entities/player.h"
+#include "./Entities/power_up.h"
+#include "game_logic.h"
+#include "enemies.h"
 #include <vector>
 #include <map>
-#include "game_logic.h"
-#include "player.h"
-#include "power_up.h"
-#include "enemies.h"
 
 const int MINIMUM_SPACE_LOCATION = -1500;
 const int MAXIMUM_SPACE_LOCATION = 1500;
@@ -64,7 +64,6 @@ void apply_coin_power_up_to_player(player_data &player)
 
 void apply_power_up(player_data &player, power_up_kind kind)
 {
-    // Apply the different power up effects to a user
     if (kind == FUEL)
         apply_fuel_power_up_to_player(player);
     
@@ -219,6 +218,7 @@ void handle_collisions_player_and_space_fighters(vector<space_fighter_data> &spa
            {
                 if (space_fighters.size() > 1) space_fighters.at(index_of_current_fighter) = space_fighters.at(space_fighters.size() - 1);
                 space_fighters.pop_back();
+                play_sound_effect("splat");
            }    
         }
         index_of_current_fighter++;
@@ -252,6 +252,7 @@ void handle_collisions_player_and_bullets(vector<space_fighter_data> &space_figh
                 // if the player is invincible or has a shield a activated, then remove the bullet from the game
                 if ( !(player.invincible) && !(player.power_up_counter > 0) ) player.fuel_pct -= 0.25;
                 delete_bullet(space_fighter.bullets, bullet_index);  
+                play_sound_effect("splat");
             }
         }
     });

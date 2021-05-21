@@ -1,7 +1,8 @@
 #include "splashkit.h"
 #include "heads_up_display.h"
 #include "lost_in_space.h"
-#include "power_up.h"
+#include "./Entities/power_up.h"
+#include "./Entities/player.h"
 #include "enemies.h"
 
 void draw_next_level_information(const game_data &game)

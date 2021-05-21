@@ -17,9 +17,9 @@ Space Game requires [SplashKit](https://www.splashkit.io/) and [MSYS2](https://w
 
 Install the dependencies and and fork the repository. Once complete, navigate to the folder and enter the following commands into the msys2 Terminal.
 
+### Setup
 ```sh
-skm new c++ # Generate the C++ resources
-skm clang++ program.cpp ./Source/GameData/*.cpp ./Source/MenuData/*.cpp ./Source/Utilities/*.cpp -o LostInSpace.exe # Compile the program
+./LostInSpace setup
 ./LostInSpace.exe # Run the application
 ```
 
@@ -44,5 +44,4 @@ THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH RE
 + Dying Sun
 
 ## CURRENTLY IMPLEMENTING
-+ Draw Space Fighter on MiniMap
-+ Add Laser 
++ This Project is Depricated and Will Not Receive Future Updates.

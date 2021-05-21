@@ -94,3 +94,4 @@ SOUND,missle,missle.mp3
 SOUND,slurp,slurp.mp3
 SOUND,tire_puncture,tire_puncture.mp3
 SOUND,pop,pop.flac
+SOUND,splat,splat.mp3

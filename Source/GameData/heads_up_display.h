@@ -4,9 +4,10 @@
 #include "splashkit.h"
 #include "heads_up_display.h"
 #include "lost_in_space.h"
-#include "player.h"
-#include "power_up.h"
-
+#include "enemies.h"
+#include "./Entities/player.h"
+#include "./Entities/power_up.h"
+#include "./Entities/space_fighter.h"
 
 enum time_data
 {
@@ -74,6 +75,24 @@ point_2d mini_map_coordinate(const space_fighter_data &space_fighter);
  * @param                                          y
  */ 
 point_2d mini_map_coordinate_player(double x, double y);
+
+/**
+ * Draw the mini map location for all power ups
+ * @param                                          power_ups
+ */ 
+void draw_mini_map_location_for_powerups(const vector<power_up_data> &power_ups);
+
+/**
+ * Draw the mini map location for the player
+ * @param                                          player
+ */ 
+void draw_mini_map_location_for_player(const player_data &player);
+
+/**
+ * Draw the minimap location for all space fighters
+ * @param                                          space_fighters
+ */ 
+void draw_mini_map_location_for_space_fighters(const vector<space_fighter_data> space_fighters);
 
 /**
  * Draw the minimap and each entity as a pixel on the map

@@ -1,7 +1,6 @@
 #include "splashkit.h"
 #include "power_up.h"
 
-
 bitmap power_up_bitmap(power_up_kind option) {
     bitmap result;
     switch (option) 

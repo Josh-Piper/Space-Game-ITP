@@ -2,8 +2,8 @@
 #define LOST_IN_SPACE
 
 #include "splashkit.h"
-#include "player.h"
-#include "power_up.h"
+#include "./Entities/player.h"
+#include "./Entities/power_up.h"
 #include "enemies.h"
 #include <vector>
 

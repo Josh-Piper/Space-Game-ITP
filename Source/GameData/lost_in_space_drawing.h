@@ -3,7 +3,7 @@
 
 #include "splashkit.h"
 #include "lost_in_space.h"
-#include "power_up.h"
+#include "./Entities/power_up.h"
 
 /**
  * Draw the level up screen

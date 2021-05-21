@@ -4,9 +4,9 @@
 #include "enemies.h"
 #include "lost_in_space.h"
 #include "heads_up_display.h"
-#include "player.h"
 #include "../../Source/MenuData/menu_logic.h"
-#include "power_up.h"
+#include "./Entities/player.h"
+#include "./Entities/power_up.h"
 #include "lost_in_space_drawing.h"
 #include "game_logic.h"
 
@@ -75,17 +75,12 @@ void update_level(game_data &game)
 void update_game(game_data &game)
 {   
     
-
-    // Check for the level of the game here
     update_level(game);
-    
     generate_entities(game.power_ups, game.enemies, game.game_level);
-
     check_collisions(game);
 
     update_player(game.player);
     update_power_ups(game.power_ups);
-
     update_all_enemies(game.enemies, game.player);
 }
 
@@ -121,11 +116,16 @@ void handle_end_game(menu_handler_data &global_menu_handler, game_data &game)
     }
 }
 
-void handle_admin_cmds(game_data &game)
+void admin_cmds(game_data &game)
 {
-    if (key_typed(RIGHT_SHIFT_KEY)) game.game_level++;
-    if (key_typed(O_KEY)) game.player.invincible = true;
-    if (key_typed(K_KEY)) game.player.fuel_pct = 0.1;
+    if (key_typed(O_KEY))
+    {
+        game.player.invincible = true;
+    }
+    if (key_typed(RIGHT_SHIFT_KEY))
+    {
+        game.game_level++;
+    }
 }
 
 game_state handle_game()
@@ -133,14 +133,12 @@ game_state handle_game()
     menu_handler_data global_menu_handler = create_menu_handler();
     global_menu_handler.game_state = PLAY_GAME_SCREEN;
     game_data game { new_game() };
-    
-    add_space_fighter_to_game(game.enemies.space_fighters, 400, 400);
 
     while ( ! quit_requested() )
     {
         process_events();
 
-        handle_admin_cmds(game);
+        admin_cmds(game);
 
         handle_input(game.player);
         draw_game(game);

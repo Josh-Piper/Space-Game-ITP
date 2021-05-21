@@ -1,7 +1,6 @@
 #include "player.h"
 #include "splashkit.h"
 
-
 bitmap ship_bitmap(ship_kind kind)
 {
     switch (kind)
