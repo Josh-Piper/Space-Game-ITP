@@ -98,4 +98,4 @@ void update_player(player_data &player_to_update);
  */
 void handle_input(player_data &player);
 
-#endif 
+#endif

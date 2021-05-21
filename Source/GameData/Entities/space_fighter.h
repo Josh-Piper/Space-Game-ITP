@@ -63,8 +63,6 @@ void generate_space_fighter_bullets(vector<space_fighter_data> &space_fighters);
  */ 
 void handle_space_fighter_bullet_boundaries(vector<space_fighter_data> &space_fighters);
 
-
-
 /**
  * Generate a random point within the game's space parameters
  */ 

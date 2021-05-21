@@ -211,7 +211,7 @@ void handle_collisions_player_and_space_fighters(vector<space_fighter_data> &spa
     int index_of_current_fighter = 0;
     for_all_space_fighters(space_fighters, [&] (space_fighter_data space_fighter)
     {  
-        if ( check_entity_collision(player, space_fighter.space_fighter_sprite) ) // handle what happens during a collision
+        if ( check_entity_collision(player, space_fighter.space_fighter_sprite) ) 
         {
             // if the player is invincible or has a shield a activated, then remove the space fighter from the game
            if (player.invincible || player.power_up_counter > 0)
@@ -233,9 +233,7 @@ void handle_collisions_bullets_and_power_ups(vector<space_fighter_data> &space_f
         for (int power_up_index = 0; power_up_index < power_ups.size(); power_up_index++)
         {
             if (sprite_collision(bullet.bullet_sprite, power_ups[power_up_index].power_up_sprite))
-            {
                 remove_power_up(power_ups, power_up_index);
-            }
         }
     });
 }

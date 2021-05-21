@@ -1,6 +1,7 @@
 #!/bin/sh
 
 if [ $# -eq 0 ] ; then
+echo "Compiling..."
 skm clang++ program.cpp ./Source/GameData/Entities/*.cpp ./Source/GameData/*.cpp ./Source/MenuData/*.cpp ./Source/Utilities/*.cpp -o LostInSpace.exe
 echo "🎉 Game Has Been Compiled!" 
 fi
@@ -16,9 +17,6 @@ if [ $# -eq 1 ] ; then
         echo "Wut?..."
         
     fi
-    # if [ "$1" -eq "test" ] ; then
-    # echo "Great"
-    # fi
 fi
 
 # skm new c++ # Generate the C++ resources

@@ -74,7 +74,8 @@ void handle_space_fighter_bullet_boundaries(vector<space_fighter_data> &space_fi
 
 space_fighter_data create_enemy_space_fighter(double x, double y)
 {
-    static int current_fighter_id = 0; // Keep track of how many space fighters have spawned to make each timer unique
+    // Keep track of how many space fighters have spawned to make each timer unique
+    static int current_fighter_id = 0; 
 
     space_fighter_data result;
     result.space_fighter_sprite = create_sprite ( ship_bitmap(PEGASI) ); 
@@ -84,7 +85,8 @@ space_fighter_data create_enemy_space_fighter(double x, double y)
     start_timer(result.bullet_timer_id);
     sprite_set_position(result.space_fighter_sprite, point_at(x, y));
 
-    current_fighter_id++; // Increase the fighter id to maintain a new id for the next space fighter
+    // Increase the fighter id to maintain a new id for the next space fighter
+    current_fighter_id++; 
     return result;
 }
 

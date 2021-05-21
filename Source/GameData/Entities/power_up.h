@@ -56,5 +56,4 @@ void draw_power_up(const power_up_data &power_up);
  */ 
 void update_power_up(power_up_data &power_up);
 
-
 #endif

@@ -146,9 +146,9 @@ vector<leaderboard_entry_data> create_leaderboard_vector_from_file()
     return result;
 }
 
-bool sort_leaderboard_alphabetically_ascending(const leaderboard_entry_data &lhs, const leaderboard_entry_data &rhs) { return lhs.message < rhs.message; }
+bool sort_leaderboard_alphabetically_ascending(const leaderboard_entry_data &lhs, const leaderboard_entry_data &rhs) { return lhs.message > rhs.message; }
 
-bool sort_leaderboard_alphabetically_descending(const leaderboard_entry_data &lhs, const leaderboard_entry_data &rhs) { return lhs.message > rhs.message; }
+bool sort_leaderboard_alphabetically_descending(const leaderboard_entry_data &lhs, const leaderboard_entry_data &rhs) { return lhs.message < rhs.message; }
 
 bool sort_leaderboard_date_ascending(const leaderboard_entry_data &lhs, const leaderboard_entry_data &rhs) { return lhs.time_uploaded < rhs.time_uploaded; }
 

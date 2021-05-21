@@ -108,7 +108,6 @@ void draw_mini_map(const vector<power_up_data> &power_ups, const player_data &pl
  */ 
 void draw_heads_up_display_background(const game_data &game);
 
-
 /**
  * Handle the drawing of the HUD
  * @param                                          game    

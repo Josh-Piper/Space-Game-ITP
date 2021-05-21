@@ -153,4 +153,3 @@ game_state handle_game()
     if (global_menu_handler.game_state == HOME_SCREEN) return HOME_SCREEN;
     return END_GAME;
 }
-

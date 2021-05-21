@@ -13,7 +13,7 @@ void increase_music_volume(music_handler_data &music_player)
 { 
     if ( is_music_new_increase_volume_valid ( music_player.current_volume ) ) 
     {
-        music_player.current_volume += 0.1; 
+        music_player.current_volume += MUSIC_VOLUME_INCREMENT; 
         music_player.changed_volume_required = true;
     }
 }
@@ -22,7 +22,7 @@ void decrease_music_volume(music_handler_data &music_player)
 { 
     if ( is_music_new_decrease_volume_valid ( music_player.current_volume ) )
     {
-        music_player.current_volume -= 0.1; 
+        music_player.current_volume -= MUSIC_VOLUME_INCREMENT; 
         music_player.changed_volume_required = true;
     }
 }

@@ -49,5 +49,3 @@ void draw_game(const game_data &game)
 
     refresh_screen(60);
 }
-
-

@@ -45,7 +45,7 @@ menu_handler_data create_menu_handler()
     return menu_handler;
 }
 
-void handle_all_screens_button_hover_over_highlighting(menu_handler_data &global_menu_handler) // rename functionn name
+void handle_all_screens_button_hover_over_highlighting(menu_handler_data &global_menu_handler) 
 {
     game_state current_state = global_menu_handler.game_state;
 
@@ -126,7 +126,8 @@ void handle_information_screen_actions(menu_handler_data &global_menu_handler)
 
 void handle_leaderboard_screen_actions(menu_handler_data &global_menu_handler)
 {
-    static int delay_left_click = 0; // Prevent the double bufferring issue of rendering a second click when accessed the button from the home menu
+    // Prevent the double bufferring issue of rendering a second click when accessed the button from the home menu
+    static int delay_left_click = 0;
     static const int delay_click_limitter = 1;
     static const int LEADERBOARD_LOCATION_X = 560, LEADERBOARD_LOCATION_Y = 750, LEADERBOARD_SIZE_X = 790, LEADERBOARD_SIZE_Y = 800;
 
@@ -154,7 +155,6 @@ void handle_leaderboard_screen_actions(menu_handler_data &global_menu_handler)
     }
 }
 
-// Handle all menu's
 void handle_menu_state(menu_handler_data &global_menu_handler) 
 {
     switch (global_menu_handler.game_state) 
@@ -279,7 +279,8 @@ bool handle_end_game_menu(menu_handler_data &global_menu_handler, game_data &gam
     if (has_mouse_clicked_first_button()) 
     {
         global_menu_handler.game_state = HOME_SCREEN;
-        has_entered_entry = false; // Reset the entry entered when the user returns to the home screen. Allows them to enter their leaderboard entry once per round
+        // Reset the entry entered when the user returns to the home screen. Allows them to enter their leaderboard entry once per round
+        has_entered_entry = false;
         end_ending_screen_loop = true;
     }
 
@@ -307,4 +308,3 @@ void handle_menu()
 
     }
 }
-

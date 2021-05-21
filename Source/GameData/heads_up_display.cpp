@@ -147,7 +147,8 @@ void draw_mini_map_location_for_player(const player_data &player)
 
 void draw_mini_map(const vector<power_up_data> &power_ups, const player_data &player, const enemy_handler_data &enemies)
 {
-    fill_rectangle(COLOR_BLACK, MINI_MAP_X, MINI_MAP_Y, MINI_MAP_SIZE, MINI_MAP_SIZE, option_to_screen()); // Draw the minimap background
+    // Draw the minimap background
+    fill_rectangle(COLOR_BLACK, MINI_MAP_X, MINI_MAP_Y, MINI_MAP_SIZE, MINI_MAP_SIZE, option_to_screen()); 
 
     draw_mini_map_location_for_powerups(power_ups);
     draw_mini_map_location_for_space_fighters(enemies.space_fighters);
@@ -194,4 +195,3 @@ void draw_heads_up_display(const game_data &game)
         draw_bitmap("purple_bar", x_dist, bar_y, option_to_screen());
     
 }
-
