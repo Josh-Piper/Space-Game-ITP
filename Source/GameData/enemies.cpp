@@ -183,6 +183,7 @@ void generate_space_fighter_bullets(vector<space_fighter_data> &space_fighters)
         if ( bullet_timer_in_seconds > BULLET_COOLDOWN_IN_SECONDS )
         {
             add_bullet_to_space_fighter(space_fighter);
+            play_sound_effect("missle");
             reset_timer(space_fighter.bullet_timer_id);
         }
     });

@@ -32,13 +32,9 @@ Permission to use, copy, modify, and/or distribute this software for any purpose
 THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 ## Future Features
-+ Different Sound Effects
-+ Difficulties
 + With the levels - add planets, and more planets spawn the greater the level
 + Have a stay clear message,
-+ Have enemies that navigate towards you and attack
 + Paused Menu hooked into the Settings Menu - to allow muting and changing of the volume
-+ Different messages depndent on the users score
 + A shooting powerup
 + Only allow the user to change speeds when they have certain things, and make them slow down depending on the fuel
 + Different Worlds
@@ -47,5 +43,6 @@ THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH RE
 + Planet
 + Dying Sun
 
-## CURRENTLY IMPLEMENTING - THEN FINISHED
-- Different sound effects per item
+## CURRENTLY IMPLEMENTING
++ Draw Space Fighter on MiniMap
++ Add Laser 

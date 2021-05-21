@@ -109,6 +109,7 @@ void handle_end_game(menu_handler_data &global_menu_handler, game_data &game)
 
     if (game.player.fuel_pct <= PLAYER_DEATH_HEALTH)
     {
+        play_sound_effect("end_game_sound");
         bool exit_menu = false;
         do
         {
@@ -120,48 +121,34 @@ void handle_end_game(menu_handler_data &global_menu_handler, game_data &game)
     }
 }
 
+void handle_admin_cmds(game_data &game)
+{
+    if (key_typed(RIGHT_SHIFT_KEY)) game.game_level++;
+    if (key_typed(O_KEY)) game.player.invincible = true;
+    if (key_typed(K_KEY)) game.player.fuel_pct = 0.1;
+}
+
 game_state handle_game()
 {
     menu_handler_data global_menu_handler = create_menu_handler();
     global_menu_handler.game_state = PLAY_GAME_SCREEN;
     game_data game { new_game() };
-
-    add_space_fighter_to_game(game.enemies.space_fighters, 400, 400);
     
+    add_space_fighter_to_game(game.enemies.space_fighters, 400, 400);
+
     while ( ! quit_requested() )
     {
         process_events();
 
-        if (key_typed(M_KEY)) game.player.invincible = true;
-        if (key_typed(N_KEY)) game.player.invincible = false;
+        handle_admin_cmds(game);
 
-        if (key_typed(L_KEY)) game.player.power_up_counter = 3;
-        if ( key_typed (RIGHT_SHIFT_KEY) )
-        {
-            game.game_level++;
-        }
-
-        if ( key_typed (P_KEY) )
-        {
-            game.player.fuel_pct = 0.0;
-        }
-        
-        if (key_typed (K_KEY))
-            game.player.fuel_pct = 0.1;
-        // Handle the looping of the game itself
         handle_input(game.player);
         draw_game(game);
-
         update_game(game);
         handle_end_game(global_menu_handler, game);
 
-
-        // When the user types the escape key, handle the in-game paused menu
-        handle_game_paused(global_menu_handler, game);
-
-        // Exit the game when not in playing game mode
-        if (global_menu_handler.game_state != PLAY_GAME_SCREEN) break;
-        
+        handle_game_paused(global_menu_handler, game); // When the user types the escape key, handle the in-game paused menu
+        if (global_menu_handler.game_state != PLAY_GAME_SCREEN) break; // Exit the game when not in playing game mode
     }
 
     // If user wants to return the home screen. Then return it

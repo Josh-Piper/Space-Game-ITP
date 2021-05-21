@@ -7,6 +7,8 @@
 const int MINI_MAP_SIZE = 100;
 const double MINI_MAP_X = 200.0; 
 const double MINI_MAP_Y = 12.5; 
+const int MINI_MAP_X_END = 300;
+const int MINI_MAP_Y_END = 112.5;
 const double GAME_WIDTH = 3000.0; 
 const double GAME_OFFSET = 1500;
 
@@ -105,20 +107,39 @@ point_2d mini_map_coordinate(const power_up_data &power_up)
     return point_at(return_x, return_y);
 }
 
-void draw_mini_map(const vector<power_up_data> &power_ups, const player_data &player)
+point_2d mini_map_coordinate(const space_fighter_data &space_fighter)
 {
+    //points escape left and top borders of the black box
+    float powerup_x = sprite_x(space_fighter.space_fighter_sprite);
+    float powerup_y = sprite_y(space_fighter.space_fighter_sprite);
 
+    double return_x = ( powerup_x + GAME_OFFSET ) / GAME_WIDTH * MINI_MAP_SIZE + MINI_MAP_X;
+    double return_y = ( powerup_y + GAME_OFFSET ) / GAME_WIDTH * MINI_MAP_SIZE + MINI_MAP_Y;
+
+    return point_at(return_x, return_y);
+}
+
+void draw_mini_map(const vector<power_up_data> &power_ups, const player_data &player, const enemy_handler_data &enemies)
+{
     fill_rectangle(COLOR_BLACK, MINI_MAP_X, MINI_MAP_Y, MINI_MAP_SIZE, MINI_MAP_SIZE, option_to_screen());
-
+    const color GRAY_CLR = rgba_color(199, 202, 203, 200);
+    // Draw Powerups
     for (int powerup = 0; powerup < power_ups.size(); powerup++)
     {
         point_2d cords = mini_map_coordinate (power_ups[powerup]);
-        if (cords.x >= 200 && cords.x <= 300 && cords.y >= 12.5 && cords.y <= 112.5) draw_pixel( rgba_color(199, 202, 203, 200), cords, option_to_screen() );
+        if (cords.x >= MINI_MAP_X && cords.x <= MINI_MAP_X_END && cords.y >= MINI_MAP_Y && cords.y <= MINI_MAP_Y_END) draw_pixel( GRAY_CLR, cords, option_to_screen() );
+    }
+
+    // Draw the Space Fighters
+    for (int space_fighter_index = 0; space_fighter_index < enemies.space_fighters.size(); space_fighter_index++)
+    {   
+        point_2d cords = mini_map_coordinate (enemies.space_fighters[space_fighter_index]);
+        if (cords.x >= MINI_MAP_X && cords.x <= MINI_MAP_X_END && cords.y >= MINI_MAP_Y && cords.y <= MINI_MAP_Y_END) draw_pixel( COLOR_RED, cords, option_to_screen() );
     }
 
     //draw player
     point_2d player_location = mini_map_coordinate_player(sprite_x(player.player_sprite), sprite_y(player.player_sprite));
-    if (player_location.x >= 200 && player_location.x <= 300 && player_location.y >= 12.5 && player_location.y <= 112.5)  draw_pixel( COLOR_AQUA, player_location, option_to_screen() );
+    if (player_location.x >= MINI_MAP_X && player_location.x <= MINI_MAP_X_END && player_location.y >= MINI_MAP_Y && player_location.y <= MINI_MAP_Y_END)  draw_pixel( COLOR_AQUA, player_location, option_to_screen() );
 
 }
 
@@ -126,7 +147,7 @@ void draw_heads_up_display_background(const game_data &game) {
     clear_screen(COLOR_BLACK);
     
     fill_rectangle(COLOR_DARK_SLATE_GRAY, 0, 0, 325, 175, option_to_screen());
-    draw_mini_map(game.power_ups, game.player);
+    draw_mini_map(game.power_ups, game.player, game.enemies);
 }
 
 void draw_heads_up_display(const game_data &game) 

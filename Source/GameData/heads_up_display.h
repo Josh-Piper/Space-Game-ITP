@@ -63,6 +63,12 @@ string convert_milliseconds_to_seconds(unsigned int ticks);
 point_2d mini_map_coordinate(const power_up_data &power_up);
 
 /**
+ * Get the mini map coordinates of a space fighter
+ * @param                                          space_fighter
+ */ 
+point_2d mini_map_coordinate(const space_fighter_data &space_fighter);
+
+/**
  * Get the mini map coordinates of a player
  * @param                                          x 
  * @param                                          y
@@ -70,11 +76,12 @@ point_2d mini_map_coordinate(const power_up_data &power_up);
 point_2d mini_map_coordinate_player(double x, double y);
 
 /**
- * Draw the minimap
+ * Draw the minimap and each entity as a pixel on the map
  * @param                                          power_ups
- * 
+ * @param                                          player
+ * @param                                          enemies
  */ 
-void draw_mini_map(const vector<power_up_data> &power_ups, const player_data &player);
+void draw_mini_map(const vector<power_up_data> &power_ups, const player_data &player, const enemy_handler_data &enemies);
 
 /**
  * Draw the HUD background

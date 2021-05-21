@@ -28,33 +28,38 @@ void apply_fuel_power_up_to_player(player_data &player)
 {
     player.fuel_pct +=  0.20;
     if (player.fuel_pct >= 1.0) player.fuel_pct = 1.0;
-    play_sound_effect("pop");
+    play_sound_effect("slurp");
 }
 
 void apply_shield_power_up_to_player(player_data &player)
 {
     player.power_up_counter = 1.0;
+    play_sound_effect("tire_puncture");
 }
 
 void apply_potion_power_up_to_player(player_data &player)
 {
     player.fuel_pct -= 0.15;
+    play_sound_effect("glass_ding");
    
 }
 
 void apply_drops_power_up_to_player(player_data &player)
 {
     player.score += 5;
+    play_sound_effect("bubble");
 }
 
 void apply_diamond_power_up_to_player(player_data &player)
 {
     player.score += 50;
+    play_sound_effect("balloon_pop");
 }
 
 void apply_coin_power_up_to_player(player_data &player)
 {
     player.score += 1;
+    play_sound_effect("pop");
 }
 
 void apply_power_up(player_data &player, power_up_kind kind)
@@ -153,14 +158,14 @@ int get_space_fighter_occurence_limitation(int game_level)
     {
         { 1, -1 },
         { 2, 1 },
-        { 3, 3 },
-        { 4, 5 },
-        { 5, 15 },
-        { 6, 20 },
-        { 7, 25 },
-        { 8, 30 },
-        { 9, 40 },
-        { 10, 45 },
+        { 3, 2 },
+        { 4, 3 },
+        { 5, 4 },
+        { 6, 5 },
+        { 7, 6 },
+        { 8, 7 },
+        { 9, 10 },
+        { 10, 15 },
     };
 
     auto result = SPACE_FIGHTERS_OCCURRENCES.find(game_level);
@@ -245,10 +250,8 @@ void handle_collisions_player_and_bullets(vector<space_fighter_data> &space_figh
             if ( check_entity_collision (player, space_fighter.bullets[bullet_index].bullet_sprite) )
             {
                 // if the player is invincible or has a shield a activated, then remove the bullet from the game
-                if (player.invincible || player.power_up_counter > 0)
-                    delete_bullet(space_fighter.bullets, bullet_index);  
-                else
-                    player.fuel_pct -= 0.25;
+                if ( !(player.invincible) && !(player.power_up_counter > 0) ) player.fuel_pct -= 0.25;
+                delete_bullet(space_fighter.bullets, bullet_index);  
             }
         }
     });

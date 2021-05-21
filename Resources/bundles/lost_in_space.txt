@@ -85,5 +85,12 @@ ANIM,coins,coin_animation.txt
 FONT,valentime,Valentime.otf
 FONT,Audacity,Audacity.otf
 FONT,hud_font,Locanita.otf
-SOUND,pop,pop.flac
 BITMAP,icon,icon.png
+SOUND,balloon_pop,balloon_pop.mp3
+SOUND,bubble,bubble.mp3
+SOUND,end_game_sound,end_game_sound.mp3
+SOUND,glass_ding,glass_ding.mp3
+SOUND,missle,missle.mp3
+SOUND,slurp,slurp.mp3
+SOUND,tire_puncture,tire_puncture.mp3
+SOUND,pop,pop.flac

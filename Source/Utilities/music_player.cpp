@@ -50,7 +50,7 @@ std::string get_current_volume_as_percentage(music_handler_data &music_player)
 music_handler_data create_music_handler()
 {
     static const string INIT_FAKE_SONG = "music0";
-    static const float DEFAULT_VOLUME = 0.0f;
+    static const float DEFAULT_VOLUME = 0.5f;
 
     music_handler_data music_handler;
     music_handler.current_song = INIT_FAKE_SONG; 
