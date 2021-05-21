@@ -88,8 +88,8 @@ void apply_power_up(player_data &player, power_up_kind kind)
 
 void update_power_ups(vector<power_up_data> &power_ups) 
 {
-    for (int powerup; powerup < power_ups.size(); powerup++)
-        update_power_up(power_ups[powerup]);
+    for (int powerup_index = 0; powerup_index < power_ups.size(); powerup_index++)
+        update_power_up(power_ups[powerup_index]);
 }
 
 void remove_power_up(vector<power_up_data> &power_ups, int index)
