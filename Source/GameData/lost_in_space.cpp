@@ -26,9 +26,6 @@ game_data new_game()
     return game;
 }
 
-#include <iostream>
-using namespace std;
-
 void check_collisions(game_data &game) 
 {
     handle_collisions_player_and_powerup(game.power_ups, game.player);
@@ -47,10 +44,12 @@ void update_level_per_minute(game_data &game)
     {
         game.game_level++;
         game.power_ups.clear(); 
-        start_timer( game.level_up_timer_cooldown ); // Draw the next level information
+        // Draw the next level information
+        start_timer( game.level_up_timer_cooldown ); 
     }
-
-    if (draw_next_level_cooldown > 3.0) // if the draw next level has drawn for longer than 3 seconds then reset.
+    
+    // if the draw next level has drawn for longer than 3 seconds then reset.
+    if (draw_next_level_cooldown > 3.0) 
     {
         reset_timer(game.level_up_timer_cooldown);
         stop_timer(game.level_up_timer_cooldown);
@@ -59,22 +58,11 @@ void update_level_per_minute(game_data &game)
 
 void update_level(game_data &game)
 {
-    // Normal Level
-    if (game.game_level % 5 != 0)
-    {
-        update_level_per_minute(game);
-    }
-    // Boss Level - every 5 
-    else 
-    {
-        update_level_per_minute(game);
-        // To Implement.
-    }  
+    update_level_per_minute(game);
 }
 
 void update_game(game_data &game)
 {   
-    
     update_level(game);
     generate_entities(game.power_ups, game.enemies, game.game_level);
     check_collisions(game);

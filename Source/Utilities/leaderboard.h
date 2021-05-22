@@ -34,6 +34,11 @@ enum sort_type {
 string get_current_time();
 
 /**
+ * Return the default information file information
+ */ 
+vector<string> get_default_information_data();
+
+/**
  * Reset the information file
  */ 
 void reset_information_file();
@@ -140,6 +145,6 @@ vector<string> convert_leaderboard_entry_vector_to_string_vector(const vector<le
  * Change the type of the sorting
  * @param                                          current
  */
-sort_type change_sorting_type(sort_type current);
+void change_sorting_type(sort_type &current);
 
 #endif

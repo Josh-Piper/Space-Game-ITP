@@ -129,8 +129,7 @@ void handle_leaderboard_screen_actions(menu_handler_data &global_menu_handler)
     // Prevent the double bufferring issue of rendering a second click when accessed the button from the home menu
     static int delay_left_click = 0;
     static const int delay_click_limitter = 1;
-    static const int LEADERBOARD_LOCATION_X = 560, LEADERBOARD_LOCATION_Y = 750, LEADERBOARD_SIZE_X = 790, LEADERBOARD_SIZE_Y = 800;
-
+    
     handle_all_screens_button_hover_over_highlighting(global_menu_handler);
     
     if (has_mouse_clicked_first_button()) 
@@ -149,9 +148,9 @@ void handle_leaderboard_screen_actions(menu_handler_data &global_menu_handler)
         }
     }
 
-    if (is_mouse_between_two_points(LEADERBOARD_LOCATION_X, LEADERBOARD_LOCATION_Y, LEADERBOARD_SIZE_X, LEADERBOARD_SIZE_Y)  && mouse_clicked(LEFT_BUTTON)) 
+    if (has_mouse_clicked_leaderboard_button()) 
     {
-        global_menu_handler.leaderboard_sorting_method = change_sorting_type(global_menu_handler.leaderboard_sorting_method);
+        change_sorting_type(global_menu_handler.leaderboard_sorting_method);
     }
 }
 

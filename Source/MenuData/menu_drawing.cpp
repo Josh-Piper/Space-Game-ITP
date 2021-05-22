@@ -1,8 +1,8 @@
 #include "splashkit.h"
 #include "menu_logic.h"
+#include "menu_utilities.h"
 #include "../../Source/Utilities/leaderboard.h"
 #include <vector>
-#include <algorithm>
 #include <map>
 
 void append_vector_menu_buttons_to_highlight(const menu_handler_data &global_game_settings, std::vector<string> &menu) 
@@ -27,38 +27,29 @@ void draw_menu(const vector<string> menu)
 
     if (menu.size() > 1) 
     {
-        for (int button = 1; button < menu.size(); button++) 
+        for (int button_number = 1; button_number < menu.size(); button_number++) 
         {
             //if you create three buttons, then create a new row. As each row has two columns.
-            if (button == 3) 
+            if (button_number == 3) 
             {
                 x_location -= 690;
                 y_location += 315;
             }
 
-            draw_bitmap(menu.at(button), x_location, y_location, option_to_screen());
-            x_location += 345; // move across to the right for the next button
+            draw_bitmap(menu.at(button_number), x_location, y_location, option_to_screen());
+            // move across to the right for the next button
+            x_location += 345; 
         }
     }
 }
 
-void draw_text_after_two_buttons(vector<string> reading_file)
+void draw_text_after_two_buttons(vector<string> file_to_read)
 {
     static const string font { "hud_font" };
     static const int margin = 10; 
-    int start_y_location = 450, start_x_location = 25, font_size = INT_MAX;
+    int start_y_location = 450, start_x_location = 25, font_size = font_size_depending_on_files_info(file_to_read);
 
-    auto longest_string_in_file_location = std::max_element(reading_file.begin(), reading_file.end(), [] (const string &a, const string &b) 
-    { 
-        return a.length() < b.length(); 
-    });
-
-    int font_size_depending_on_longest_string = 1800 / reading_file.at( std::distance ( reading_file.begin(), longest_string_in_file_location) ).length(); 
-
-    if (reading_file.size() > 5) font_size = 50;
-    if (font_size_depending_on_longest_string < font_size) font_size = font_size_depending_on_longest_string;
-
-    for (string text: reading_file)
+    for (string text: file_to_read)
     {
         draw_text(text, COLOR_WHITE_SMOKE, font, font_size, start_x_location, start_y_location, option_to_screen());
         start_y_location += font_size + margin;
@@ -159,7 +150,7 @@ void draw_settings_paused_screen_background(menu_handler_data &global_menu_handl
     draw_menu(information_screen_buttons);
 }
 
-vector<string> form_paused_menu_information(game_data &game) // could do with a rename
+vector<string> form_paused_menu_information(game_data &game) 
 {
     vector<string> result;
     result.push_back("Player Information");

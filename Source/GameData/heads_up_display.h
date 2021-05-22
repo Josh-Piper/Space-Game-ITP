@@ -77,6 +77,13 @@ point_2d mini_map_coordinate(const space_fighter_data &space_fighter);
 point_2d mini_map_coordinate_player(double x, double y);
 
 /**
+ * Check if a coordinate will be within the minimap location
+ * Return true or false depending on the answer
+ * @param                                          cords
+ */ 
+bool is_mini_map_position_within_mini_map_bounds(point_2d cords);
+
+/**
  * Draw the mini map location for all power ups
  * @param                                          power_ups
  */ 

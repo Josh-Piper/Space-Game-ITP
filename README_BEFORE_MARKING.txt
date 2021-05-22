@@ -26,6 +26,9 @@ Please note that I have tried to implement all of the artefacts we have been tau
 I have implemented the following advanced features as per the suggestions given throughout the unit:
 - File Read-Write Validation (As per the Week 10 Lecture)
 - Sorting (As per the 7.3D task sheet)
+Feel free to test these validation methods by adding false information in the leaderboard file that does not follow its current format. 
+Furthermore, you can delete the leaderboard or information text files and then run the game and 
+it will regenerate!
 
 Specific conventions have been following such as using @field for the comments regarding members within the structs. This convention was taught and highlighted in Task 5.2. 
 However, @field does not highlight in the text editor Visual Code Studio, thus, please have consideration when marking due to these issues.

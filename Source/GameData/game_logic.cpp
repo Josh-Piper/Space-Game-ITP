@@ -17,49 +17,11 @@ point_2d generate_random_point_in_game()
     return result; 
 }
 
-void add_power_up(vector<power_up_data> &power_ups)
+void add_power_up_to_game(vector<power_up_data> &power_ups)
 {
     point_2d random_point = generate_random_point_in_game();
     power_up_data result = new_power_up(random_point.x, random_point.y);
     power_ups.push_back( result );
-}
-
-void apply_fuel_power_up_to_player(player_data &player)
-{
-    player.fuel_pct +=  0.20;
-    if (player.fuel_pct >= 1.0) player.fuel_pct = 1.0;
-    play_sound_effect("slurp");
-}
-
-void apply_shield_power_up_to_player(player_data &player)
-{
-    player.power_up_counter = 1.0;
-    play_sound_effect("tire_puncture");
-}
-
-void apply_potion_power_up_to_player(player_data &player)
-{
-    player.fuel_pct -= 0.15;
-    play_sound_effect("glass_ding");
-   
-}
-
-void apply_drops_power_up_to_player(player_data &player)
-{
-    player.score += 5;
-    play_sound_effect("bubble");
-}
-
-void apply_diamond_power_up_to_player(player_data &player)
-{
-    player.score += 50;
-    play_sound_effect("balloon_pop");
-}
-
-void apply_coin_power_up_to_player(player_data &player)
-{
-    player.score += 1;
-    play_sound_effect("pop");
 }
 
 void apply_power_up(player_data &player, power_up_kind kind)
@@ -183,7 +145,7 @@ void generate_entities(vector<power_up_data> &power_ups, enemy_handler_data &ene
 
     // Create powerups
     if (rnd(RANDOM_MIN, RANDOM_MAX) <= power_up_occurence_limitation)
-        add_power_up(power_ups);
+        add_power_up_to_game(power_ups);
 
     // Create space fighter enemy once past level 2
     if (rnd(RANDOM_MIN, RANDOM_MAX) <= space_fighter_occurence_limitation)

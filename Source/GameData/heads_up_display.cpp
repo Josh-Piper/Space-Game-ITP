@@ -120,13 +120,19 @@ point_2d mini_map_coordinate(const space_fighter_data &space_fighter)
     return point_at(return_x, return_y);
 }
 
+bool is_mini_map_position_within_mini_map_bounds(point_2d cords)
+{
+    return (cords.x >= MINI_MAP_X && cords.x <= MINI_MAP_X_END &&
+            cords.y >= MINI_MAP_Y && cords.y <= MINI_MAP_Y_END);
+}
+
 void draw_mini_map_location_for_powerups(const vector<power_up_data> &power_ups)
 {
     const color GRAY_CLR = rgba_color(199, 202, 203, 200);
     for (int powerup = 0; powerup < power_ups.size(); powerup++)
     {
         point_2d cords = mini_map_coordinate (power_ups[powerup]);
-        if (cords.x >= MINI_MAP_X && cords.x <= MINI_MAP_X_END && cords.y >= MINI_MAP_Y && cords.y <= MINI_MAP_Y_END) draw_pixel( GRAY_CLR, cords, option_to_screen() );
+        if (is_mini_map_position_within_mini_map_bounds(cords)) draw_pixel( GRAY_CLR, cords, option_to_screen() );
     }
 }
 
@@ -135,14 +141,14 @@ void draw_mini_map_location_for_space_fighters(const vector<space_fighter_data> 
     for (int space_fighter_index = 0; space_fighter_index < space_fighters.size(); space_fighter_index++)
     {   
         point_2d cords = mini_map_coordinate (space_fighters[space_fighter_index]);
-        if (cords.x >= MINI_MAP_X && cords.x <= MINI_MAP_X_END && cords.y >= MINI_MAP_Y && cords.y <= MINI_MAP_Y_END) draw_pixel( COLOR_RED, cords, option_to_screen() );
+        if (is_mini_map_position_within_mini_map_bounds(cords)) draw_pixel( COLOR_RED, cords, option_to_screen() );
     }
 }
 
 void draw_mini_map_location_for_player(const player_data &player)
 {
     point_2d player_location = mini_map_coordinate_player(sprite_x(player.player_sprite), sprite_y(player.player_sprite));
-    if (player_location.x >= MINI_MAP_X && player_location.x <= MINI_MAP_X_END && player_location.y >= MINI_MAP_Y && player_location.y <= MINI_MAP_Y_END)  draw_pixel( COLOR_AQUA, player_location, option_to_screen() );
+    if (is_mini_map_position_within_mini_map_bounds(player_location)) draw_pixel( COLOR_AQUA, player_location, option_to_screen() );
 }
 
 void draw_mini_map(const vector<power_up_data> &power_ups, const player_data &player, const enemy_handler_data &enemies)

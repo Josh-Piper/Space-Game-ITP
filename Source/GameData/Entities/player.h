@@ -93,6 +93,42 @@ void update_player_camera(player_data &player_to_update);
 void update_player(player_data &player_to_update);
 
 /**
+ * Apply the fuel power up to a player
+ * @param                                          player
+ */ 
+void apply_fuel_power_up_to_player(player_data &player);
+
+/**
+ * Apply the shield power up to a player
+ * @param                                          player
+ */ 
+void apply_shield_power_up_to_player(player_data &player);
+
+/**
+ * Apply the potion power up to a player
+ * @param                                          player
+ */ 
+void apply_potion_power_up_to_player(player_data &player);
+
+/**
+ * Apply the drops power up to a player
+ * @param                                          player
+ */ 
+void apply_drops_power_up_to_player(player_data &player);
+
+/**
+ * Apply the diamond power up to a player
+ * @param                                          player
+ */ 
+void apply_diamond_power_up_to_player(player_data &player);
+
+/**
+ * Apply the coin power up to a player
+ * @param                                          player
+ */ 
+void apply_coin_power_up_to_player(player_data &player);
+
+/**
  * Read user input and update the player based on this interaction.
  * @param                                          player    The player to update
  */

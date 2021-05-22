@@ -27,43 +27,7 @@ struct sprite_collision_data
  * Create a new powerup with random coordinates and add it to the game's vector of power_ups
  * @param                                          power_ups
  */ 
-void add_power_up(vector<power_up_data> &power_ups);
-
-/**
- * Apply the fuel power up to a player
- * @param                                          player
- */ 
-void apply_fuel_power_up_to_player(player_data &player);
-
-/**
- * Apply the shield power up to a player
- * @param                                          player
- */ 
-void apply_shield_power_up_to_player(player_data &player);
-
-/**
- * Apply the potion power up to a player
- * @param                                          player
- */ 
-void apply_potion_power_up_to_player(player_data &player);
-
-/**
- * Apply the drops power up to a player
- * @param                                          player
- */ 
-void apply_drops_power_up_to_player(player_data &player);
-
-/**
- * Apply the diamond power up to a player
- * @param                                          player
- */ 
-void apply_diamond_power_up_to_player(player_data &player);
-
-/**
- * Apply the coin power up to a player
- * @param                                          player
- */ 
-void apply_coin_power_up_to_player(player_data &player);
+void add_power_up_to_game(vector<power_up_data> &power_ups);
 
 /**
  * Apply the powerup to the ingame character,

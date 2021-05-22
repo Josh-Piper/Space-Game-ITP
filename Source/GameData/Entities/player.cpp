@@ -109,6 +109,44 @@ void update_player(player_data &player_to_update)
     }
 }
 
+void apply_fuel_power_up_to_player(player_data &player)
+{
+    player.fuel_pct +=  0.20;
+    if (player.fuel_pct >= 1.0) player.fuel_pct = 1.0;
+    play_sound_effect("slurp");
+}
+
+void apply_shield_power_up_to_player(player_data &player)
+{
+    player.power_up_counter = 1.0;
+    play_sound_effect("tire_puncture");
+}
+
+void apply_potion_power_up_to_player(player_data &player)
+{
+    player.fuel_pct -= 0.15;
+    play_sound_effect("glass_ding");
+   
+}
+
+void apply_drops_power_up_to_player(player_data &player)
+{
+    player.score += 5;
+    play_sound_effect("bubble");
+}
+
+void apply_diamond_power_up_to_player(player_data &player)
+{
+    player.score += 50;
+    play_sound_effect("balloon_pop");
+}
+
+void apply_coin_power_up_to_player(player_data &player)
+{
+    player.score += 1;
+    play_sound_effect("pop");
+}
+
 void handle_input(player_data &player)
 {
     // Handle movement - rotating left/right and moving forward/back

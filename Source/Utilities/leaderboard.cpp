@@ -27,11 +27,24 @@ string get_current_time()
     return todays_date_time_formatted;
 }
 
+vector<string> get_default_information_data()
+{
+    static const vector<string> INFORMATION_FILE_DATA =
+    {
+        "Lost in Space",
+        "An action packed Space Adventure game!",
+        "Note - you can only kill space fighters when you have a shield",
+        "Level 1 - Survive for 60 Seconds",
+        "Level 2 - Survive from Space Fighters for 60 Seconds",
+        "Level 3 - Not Implemented Yet."
+    };
+    return INFORMATION_FILE_DATA;
+}
 void reset_information_file()
 {
     ofstream new_file( INFORMATION_FILE_LOCATION );
-    new_file << "Lost in Space";
-    new_file << "More Information Will Be Added Soon!";
+    for (string info_message: get_default_information_data())
+        new_file << info_message << endl;
     new_file.close();
 }
 
@@ -41,17 +54,18 @@ vector<string> read_information_file()
     vector<string> result;
     ifstream info_text_file { INFORMATION_FILE_LOCATION };
 
+    if (info_text_file.fail())
+    {
+        reset_information_file();
+        return get_default_information_data();
+    }
+
     if (info_text_file.is_open())
     {
         while ( getline (info_text_file, line) )
             result.push_back(line);
-    }   
-
-    else if (info_text_file.fail())
-    {
-        reset_information_file();
     }
-
+           
     info_text_file.close();
     return result;
 }   
@@ -92,7 +106,7 @@ bool is_leaderboard_file_valid(vector<string> leaderboard)
     return true;
 }
 
-vector<string> read_leaderboard_text() // Could be renamed to read leaderboard file
+vector<string> read_leaderboard_text()
 {
     string line;
     vector<string> result;
@@ -183,18 +197,18 @@ vector<string> convert_leaderboard_entry_vector_to_string_vector(const vector<le
     return result;
 }
 
-sort_type change_sorting_type(sort_type current)
+void change_sorting_type(sort_type &current)
 {
-    sort_type result = ALPHA_ASCENDING;  
+    sort_type new_sorting_method = ALPHA_ASCENDING;  
 
     switch (current)
     {
-        case ALPHA_ASCENDING: result = ALPHA_DESCENDING; break;
-        case ALPHA_DESCENDING: result = DATE_ASCENDING; break;
-        case DATE_ASCENDING: result = DATE_DESCENDING; break;
-        case DATE_DESCENDING: result = SCORE_ASCENDING; break;
-        case SCORE_ASCENDING: result = SCORE_DESCENDING; break;
+        case ALPHA_ASCENDING: new_sorting_method = ALPHA_DESCENDING; break;
+        case ALPHA_DESCENDING: new_sorting_method = DATE_ASCENDING; break;
+        case DATE_ASCENDING: new_sorting_method = DATE_DESCENDING; break;
+        case DATE_DESCENDING: new_sorting_method = SCORE_ASCENDING; break;
+        case SCORE_ASCENDING: new_sorting_method = SCORE_DESCENDING; break;
         default: break;
     }
-    return result;
+    current = new_sorting_method;
 }
