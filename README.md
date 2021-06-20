@@ -2,6 +2,25 @@
 ## Description
 Lost in Space is a Space Game created for Introduction to Programming at Deakin University
 
+<table>
+    <tr>
+        <td>Gameplay</td>
+        <td>Home</td>
+        <td>Leaderboard</td>
+    </tr>
+    <tr>
+        <td>
+            <img src="Screenshots/gameplay.png">
+        </td>
+        <td>
+            <img src="Screenshots/home.png">
+        </td>
+        <td>
+            <img src="Screenshots/leaderboard.png">
+        </td>
+    </tr>
+</table>
+
 ## Features
 The following features include:
 <br />
