@@ -10,24 +10,29 @@ void add_bullet_to_space_fighter(space_fighter_data &space_fighter)
 {
     int bullet_x = sprite_x (space_fighter.space_fighter_sprite);
     int bullet_y = sprite_y (space_fighter.space_fighter_sprite);
-    bullet space_fighter_bullet = new_bullet( bullet_x, bullet_y, sprite_rotation(space_fighter.space_fighter_sprite) );
+    float rotation = sprite_rotation(space_fighter.space_fighter_sprite);
+
+    bullet space_fighter_bullet = new_bullet( bullet_x, bullet_y, rotation );
     space_fighter.bullets.push_back(space_fighter_bullet);
 }
 
-void for_all_space_fighters_bullets(vector<space_fighter_data> &space_fighters, bullet_function fn)
+void for_all_space_fighters_bullets(vector<space_fighter_data> &space_fighters, 
+    bullet_function fn)
 {
-    for_all_space_fighters(space_fighters, [&] (space_fighter_data &space_fighter) 
+    for_all_space_fighters(space_fighters, [&] (space_fighter_data &fighter) 
     {
-        for (bullet bullet: space_fighter.bullets)
+        for (bullet bullet: fighter.bullets)
         {
             fn(bullet);
         }    
     });
 }
 
-void for_all_space_fighters_bullets_drawing(const vector<space_fighter_data> &space_fighters, bullet_function fn)
+void for_all_space_fighters_bullets_drawing(
+    const vector<space_fighter_data> &space_fighters, bullet_function fn)
 {
-    for_all_space_fighters_drawing(space_fighters, [&] (space_fighter_data &space_fighter)
+    for_all_space_fighters_drawing(space_fighters, 
+        [&] (space_fighter_data &space_fighter)
     {
         for (bullet bullet: space_fighter.bullets)
         {
@@ -41,7 +46,8 @@ void generate_space_fighter_bullets(vector<space_fighter_data> &space_fighters)
     static const int BULLET_COOLDOWN_IN_SECONDS = 10;
     for_all_space_fighters(space_fighters, [&] (space_fighter_data &space_fighter)
     {
-        int bullet_timer_in_seconds = get_ticks_as_seconds( timer_ticks( space_fighter.bullet_timer_id ) );
+        unsigned int ticks = timer_ticks( space_fighter.bullet_timer_id );
+        int bullet_timer_in_seconds = get_ticks_as_seconds( ticks );
 
         if ( bullet_timer_in_seconds > BULLET_COOLDOWN_IN_SECONDS )
         {
@@ -52,22 +58,35 @@ void generate_space_fighter_bullets(vector<space_fighter_data> &space_fighters)
     });
 }
 
-void handle_space_fighter_bullet_boundaries(vector<space_fighter_data> &space_fighters)
+void update_bullet_limits(vector<bullet> &bullets, bullet &bullet, int idx)
 {
-    for_all_space_fighters(space_fighters, [&] (space_fighter_data &space_fighter)
-    {
-        for (int bullet_id = 0; bullet_id < space_fighter.bullets.size(); bullet_id++)
-        {
-            // check that new location is within the limits before deleting bullet
-            point_2d *bullet_location = &(space_fighter.bullets[bullet_id].original_location);
-            sprite *bullet_sprite = &(space_fighter.bullets[bullet_id].bullet_sprite);
-            double bullet_x = (*bullet_location).x, bullet_y = (*bullet_location).y; 
-            static const int RADIUS = 1000; 
-            int min_x = bullet_x - RADIUS, max_x = bullet_x + RADIUS;
-            int min_y = bullet_y - RADIUS, max_y = bullet_y + RADIUS;
+// check that new location is within the limits before deleting bullet
+    point_2d *bullet_location = &(bullet.original_location);
+    sprite *bullet_sprite = &(bullet.bullet_sprite);
+    double bullet_x = (*bullet_location).x, bullet_y = (*bullet_location).y; 
+    static const int RADIUS = 1000; 
+    int min_x = bullet_x - RADIUS, max_x = bullet_x + RADIUS;
+    int min_y = bullet_y - RADIUS, max_y = bullet_y + RADIUS;
 
-            if (sprite_x(*bullet_sprite) < min_x || sprite_x(*bullet_sprite)  > max_x || sprite_y(*bullet_sprite)  < min_y || sprite_y(*bullet_sprite)  > max_y)
-                delete_bullet(space_fighter.bullets, bullet_id);
+    float x = sprite_x(*bullet_sprite);
+    bool has_exceed_x = x < min_x || x  > max_x ;
+    float y = sprite_y(*bullet_sprite);
+    bool has_exceed_y = y < min_y || y  > max_y;
+
+    if ( has_exceed_x || has_exceed_y )
+        delete_bullet(bullets, idx);
+}
+
+void handle_space_fighter_bullet_boundaries(
+    vector<space_fighter_data> &space_fighters)
+{
+    for_all_space_fighters(space_fighters, 
+        [&] (space_fighter_data &space_fighter)
+    {
+        for (int idx = 0; idx < space_fighter.bullets.size(); idx++)
+        {
+            update_bullet_limits(space_fighter.bullets, 
+                space_fighter.bullets[idx], idx);
         }
     });
 }
@@ -164,4 +183,12 @@ void update_all_space_fighters(vector<space_fighter_data> &space_fighters, playe
     generate_space_fighter_bullets(space_fighters);
   
     handle_space_fighter_bullet_boundaries(space_fighters);
+}
+
+void remove_space_fighter(vector<space_fighter_data> &space_fighters, int idx)
+{
+    if (space_fighters.size() > 1) 
+        space_fighters.at(idx) = space_fighters.at(space_fighters.size() - 1);
+
+    space_fighters.pop_back();
 }

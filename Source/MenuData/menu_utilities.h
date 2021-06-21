@@ -9,7 +9,8 @@
  * @param                                          second_y
  * 
  */ 
-bool is_mouse_between_two_points(int first_x, int first_y, int second_x, int second_y);
+bool is_mouse_between_two_points(int first_x, int first_y, 
+    int second_x, int second_y);
 
 /**
  * Check if the mouse is between the first button
@@ -88,8 +89,9 @@ bool has_mouse_clicked_leaderboard_button();
 int index_of_longest_string_in_strings(vector<string> strings);
 
 /**
- * Return the font size SplashKit text should be dependent on a vector of strings
- * The result is based on the amount of rows or the longest string in the strings
+ * Return the font size SplashKit text should be dependent on a 
+ * vector of strings. The result is based on the amount of rows 
+ * or the longest string in the strings
  * @param                                          file_to_read
  */ 
 int font_size_depending_on_files_info(vector<string> file_to_read);

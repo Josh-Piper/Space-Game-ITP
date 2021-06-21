@@ -49,7 +49,7 @@ struct player_data
  * 
  * Not exposed by the header.
  * 
- * @param                                          kind  The kind of ship you want the bitmap of
+ * @param                                          kind  
  * @return      The bitmap matching this ship kind
  */
 bitmap ship_bitmap(ship_kind kind);
@@ -72,11 +72,11 @@ void increment_player_power_up_count(player_data &player);
  * @param                                          player
  * @param                                          new_powerup_bitmap
  */ 
-void set_player_current_power_up_image(player_data &player, bitmap new_powerup_bitmap);
+void set_player_current_power_up_image(player_data &player, bitmap new_bitmap);
 
 /**
  * Draws the player to the screen. 
- * @param                                          player_to_draw    The player to draw to the screen
+ * @param                                          player_to_draw  
  */
 void draw_player(const player_data &player_to_draw);
 
@@ -87,8 +87,14 @@ void draw_player(const player_data &player_to_draw);
 void update_player_camera(player_data &player_to_update);
 
 /**
+ * Update the player's current fuel
+ * @param                                          fuel_pct
+ */ 
+void update_fuel(double &fuel_pct);
+
+/**
  * Actions a step update of the player - moving them and adjusting the camera.
- * @param                                          player_to_update      The player being updated
+ * @param                                          player_to_update     
  */
 void update_player(player_data &player_to_update);
 
@@ -130,7 +136,7 @@ void apply_coin_power_up_to_player(player_data &player);
 
 /**
  * Read user input and update the player based on this interaction.
- * @param                                          player    The player to update
+ * @param                                          player    
  */
 void handle_input(player_data &player);
 

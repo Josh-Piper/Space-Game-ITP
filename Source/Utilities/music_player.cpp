@@ -5,9 +5,15 @@ const double MUSIC_MINIMUM_VOLUME = 0.0;
 const double MUSIC_MAXIMUM_VOLUME = 1.1;
 const double MUSIC_VOLUME_INCREMENT = 0.1;
 
-bool is_music_new_increase_volume_valid(float volume) { return ( ( volume += MUSIC_VOLUME_INCREMENT ) <= MUSIC_MAXIMUM_VOLUME); }; 
+bool is_music_new_increase_volume_valid(float volume) 
+{ 
+    return ( ( volume += MUSIC_VOLUME_INCREMENT ) <= MUSIC_MAXIMUM_VOLUME); 
+}; 
 
-bool is_music_new_decrease_volume_valid(float volume) { return ( ( volume -= MUSIC_MINIMUM_VOLUME ) >= MUSIC_MINIMUM_VOLUME); } 
+bool is_music_new_decrease_volume_valid(float volume) 
+{
+    return ( ( volume -= MUSIC_MINIMUM_VOLUME ) >= MUSIC_MINIMUM_VOLUME); 
+} 
 
 void increase_music_volume(music_handler_data &music_player) 
 { 
@@ -41,10 +47,12 @@ void handle_music_pausing(music_handler_data &music_player)
 
 std::string get_current_volume_as_percentage(music_handler_data &music_player) 
 {
-    string current_volume_to_string { std::to_string(music_player.current_volume).substr(0, 3) }; 
+    // return the percentage as the last 2 decimals, i.e. 0.35 -> 35%
+    string current_volume_to_string { std::to_string(
+        music_player.current_volume).substr(0, 3) }; 
     if (current_volume_to_string == "1.0") return "100%";
     if (current_volume_to_string == "0.0") return "0%";
-    return current_volume_to_string.substr(2, 1).append("0%"); // return the percentage as the last 2 decimals, i.e. 0.35 -> 35%
+    return current_volume_to_string.substr(2, 1).append("0%"); 
 }
 
 music_handler_data create_music_handler()
@@ -95,7 +103,8 @@ void handle_music(music_handler_data &music_handler)
         set_music_volume(music_handler.current_volume);
     }
 
-    if (music_handler.changed_volume_required) set_music_volume(music_handler.current_volume);
+    if (music_handler.changed_volume_required) 
+        set_music_volume(music_handler.current_volume);
 
     (music_handler.is_muted) ? pause_music() : resume_music();
 }

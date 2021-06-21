@@ -28,17 +28,26 @@ game_data new_game()
 
 void check_collisions(game_data &game) 
 {
-    handle_collisions_player_and_powerup(game.power_ups, game.player);
-    handle_collisions_player_and_space_fighters(game.enemies.space_fighters, game.player);
-    handle_collisions_bullets_and_power_ups(game.enemies.space_fighters, game.power_ups);
-    handle_collisions_player_and_bullets(game.enemies.space_fighters, game.player);
+    handle_collisions_player_and_powerup(
+        game.power_ups, game.player);
+
+    handle_collisions_player_and_space_fighters(
+        game.enemies.space_fighters, game.player);
+
+    handle_collisions_bullets_and_power_ups(
+        game.enemies.space_fighters, game.power_ups);
+
+    handle_collisions_player_and_bullets(
+        game.enemies.space_fighters, game.player);
 }
 
 void update_level_per_minute(game_data &game)
 {
-    double game_timer_in_seconds = get_ticks_as_seconds( timer_ticks(game.game_timer) ); 
+    unsigned int ticks = timer_ticks(game.game_timer);
+    double game_timer_in_seconds = get_ticks_as_seconds(ticks); 
     double game_level_per_60_secs = game.game_level * 60;
-    double draw_next_level_cooldown = get_ticks_as_seconds ( timer_ticks(game.level_up_timer_cooldown) );
+    double draw_next_level_cooldown = get_ticks_as_seconds ( 
+        timer_ticks(game.level_up_timer_cooldown) );
 
     if (game_timer_in_seconds >= game_level_per_60_secs) 
     {
@@ -80,7 +89,7 @@ void handle_game_paused(menu_handler_data &global_menu_handler, game_data &game)
         do 
         {
             process_events();
-            // Exit the game (go back to the menu screens) when the user clicks home in paused_screen_menu
+            // Exit the game (go back to the menu screens) on click home
             exit_menu = handle_paused_screen_menu(global_menu_handler, game);
         } while ( ! exit_menu && ! quit_requested() );
     }
@@ -119,8 +128,8 @@ game_state handle_game()
         update_game(game);
         handle_end_game(global_menu_handler, game);
 
-        handle_game_paused(global_menu_handler, game); // When the user types the escape key, handle the in-game paused menu
-        if (global_menu_handler.game_state != PLAY_GAME_SCREEN) break; // Exit the game when not in playing game mode
+        handle_game_paused(global_menu_handler, game); 
+        if (global_menu_handler.game_state != PLAY_GAME_SCREEN) break; 
     }
 
     // If user wants to return the home screen. Then return it

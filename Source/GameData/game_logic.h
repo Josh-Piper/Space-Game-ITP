@@ -24,7 +24,7 @@ struct sprite_collision_data
 };
 
 /**
- * Create a new powerup with random coordinates and add it to the game's vector of power_ups
+ * Create a new powerup and add it to the game's vector of power_ups
  * @param                                          power_ups
  */ 
 void add_power_up_to_game(vector<power_up_data> &power_ups);
@@ -48,8 +48,8 @@ void update_power_ups(vector<power_up_data> &power_ups);
 
 /**
  * Remove a specific power_up from the game
- * @param                                          power_ups    Used to update the game's player
- * @param                                          kind    The type of power_up accessed
+ * @param                                          power_ups   
+ * @param                                          kind  
  */ 
 void remove_power_up(vector<power_up_data> &power_ups, int index);
 
@@ -59,6 +59,18 @@ void remove_power_up(vector<power_up_data> &power_ups, int index);
  * @param                                          sprite
  */ 
 sprite_collision_data new_sprite_collision_data(sprite &sprite);
+
+            
+/**
+ * Update player on collision impact
+ * @param                                          is_left_collision
+ * @param                                          is_right_collision
+ * @param                                          player
+ * @param                                          left
+ * @param                                          right
+ */ 
+void update_player_collision(bool is_left_collision, bool is_right_collision,
+    player_data &player, double left, double right);
 
 /**
  * Handle and check if the player has collided with an entity
@@ -86,21 +98,24 @@ int get_space_fighter_occurence_limitation(int game_level);
  * @param                                          enemies
  * @param                                          game_level
  */ 
-void generate_entities(vector<power_up_data> &power_ups, enemy_handler_data &enemies, int game_level);
+void generate_entities(vector<power_up_data> &power_ups, 
+    enemy_handler_data &enemies, int game_level);
 
 /**
  * Handle the collision between a player and powerup
  * @param                                          power_ups
  * @param                                          player
  */ 
-void handle_collisions_player_and_powerup(vector<power_up_data> &power_ups, player_data &player);
+void handle_collisions_player_and_powerup(vector<power_up_data> &power_ups, 
+    player_data &player);
 
 /**
  * Handle what happens during a collision with a player and space fighter
  * @param                                          space_fighters
  * @param                                          player
  */ 
-void handle_collisions_player_and_space_fighters(vector<space_fighter_data> &space_fighters, player_data &player);
+void handle_collisions_player_and_space_fighters(
+    vector<space_fighter_data> &space_fighters, player_data &player);
 
 /**
  * Handle the collisions between the space fighter bullets and power ups
@@ -108,14 +123,16 @@ void handle_collisions_player_and_space_fighters(vector<space_fighter_data> &spa
  * @param                                          space_fighters
  * @param                                          power_ups
  */ 
-void handle_collisions_bullets_and_power_ups(vector<space_fighter_data> &space_fighters, vector<power_up_data> &power_ups);
+void handle_collisions_bullets_and_power_ups(
+    vector<space_fighter_data> &space_fighters, vector<power_up_data> &power_ups);
 
 /**
- * Delete a bullet if a player collides with it if the player is invincible or shielded
- * Otherwie the user gets dealth damage to their fuel.
+ * Delete a bullet if the player is invincible or shielded
+ * Otherwise the user gets dealth damage to their fuel.
  * @param                                          space_fighters
  * @param                                          player
  */ 
-void handle_collisions_player_and_bullets(vector<space_fighter_data> &space_fighters, player_data &player);
+void handle_collisions_player_and_bullets(
+    vector<space_fighter_data> &space_fighters, player_data &player);
 
 #endif

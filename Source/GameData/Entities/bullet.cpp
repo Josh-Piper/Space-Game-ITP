@@ -39,12 +39,22 @@ void update_bullet(const bullet &bullet)
 
 void update_bullet_location(bullet &bullet)
 {
+    float sprite_direction;
     static const int SPEED_INCREMENT = 5; 
     sprite *bullet_sprite = &(bullet.bullet_sprite);
     int new_x = sprite_x(*bullet_sprite), new_y = sprite_y(*bullet_sprite);
-    float sprite_direction = ( sprite_rotation(*bullet_sprite) - 90 < 0) ? 315 : sprite_rotation(*bullet_sprite) - 90;
-    bool facing_towards_right_side_of_game = (sprite_direction >= 270 && sprite_direction <= 360) || (sprite_direction >= 0 && sprite_direction <= 90);
-    bool facing_towards_top_half_of_game = sprite_direction >= 180 && sprite_direction <= 360;
+
+    if (sprite_rotation(*bullet_sprite) - 90 < 0)
+        sprite_direction = 315;
+    else
+        sprite_direction = sprite_rotation(*bullet_sprite) - 90;
+
+    bool facing_towards_right_side_of_game = 
+        (sprite_direction >= 270 && sprite_direction <= 360) || 
+        (sprite_direction >= 0 && sprite_direction <= 90);
+
+    bool facing_towards_top_half_of_game = sprite_direction >= 180 
+        && sprite_direction <= 360;
 
     // Set x coordinate
     if ( facing_towards_right_side_of_game )

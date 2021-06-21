@@ -41,14 +41,16 @@ void add_bullet_to_space_fighter(space_fighter_data &space_fighter);
  * @param                                          space_fighters
  * @param                                          fn
  */ 
-void for_all_space_fighters_bullets(vector<space_fighter_data> &space_fighters, bullet_function fn);
+void for_all_space_fighters_bullets(
+    vector<space_fighter_data> &space_fighters, bullet_function fn);
 
 /**
  *  Call a function to each space fighters bullets when the bullets cannot be edited.
  * @param                                          space_fighters
  * @param                                          fn
  */ 
-void for_all_space_fighters_bullets_drawing(const vector<space_fighter_data> &space_fighters, bullet_function fn);
+void for_all_space_fighters_bullets_drawing(
+    const vector<space_fighter_data> &space_fighters, bullet_function fn);
 
 
 /**
@@ -58,10 +60,19 @@ void for_all_space_fighters_bullets_drawing(const vector<space_fighter_data> &sp
 void generate_space_fighter_bullets(vector<space_fighter_data> &space_fighters);
 
 /**
- * Control the lifecycle of a bullet, i.e. delete a bullet when it leaves a certain bound(s)
+ * Update individual bullet limits out of bound details
+ * @param                                           bullets
+ * @param                                           bullet
+ * @param                                           idx
+ */                                          
+void update_bullet_limits(vector<bullet> &bullets, bullet &bullet, int idx);
+
+/**
+ * Control the lifecycle of a bullet, delete a bullet when out of bounds.
  * @param                                          space_fighters
  */ 
-void handle_space_fighter_bullet_boundaries(vector<space_fighter_data> &space_fighters);
+void handle_space_fighter_bullet_boundaries(
+    vector<space_fighter_data> &space_fighters);
 
 /**
  * Generate a random point within the game's space parameters
@@ -82,7 +93,8 @@ space_fighter_data create_enemy_space_fighter(double x, double y);
  * @param                                          x
  * @param                                          y
  */ 
-void add_space_fighter_to_game(vector<space_fighter_data> &space_fighters, double x, double y);
+void add_space_fighter_to_game(
+    vector<space_fighter_data> &space_fighters, double x, double y);
 
 /**
  * Apply a function to every space fighter in a vector of them.
@@ -90,7 +102,8 @@ void add_space_fighter_to_game(vector<space_fighter_data> &space_fighters, doubl
  * @param                                          space_fighters
  * @param                                          fn
  */ 
-void for_all_space_fighters(vector<space_fighter_data> &space_fighters, space_fighter_function fn);
+void for_all_space_fighters(
+    vector<space_fighter_data> &space_fighters, space_fighter_function fn);
 
 /**
  * Apply a function to every space fighter in a vector of them passing by CONSTANT.
@@ -98,7 +111,8 @@ void for_all_space_fighters(vector<space_fighter_data> &space_fighters, space_fi
  * @param                                          space_fighters
  * @param                                          fn
  */ 
-void for_all_space_fighters_drawing(const vector<space_fighter_data> &space_fighters, space_fighter_function fn);
+void for_all_space_fighters_drawing(
+    const vector<space_fighter_data> &space_fighters, space_fighter_function fn);
 
 /**
  * Draw a space fighter
@@ -113,19 +127,22 @@ void draw_enemy_space_fighter(const space_fighter_data &entity);
 void update_enemy_space_fighter(const space_fighter_data &entity);
 
 /**
- * Perform a space_player_and_fighter function that affects each space fighter and player
+ * Update each space fighter and player
  * @param                                          space_fighters
  * @param                                          player
  * @param                                          space_fighter_and_player_fn
  */ 
-void for_all_space_fighters_and_player(vector<space_fighter_data> &space_fighters, player_data &player, space_fighter_and_player_function space_fighter_and_player_fn);
+void for_all_space_fighters_and_player(
+    vector<space_fighter_data> &space_fighters, player_data &player, 
+    space_fighter_and_player_function space_fighter_and_player_fn);
 
 /**
  * Update the space fighter to move towards a player
  * @param                                          fighter
  * @param                                          player
  */ 
-void move_enemy_space_fighter_location_towards_player(space_fighter_data &fighter, player_data &player);
+void move_enemy_space_fighter_location_towards_player(
+    space_fighter_data &fighter, player_data &player);
 
 /**
  * Update all space fighters to move towards the user and update their location
@@ -133,6 +150,14 @@ void move_enemy_space_fighter_location_towards_player(space_fighter_data &fighte
  * @param                                          player
  * 
  */ 
-void update_all_space_fighters(vector<space_fighter_data> &space_fighters, player_data &player);
+void update_all_space_fighters(
+    vector<space_fighter_data> &space_fighters, player_data &player);
+
+/**
+* Remove a space fighter from a vector of space_fighters
+* @param                                           space_fighters
+* @param                                           idx
+*/ 
+void remove_space_fighter(vector<space_fighter_data> &space_fighters, int idx);
 
 #endif

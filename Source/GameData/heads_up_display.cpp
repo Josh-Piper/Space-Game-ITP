@@ -20,13 +20,15 @@ string remove_cords_prefix_filler_text(string cords)
 
 string get_heads_up_display_cords_as_string(point_2d cords) 
 {
-    static const int INDEX_OF_BEGIN_NUMBER = 0, INDEX_OF_END_NUMBER = 5;
-    string result;
+    static const int START_IDX = 0, END_IDX = 5;
+    string new_cords = point_to_string(cords), player_current_location, result;
 
-    // Change the format of a cord @pt ... some number: somenumber to somenumber , somenumber
-    string player_current_location = remove_cords_prefix_filler_text( point_to_string(cords) );
-    string x_cord { player_current_location.substr(INDEX_OF_BEGIN_NUMBER, INDEX_OF_END_NUMBER) };
-    string y_cord { player_current_location.substr(player_current_location.find_first_of(':') + 1, INDEX_OF_END_NUMBER) };
+    // Change the format of a cord @pt ... x : y to x, y
+    player_current_location = remove_cords_prefix_filler_text( new_cords );
+    string x_cord { player_current_location.substr( START_IDX, END_IDX ) };
+
+    int y_start_idx = player_current_location.find_first_of(':') + 1;
+    string y_cord { player_current_location.substr( y_start_idx, END_IDX ) };
     
     result += x_cord + ", ";
     result += y_cord;
@@ -72,7 +74,6 @@ string convert_milliseconds_to_seconds(unsigned int ticks)
     time_data suffix = SECONDS;
     double ans = get_ticks_as_seconds(ticks); 
 
-    // Convert milliseconds to its current responding time whether seconds, minutes or hours. 
     if (ans > TIME_CONVERSION_RATE && suffix == SECONDS)
     {
         ans /= TIME_CONVERSION_RATE;
@@ -102,8 +103,10 @@ point_2d mini_map_coordinate(const power_up_data &power_up)
     float powerup_x = sprite_x(power_up.power_up_sprite);
     float powerup_y = sprite_y(power_up.power_up_sprite);
 
-    double return_x = ( powerup_x + GAME_OFFSET ) / GAME_WIDTH * MINI_MAP_SIZE + MINI_MAP_X;
-    double return_y = ( powerup_y + GAME_OFFSET ) / GAME_WIDTH * MINI_MAP_SIZE + MINI_MAP_Y;
+    double return_x = ( powerup_x + GAME_OFFSET ) / GAME_WIDTH * MINI_MAP_SIZE
+     + MINI_MAP_X;
+    double return_y = ( powerup_y + GAME_OFFSET ) / GAME_WIDTH * MINI_MAP_SIZE
+     + MINI_MAP_Y;
 
     return point_at(return_x, return_y);
 }
@@ -114,8 +117,10 @@ point_2d mini_map_coordinate(const space_fighter_data &space_fighter)
     float powerup_x = sprite_x(space_fighter.space_fighter_sprite);
     float powerup_y = sprite_y(space_fighter.space_fighter_sprite);
 
-    double return_x = ( powerup_x + GAME_OFFSET ) / GAME_WIDTH * MINI_MAP_SIZE + MINI_MAP_X;
-    double return_y = ( powerup_y + GAME_OFFSET ) / GAME_WIDTH * MINI_MAP_SIZE + MINI_MAP_Y;
+    double return_x = ( powerup_x + GAME_OFFSET ) / GAME_WIDTH * MINI_MAP_SIZE 
+     + MINI_MAP_X;
+    double return_y = ( powerup_y + GAME_OFFSET ) / GAME_WIDTH * MINI_MAP_SIZE
+     + MINI_MAP_Y;
 
     return point_at(return_x, return_y);
 }
@@ -131,34 +136,46 @@ void draw_mini_map_location_for_powerups(const vector<power_up_data> &power_ups)
     const color GRAY_CLR = rgba_color(199, 202, 203, 200);
     for (int powerup = 0; powerup < power_ups.size(); powerup++)
     {
-        point_2d cords = mini_map_coordinate (power_ups[powerup]);
-        if (is_mini_map_position_within_mini_map_bounds(cords)) draw_pixel( GRAY_CLR, cords, option_to_screen() );
+        point_2d cords = mini_map_coordinate ( power_ups[powerup] );
+        if (is_mini_map_position_within_mini_map_bounds( cords) ) 
+            draw_pixel( GRAY_CLR, cords, option_to_screen() );
     }
 }
 
-void draw_mini_map_location_for_space_fighters(const vector<space_fighter_data> space_fighters)
+void draw_mini_map_location_for_space_fighters
+    (const vector<space_fighter_data> space_fighters)
 {
-    for (int space_fighter_index = 0; space_fighter_index < space_fighters.size(); space_fighter_index++)
+    point_2d cords;
+
+    for (space_fighter_data space_fighter: space_fighters)
     {   
-        point_2d cords = mini_map_coordinate (space_fighters[space_fighter_index]);
-        if (is_mini_map_position_within_mini_map_bounds(cords)) draw_pixel( COLOR_RED, cords, option_to_screen() );
+        cords = mini_map_coordinate ( space_fighter );
+        if (is_mini_map_position_within_mini_map_bounds( cords) ) 
+            draw_pixel( COLOR_RED, cords, option_to_screen() );
     }
 }
 
 void draw_mini_map_location_for_player(const player_data &player)
 {
-    point_2d player_location = mini_map_coordinate_player(sprite_x(player.player_sprite), sprite_y(player.player_sprite));
-    if (is_mini_map_position_within_mini_map_bounds(player_location)) draw_pixel( COLOR_AQUA, player_location, option_to_screen() );
+    point_2d player_location;
+    float player_x = sprite_x(player.player_sprite);
+    float player_y = sprite_y(player.player_sprite);
+
+    player_location = mini_map_coordinate_player( player_x, player_y );
+    if (is_mini_map_position_within_mini_map_bounds(player_location)) 
+        draw_pixel( COLOR_AQUA, player_location, option_to_screen() );
 }
 
-void draw_mini_map(const vector<power_up_data> &power_ups, const player_data &player, const enemy_handler_data &enemies)
+void draw_mini_map(const vector<power_up_data> &power_ups, 
+    const player_data &player, const enemy_handler_data &enemies)
 {
     // Draw the minimap background
-    fill_rectangle(COLOR_BLACK, MINI_MAP_X, MINI_MAP_Y, MINI_MAP_SIZE, MINI_MAP_SIZE, option_to_screen()); 
+    fill_rectangle(COLOR_BLACK, MINI_MAP_X, MINI_MAP_Y, MINI_MAP_SIZE, 
+        MINI_MAP_SIZE, option_to_screen()); 
 
-    draw_mini_map_location_for_powerups(power_ups);
-    draw_mini_map_location_for_space_fighters(enemies.space_fighters);
-    draw_mini_map_location_for_player(player);
+    draw_mini_map_location_for_powerups( power_ups );
+    draw_mini_map_location_for_space_fighters( enemies.space_fighters );
+    draw_mini_map_location_for_player( player );
 }
 
 void draw_heads_up_display_background(const game_data &game) {
@@ -174,30 +191,52 @@ void draw_heads_up_display(const game_data &game)
     static const int bar_y { 110 };
     static const string font { "hud_font" };
     static const color text_colour { COLOR_WHITE };
+    drawing_options opts { option_to_screen() };
     drawing_options power_up_drawing_constraints { option_to_screen() };
     power_up_drawing_constraints.scale_x = 0.35;
     power_up_drawing_constraints.scale_y = 0.35;
 
+    string time_played = convert_milliseconds_to_seconds
+        (timer_ticks( game.game_timer));
+    string location =  get_heads_up_display_cords_as_string
+        (center_point(game.player.player_sprite));
+
     draw_heads_up_display_background(game);
+
     draw_mini_map(game.power_ups, game.player, game.enemies);
 
-    draw_text("SCORE: " + to_string(game.player.score), text_colour, font, font_size, x_dist, 5, option_to_screen());
-    draw_text("CURRENT LEVEL: " + to_string(game.game_level), text_colour, font, font_size, x_dist, 25, option_to_screen());
-    draw_text("LOCATION: " + get_heads_up_display_cords_as_string(center_point(game.player.player_sprite)), text_colour, font, font_size, x_dist, 45, option_to_screen());
-    draw_text("CURRENT POWERUP: ", text_colour, font, font_size, x_dist, 65, option_to_screen());
-    draw_bitmap(game.player.current_power_up, 90, 25, power_up_drawing_constraints);
+    draw_text("SCORE: " + to_string(game.player.score), text_colour, font, 
+        font_size, x_dist, 5, opts);
 
-    string time_played = convert_milliseconds_to_seconds(timer_ticks( game.game_timer));
-    draw_text("TIME PLAYED: " + time_played, text_colour, font, font_size, x_dist, 152, option_to_screen() );
+    draw_text("CURRENT LEVEL: " + to_string(game.game_level), text_colour, 
+        font, font_size, x_dist, 25, opts);
 
-    /**
-     * Handle drawing of the health bar
-     */ 
-    draw_text("HEALTH: ", text_colour, font, font_size, x_dist, 95, option_to_screen());
-    draw_bitmap("empty", x_dist, bar_y, option_to_screen());
+    draw_text("LOCATION: " + location, text_colour, font, font_size, 
+        x_dist, 45, opts);
+
+    draw_text("CURRENT POWERUP: ", text_colour, font, font_size, x_dist, 
+        65, opts);
+
+    draw_bitmap(game.player.current_power_up, 90, 25, 
+        power_up_drawing_constraints);
+
+    draw_text("TIME PLAYED: " + time_played, text_colour, font, font_size, 
+        x_dist, 152, opts );
+
+    draw_text("HEALTH: ", text_colour, font, font_size, x_dist, 95, opts);
+    draw_bitmap("empty", x_dist, bar_y, opts);
+
     if ( ! game.player.invincible )
-        draw_bitmap("full", x_dist, 110, option_part_bmp(0, 0, (game.player.fuel_pct * bitmap_width("full")), bitmap_height("full"), option_to_screen())); 
-    else 
-        draw_bitmap("purple_bar", x_dist, bar_y, option_to_screen());
+    {
+        double health_bar_ratio = (game.player.fuel_pct * bitmap_width("full"));
+        drawing_options health_bar_limits = option_part_bmp (0, 0,
+            health_bar_ratio, bitmap_height("full"), opts);
+
+        draw_bitmap("full", x_dist, 110, health_bar_limits); 
+    }
+    else
+    { 
+        draw_bitmap("purple_bar", x_dist, bar_y, opts);
+    }
     
 }

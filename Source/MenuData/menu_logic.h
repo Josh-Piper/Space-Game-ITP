@@ -7,15 +7,18 @@
 #include <vector>
 
 enum operating_system { WINDOWS, APPLE, LINUX, UNIX, UNIDENTIFIED };
-enum game_state { END_GAME, HOME_SCREEN, PLAY_GAME_SCREEN, LEADERBOARD_SCREEN, SETTINGS_SCREEN, INFORMATION_SCREEN }; // the different states of the game
+
+enum game_state { END_GAME, HOME_SCREEN, PLAY_GAME_SCREEN, LEADERBOARD_SCREEN, 
+    SETTINGS_SCREEN, INFORMATION_SCREEN }; 
+
 enum highlighted_button_state { NONE, FIRST_BTN, SECOND_BTN, THIRD_BTN, FOURTH_BTN };
 
 /**
  * The menu data
- * @field                                          game_state                                The current state of the application
- * @field                                          highlighted_button                        Which button is currently highlighted within the menus
- * @field                                          music_player                              The music player to keep playing music throughout the game
- * @field                                          leaderboard_sorting_method                Used for sorting data for the leaderboard. Can be extended to other parts of the application
+ * @field                                          game_state
+ * @field                                          highlighted_button
+ * @field                                          music_player
+ * @field                                          leaderboard_sorting_method
  */ 
 struct menu_handler_data
 {
@@ -25,7 +28,7 @@ struct menu_handler_data
     sort_type                       leaderboard_sorting_method;
 };
 
-#include "../../Source/GameData/lost_in_space.h" // to allow the program to compile correctly
+#include "../../Source/GameData/lost_in_space.h" 
 
 /**
  * Create a new home menu, thus, the game itself.
@@ -35,10 +38,12 @@ struct menu_handler_data
 menu_handler_data create_menu_handler();
 
 /**
- * Changes the highlighted button stored in global_menu_handler depending where the mouse position is located
+ * Changes the highlighted button stored in global_menu_handler 
+ * depending where the mouse position is located
  * @param                                          global_menu_handler
  */ 
-void handle_all_screens_button_hover_over_highlighting(menu_handler_data &global_menu_handler);
+void handle_all_screens_button_hover_over_highlighting(
+    menu_handler_data &global_menu_handler);
 
 
 /**
@@ -81,23 +86,27 @@ void handle_menu_state(menu_handler_data &global_menu_handler);
  * @param                                          global_menu_handler
  * @param                                          game
  */ 
-bool handle_paused_screen_menu(menu_handler_data &global_menu_handler, game_data &game);
+bool handle_paused_screen_menu(menu_handler_data &global_menu_handler, 
+    game_data &game);
 
 /**
  * Handle adding a leaderboard entry via. text input
  * @param                                          global_menu_handler
  * @param                                          game
- * @param                                          has_entered_entry check if leaderboard entry has been submitted
+ * @param                                          has_entered_entry 
  */ 
-void check_end_game_add_leaderboard_entry(menu_handler_data &global_menu_handler, game_data &game, bool &has_entered_entry);
+void check_end_game_add_leaderboard_entry(
+    menu_handler_data &global_menu_handler, game_data &game, 
+    bool &has_entered_entry);
 
 /**
  * Handle the end game sequence
  * Allow the user to save their score of the current play through
- * @param                                          global_menu_handler      used to end the game or move to a particular menu after the ending
- * @param                                          game                     used for the players current score
+ * @param                                          global_menu_handler
+ * @param                                          game
  */ 
-bool handle_end_game_menu(menu_handler_data &global_menu_handler, game_data &game);
+bool handle_end_game_menu(
+    menu_handler_data &global_menu_handler, game_data &game);
 
 /**
  * Handle the menu itself

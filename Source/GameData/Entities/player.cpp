@@ -30,8 +30,9 @@ player_data new_player()
     result.kind = AQUARII;
 
     // Position in the centre of the initial screen
-    sprite_set_x(result.player_sprite, (screen_height() - (sprite_width(result.player_sprite))) / 2);
-    sprite_set_y(result.player_sprite, (screen_height() - (sprite_height(result.player_sprite))) / 2);
+    int middle = (screen_height() - (sprite_width(result.player_sprite))) / 2;
+    sprite_set_x(result.player_sprite, middle);
+    sprite_set_y(result.player_sprite, middle);
 
     return result;
 }
@@ -41,9 +42,9 @@ void increment_player_power_up_count(player_data &player)
     player.total_power_ups++;
 }
 
-void set_player_current_power_up_image(player_data &player, bitmap new_powerup_bitmap)
+void set_player_current_power_up_image(player_data &player, bitmap new_bitmap)
 {
-    player.current_power_up = new_powerup_bitmap;
+    player.current_power_up = new_bitmap;
 }
 
 void draw_player(const player_data &player_to_draw)
@@ -83,6 +84,11 @@ void update_player_camera(player_data &player_to_update)
     }
 }
 
+void update_fuel(double &fuel_pct)
+{
+    fuel_pct = fuel_pct - 1.0 / (60.0 * 50.0); // fuel will last 50 seconds
+}
+
 void update_player(player_data &player_to_update)
 {
     // Apply movement based on rotation and velocity in the sprite
@@ -100,7 +106,9 @@ void update_player(player_data &player_to_update)
     }
     else 
     {
-        if (!player_to_update.invincible) player_to_update.fuel_pct = player_to_update.fuel_pct - 1.0 / (60.0 * 50.0);//  /fuel will last 50 seconds
+        if (!player_to_update.invincible) 
+            update_fuel(player_to_update.fuel_pct);
+            
     }
 
     if (player_to_update.total_power_ups >= 1000)
@@ -150,18 +158,19 @@ void apply_coin_power_up_to_player(player_data &player)
 void handle_input(player_data &player)
 {
     // Handle movement - rotating left/right and moving forward/back
-    float dx = sprite_dx(player.player_sprite);
-    float rotation = sprite_rotation(player.player_sprite);
+    sprite sprite = player.player_sprite;
+    float dx = sprite_dx(sprite);
+    float rotation = sprite_rotation(sprite);
 
     // Allow rotation with left/right keys
     if (key_down(LEFT_KEY))
-        sprite_set_rotation(player.player_sprite, rotation - PLAYER_ROTATE_SPEED);
+        sprite_set_rotation(sprite, rotation - PLAYER_ROTATE_SPEED);
     if (key_down(RIGHT_KEY))
-        sprite_set_rotation(player.player_sprite, rotation + PLAYER_ROTATE_SPEED);
+        sprite_set_rotation(sprite, rotation + PLAYER_ROTATE_SPEED);
 
     // Increase speed with up/down keys
     if (key_typed(DOWN_KEY))
-        sprite_set_dx(player.player_sprite, dx - PLAYER_SPEED);
+        sprite_set_dx(sprite, dx - PLAYER_SPEED);
     if (key_typed(UP_KEY))
-        sprite_set_dx(player.player_sprite, dx + PLAYER_SPEED);
+        sprite_set_dx(sprite, dx + PLAYER_SPEED);
 }

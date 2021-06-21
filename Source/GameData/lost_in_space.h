@@ -11,11 +11,11 @@ using std::vector;
 
 /**
  * Game Data is used to manage the overall flow of the game and keep saved data
- * @field                                          player          The user
- * @field                                          power_ups       Holds a vector of power_ups used to manage all power_ups within the game
- * @field                                          timer           The game timer is used to measure how long the game or action has transpired
- * @field                                          game_level      The level of the current game
- * @field                                          enemies         All enemies in the game
+ * @field                                          player   
+ * @field                                          power_ups   
+ * @field                                          timer        
+ * @field                                          game_level      
+ * @field                                          enemies     
  */ 
 struct game_data 
 {
@@ -43,8 +43,8 @@ game_data new_game();
 
 /**
  * Check in-game collisions between any in-game powerup and the player
- * if true it will access apply_power_up and remove_power_up to give the in-game user effects
- * @param                                          game    Use the game's power_ups and player to check for collisions
+ * if true it will access apply_power_up and remove powerup
+ * @param                                          game  
  */ 
 void check_collisions(game_data &game);
 
@@ -65,7 +65,8 @@ void update_game(game_data &game);
  * Then handle the pause menu
  * @param                                          global_menu_game_handler  
  */ 
-void handle_game_paused(menu_handler_data &global_menu_handler, game_data &game);
+void handle_game_paused(menu_handler_data &global_menu_handler, 
+    game_data &game);
 
 /**
  * Handle the ending game scene
@@ -75,7 +76,8 @@ void handle_game_paused(menu_handler_data &global_menu_handler, game_data &game)
 void handle_end_game(menu_handler_data &global_menu_handler, game_data &game);
 
 /**
- * Will return the game_state once the game is finished, thus, bring the user back to the original menu
+ * Will return the game_state once the game is finished, thus, 
+ * bring the user back to the original menu
  * or Quiting the game
  * Handles the Space Game loop
  */ 

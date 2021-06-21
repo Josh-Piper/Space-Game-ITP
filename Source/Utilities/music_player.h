@@ -62,22 +62,24 @@ music_handler_data create_music_handler();
 
 /**
  * Return the next song number
- * Acts as a limitter. I.e. if original_number is the final song, then return the first song number
- * @param                                          original_number   The number of the song being currently played
+ * Acts as a limitter. I.e. if original_number is the final song, 
+ * then return the first song number
+ * @param                                          original_number
  */ 
 int get_next_song_number(string original_number);
 
 /**
  * Return the full string name of the next song
  * Utilises get_next_song_number to attach the new name
- * @param                                          original_number   The number of the song being currently played
+ * @param                                          original_number
  */ 
 string return_next_song(string current_song);
 
 /**
  * The music played in-game will react to the settings accordingly.
- * For example, will do the required SplashKit commands when the music_handler is muted.
- * @param                                          music_handler     The music handler
+ * For example, will do the required SplashKit commands when the music_handler
+ * is muted.
+ * @param                                          music_handler
  * 
  */ 
 void handle_music(music_handler_data &music_handler);

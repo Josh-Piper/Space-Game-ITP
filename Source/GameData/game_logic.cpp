@@ -32,7 +32,8 @@ void apply_power_up(player_data &player, power_up_kind kind)
     else if (kind == SHIELD)    
         apply_shield_power_up_to_player(player);
 
-    else if (kind == POTION && player.power_up_counter == 0.0 && !(player.invincible))
+    else if (kind == POTION && player.power_up_counter == 0.0 &&
+            !(player.invincible))
         apply_potion_power_up_to_player(player);
     
     else if (kind == DROPS)
@@ -50,8 +51,8 @@ void apply_power_up(player_data &player, power_up_kind kind)
 
 void update_power_ups(vector<power_up_data> &power_ups) 
 {
-    for (int powerup_index = 0; powerup_index < power_ups.size(); powerup_index++)
-        update_power_up(power_ups[powerup_index]);
+    for (power_up_data &power_up: power_ups)
+        update_power_up(power_up);
 }
 
 void remove_power_up(vector<power_up_data> &power_ups, int index)
@@ -74,6 +75,17 @@ sprite_collision_data new_sprite_collision_data(sprite &sprite)
     return result;
 }
 
+void update_player_collision(bool is_left_collision, bool is_right_collision,
+    player_data &player, double left, double right)
+{
+        if (is_left_collision) 
+            sprite_set_x(player.player_sprite, (left - 0.05));
+        if (is_right_collision) 
+            sprite_set_x(player.player_sprite, (right + 0.05));
+        if (!player.invincible && ! ( player.power_up_counter > 0) ) 
+            player.fuel_pct -= 0.01;
+}
+
 bool check_entity_collision(player_data &_player, sprite &enemy_sprite)
 {
     sprite player_sprite = _player.player_sprite;
@@ -82,12 +94,13 @@ bool check_entity_collision(player_data &_player, sprite &enemy_sprite)
 
     if ( sprite_collision ( player_sprite, enemy_sprite ) )
     {
-        bool check_left_collision = player.right_x > fighter.left_x && !(player.right_x > fighter.right_x);
-        bool check_right_collision = player.left_x < fighter.right_x && !(player.left_x <  fighter.left_x);
+        bool check_left_collision = player.right_x > fighter.left_x && 
+            !(player.right_x > fighter.right_x);
+        bool check_right_collision = player.left_x < fighter.right_x && 
+            !(player.left_x <  fighter.left_x);
 
-        if (check_left_collision) sprite_set_x(player_sprite, (player.left_x - 0.05));
-        if (check_right_collision) sprite_set_x(player_sprite, (player.right_x + 0.05));
-        if (!_player.invincible && ! ( _player.power_up_counter > 0) ) _player.fuel_pct -= 0.01;
+        update_player_collision(check_left_collision, check_right_collision,
+            _player, player.left_x, player.right_x);
 
         return true;
     } 
@@ -138,10 +151,16 @@ int get_space_fighter_occurence_limitation(int game_level)
     return 50;
 }
 
-void generate_entities(vector<power_up_data> &power_ups, enemy_handler_data &enemies ,int game_level)
+void generate_entities(vector<power_up_data> &power_ups, 
+    enemy_handler_data &enemies, int game_level)
 {
     static const int RANDOM_MIN = 0, RANDOM_MAX = 1000; 
-    int power_up_occurence_limitation = get_power_up_occurence_limitation(game_level), space_fighter_occurence_limitation = get_space_fighter_occurence_limitation(game_level);
+
+    int power_up_occurence_limitation = 
+        get_power_up_occurence_limitation(game_level);
+
+    int space_fighter_occurence_limitation = 
+        get_space_fighter_occurence_limitation(game_level);
 
     // Create powerups
     if (rnd(RANDOM_MIN, RANDOM_MAX) <= power_up_occurence_limitation)
@@ -150,36 +169,40 @@ void generate_entities(vector<power_up_data> &power_ups, enemy_handler_data &ene
     // Create space fighter enemy once past level 2
     if (rnd(RANDOM_MIN, RANDOM_MAX) <= space_fighter_occurence_limitation)
     {
-        point_2d fighter_location = generate_random_point_in_game();
-        add_space_fighter_to_game(enemies.space_fighters, fighter_location.x, fighter_location.y);
+        point_2d random = generate_random_point_in_game();
+
+        add_space_fighter_to_game(enemies.space_fighters, random.x, random.y);
     }
 }
 
-void handle_collisions_player_and_powerup(vector<power_up_data> &power_ups, player_data &player)
+void handle_collisions_player_and_powerup(vector<power_up_data> &power_ups, 
+    player_data &player)
 {
     for (int index = power_ups.size() - 1; index >= 0; index--)
     {
-        if (sprite_collision(player.player_sprite, power_ups[index].power_up_sprite))
+        power_up_data current = power_ups[index];
+
+        if (sprite_collision(player.player_sprite, current.power_up_sprite))
         {
-            apply_power_up(player, power_ups[index].kind);
+            apply_power_up(player, current.kind);
             remove_power_up(power_ups, index);
         }
     }
 }
 
-void handle_collisions_player_and_space_fighters(vector<space_fighter_data> &space_fighters, player_data &player)
+void handle_collisions_player_and_space_fighters(
+        vector<space_fighter_data> &space_fighters, player_data &player)
 {
-    // Prevent collisions with space fighter enemy and kill the entity if invincible or shielded -> change to iterator loop for safe deletions
+    // Kill the entity if invincible or shielded.
+
     int index_of_current_fighter = 0;
-    for_all_space_fighters(space_fighters, [&] (space_fighter_data space_fighter)
+    for_all_space_fighters(space_fighters, [&](space_fighter_data space_fighter)
     {  
-        if ( check_entity_collision(player, space_fighter.space_fighter_sprite) ) 
+        if ( check_entity_collision(player, space_fighter.space_fighter_sprite)) 
         {
-            // if the player is invincible or has a shield a activated, then remove the space fighter from the game
            if (player.invincible || player.power_up_counter > 0)
            {
-                if (space_fighters.size() > 1) space_fighters.at(index_of_current_fighter) = space_fighters.at(space_fighters.size() - 1);
-                space_fighters.pop_back();
+                remove_space_fighter(space_fighters, index_of_current_fighter);
                 play_sound_effect("splat");
            }    
         }
@@ -187,31 +210,36 @@ void handle_collisions_player_and_space_fighters(vector<space_fighter_data> &spa
     });
 }
 
-void handle_collisions_bullets_and_power_ups(vector<space_fighter_data> &space_fighters, vector<power_up_data> &power_ups)
+void handle_collisions_bullets_and_power_ups(
+    vector<space_fighter_data> &space_fighters, vector<power_up_data> &power_ups)
 {
     // delete_power_up_on_bullet_impact
     for_all_space_fighters_bullets(space_fighters, [&] (bullet &bullet)
     {
-        for (int power_up_index = 0; power_up_index < power_ups.size(); power_up_index++)
+        for (int index = 0; index < power_ups.size(); index++)
         {
-            if (sprite_collision(bullet.bullet_sprite, power_ups[power_up_index].power_up_sprite))
-                remove_power_up(power_ups, power_up_index);
+            power_up_data current = power_ups[index];
+            if (sprite_collision(bullet.bullet_sprite, current.power_up_sprite))
+                remove_power_up(power_ups, index);
         }
     });
 }
 
-void handle_collisions_player_and_bullets(vector<space_fighter_data> &space_fighters, player_data &player)
+void handle_collisions_player_and_bullets(
+    vector<space_fighter_data> &space_fighters, player_data &player)
 {
     // delete_power_up_on_bullet_impact
     for_all_space_fighters(space_fighters, [&] (space_fighter_data &space_fighter) 
     {
-        for (int bullet_index = 0; bullet_index < space_fighter.bullets.size(); bullet_index++)
+        for (int index = 0; index < space_fighter.bullets.size(); index++)
         {
-            if ( check_entity_collision (player, space_fighter.bullets[bullet_index].bullet_sprite) )
+            bullet current = space_fighter.bullets[index];
+            if ( check_entity_collision (player, current.bullet_sprite) )
             {
-                // if the player is invincible or has a shield a activated, then remove the bullet from the game
-                if ( !(player.invincible) && !(player.power_up_counter > 0) ) player.fuel_pct -= 0.25;
-                delete_bullet(space_fighter.bullets, bullet_index);  
+                if ( !(player.invincible) && !(player.power_up_counter > 0) ) 
+                    player.fuel_pct -= 0.25;
+
+                delete_bullet(space_fighter.bullets, index);  
                 play_sound_effect("splat");
             }
         }

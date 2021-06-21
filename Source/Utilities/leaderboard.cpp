@@ -14,17 +14,20 @@ using std::ofstream;
 using std::ifstream;
 
 // Global constant variables
-static const string INFORMATION_FILE_LOCATION = "./Source/Utilities/information.txt";
-static const string LEADERBOARD_FILE_LOCATION = "./Source/Utilities/leaderboard.txt";
+static const string INFORMATION_FILE_LOCATION = 
+    "./Source/Utilities/information.txt";
+static const string LEADERBOARD_FILE_LOCATION = 
+    "./Source/Utilities/leaderboard.txt";
 static const string LEADERBOARD_DEFAULT_MESSAGE = "Leader Board";
 
 string get_current_time()
 {
-    time_t todays_date_time = time(0); 
-    char todays_date_time_formatted [100]; 
-    strftime(todays_date_time_formatted, sizeof(todays_date_time_formatted), "%c", std::localtime(&todays_date_time)); // Convert the date to be comparable for the leaderboard. Format is mm/dd/yy hh:mm:ss 
-
-    return todays_date_time_formatted;
+    time_t today = time(0); 
+    tm *time_today = std::localtime(&today);
+    char today_formatted [100]; 
+    
+    strftime(today_formatted, sizeof(today_formatted), "%c", time_today); 
+    return today_formatted;
 }
 
 vector<string> get_default_information_data()
@@ -79,13 +82,15 @@ void reset_leaderboard_file()
 void add_new_leaderboard_entry(string name, int score)
 {
     string current_time = get_current_time();
-    string entry = name + "                  -> Current Score: " + to_string(score) + ">>" + get_current_time();
+    string entry = name + "                  -> Current Score: " + 
+        to_string(score) + ">>" + get_current_time();
     ofstream leaderboard_file;
 
     leaderboard_file.open(LEADERBOARD_FILE_LOCATION, std::ios_base::app);
 
-    // If the user tries to add to a leaderboard file that doesn't exist. Note this is
-    // an edge case for when the user plays the game first, thus, no file was genned.
+    // If the user tries to add to a leaderboard file that doesn't exist. 
+    // This is an edge case for when the user plays the game first, 
+    // thus, no file was genned.
     if (leaderboard_file.fail()) reset_leaderboard_file();
     leaderboard_file << entry << endl; 
     leaderboard_file.close();
@@ -95,10 +100,12 @@ bool is_leaderboard_file_valid(vector<string> leaderboard)
 {
     for (string msg: leaderboard)
     {
-        int time_delim_location = msg.find(">>"), score_delim_location = msg.find("Score: ") + 7;
+        int time_delim_location = msg.find(">>");
+        int score_delim_location = msg.find("Score: ") + 7;
 
         // File does not contain the delimeters
-        if (time_delim_location == string::npos || score_delim_location == string::npos)
+        if (time_delim_location == string::npos || 
+            score_delim_location == string::npos)
         {
             return false;
         }
@@ -141,14 +148,17 @@ vector<leaderboard_entry_data> create_leaderboard_vector_from_file()
     for (string complete_message: leaderboard_data)
     {
         leaderboard_entry_data entry;
-        int time_delim_location = complete_message.find(">>"), score_delim_location = complete_message.find("Score: ") + 7; //+ 7 to cater for the Score text and spacing
+        int time_delim_location = complete_message.find(">>");
+        int score_delim_location = complete_message.find("Score: ") + 7; 
 
         entry.message = complete_message.substr(0, time_delim_location);
-        entry.time_uploaded = complete_message.substr(time_delim_location + 2, complete_message.length() - 1); 
+        entry.time_uploaded = complete_message.substr(time_delim_location + 2, 
+            complete_message.length() - 1); 
         
         try
         {
-            entry.score = std::stoll ( complete_message.substr( score_delim_location, time_delim_location - 1 ) ); // Convert the score to a long long int.
+            entry.score = std::stoll ( complete_message.substr( 
+                score_delim_location, time_delim_location - 1 ) );
         }
         catch (int exception) 
         {
@@ -160,33 +170,78 @@ vector<leaderboard_entry_data> create_leaderboard_vector_from_file()
     return result;
 }
 
-bool sort_leaderboard_alphabetically_ascending(const leaderboard_entry_data &lhs, const leaderboard_entry_data &rhs) { return lhs.message > rhs.message; }
+bool sort_leaderboard_alphabetically_ascending(
+    const leaderboard_entry_data &lhs, const leaderboard_entry_data &rhs) 
+{ 
+    return lhs.message > rhs.message; 
+}
 
-bool sort_leaderboard_alphabetically_descending(const leaderboard_entry_data &lhs, const leaderboard_entry_data &rhs) { return lhs.message < rhs.message; }
+bool sort_leaderboard_alphabetically_descending(
+    const leaderboard_entry_data &lhs, const leaderboard_entry_data &rhs) 
+{ 
+    return lhs.message < rhs.message; 
+}
 
-bool sort_leaderboard_date_ascending(const leaderboard_entry_data &lhs, const leaderboard_entry_data &rhs) { return lhs.time_uploaded < rhs.time_uploaded; }
+bool sort_leaderboard_date_ascending(
+    const leaderboard_entry_data &lhs, const leaderboard_entry_data &rhs) 
+{
+    return lhs.time_uploaded < rhs.time_uploaded; 
+}
 
-bool sort_leaderboard_date_descending(const leaderboard_entry_data &lhs, const leaderboard_entry_data &rhs) { return lhs.time_uploaded > rhs.time_uploaded; }
+bool sort_leaderboard_date_descending(
+    const leaderboard_entry_data &lhs, const leaderboard_entry_data &rhs) 
+{
+    return lhs.time_uploaded > rhs.time_uploaded; 
+}
 
-bool sort_leaderboard_score_ascending(const leaderboard_entry_data &lhs, const leaderboard_entry_data &rhs) { return lhs.score > rhs.score; }
+bool sort_leaderboard_score_ascending(
+    const leaderboard_entry_data &lhs, const leaderboard_entry_data &rhs) 
+{ 
+    return lhs.score > rhs.score; 
+}
 
-bool sort_leaderboard_score_descending(const leaderboard_entry_data &lhs, const leaderboard_entry_data &rhs) { return lhs.score < rhs.score; }
+bool sort_leaderboard_score_descending(
+    const leaderboard_entry_data &lhs, const leaderboard_entry_data &rhs)   
+{ 
+    return lhs.score < rhs.score; 
+}
 
-void return_leaderboard_sorted(vector<leaderboard_entry_data> &my_vec, sort_type sorting_method)
+void return_leaderboard_sorted(
+    vector<leaderboard_entry_data> &my_vec, sort_type sorting_method)
 {
     switch (sorting_method)
     {
-        case ALPHA_ASCENDING: sort(my_vec.begin(), my_vec.end(), sort_leaderboard_alphabetically_ascending); break;
-        case ALPHA_DESCENDING: sort(my_vec.begin(), my_vec.end(), sort_leaderboard_alphabetically_descending); break;
-        case DATE_ASCENDING: sort(my_vec.begin(), my_vec.end(), sort_leaderboard_date_ascending); break;
-        case DATE_DESCENDING: sort(my_vec.begin(), my_vec.end(), sort_leaderboard_date_descending); break;
-        case SCORE_ASCENDING: sort(my_vec.begin(), my_vec.end(), sort_leaderboard_score_ascending); break;
-        case SCORE_DESCENDING: sort(my_vec.begin(), my_vec.end(), sort_leaderboard_score_descending); break;
-        default: break;
+        case ALPHA_ASCENDING: 
+            sort(my_vec.begin(), my_vec.end(), 
+                sort_leaderboard_alphabetically_ascending); 
+            break;
+        case ALPHA_DESCENDING: 
+            sort(my_vec.begin(), my_vec.end(), 
+                sort_leaderboard_alphabetically_descending); 
+            break;
+        case DATE_ASCENDING: 
+            sort(my_vec.begin(), my_vec.end(), 
+                sort_leaderboard_date_ascending); 
+            break;
+        case DATE_DESCENDING: 
+            sort(my_vec.begin(), my_vec.end(), 
+                sort_leaderboard_date_descending); 
+            break;
+        case SCORE_ASCENDING: 
+            sort(my_vec.begin(), my_vec.end(), 
+                sort_leaderboard_score_ascending); 
+            break;
+        case SCORE_DESCENDING: 
+            sort(my_vec.begin(), my_vec.end(), 
+                sort_leaderboard_score_descending);
+            break;
+        default: 
+            break;
     }
 }
 
-vector<string> convert_leaderboard_entry_vector_to_string_vector(const vector<leaderboard_entry_data> &my_vec)
+vector<string> convert_leaderboard_entry_vector_to_string_vector(
+    const vector<leaderboard_entry_data> &my_vec)
 {
     vector<string> result;
 

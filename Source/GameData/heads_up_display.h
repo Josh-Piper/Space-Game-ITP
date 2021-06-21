@@ -39,8 +39,8 @@ string convert_number_to_two_dp(string number);
 
 /**
  * Add a suffix to a time, i.e. seconds, minutes etc.
- * @param                                          current_time      The current text
- * @param                                          suffix          The suffix to add to the end of result
+ * @param                                          current_time
+ * @param                                          suffix
  */     
 string append_time_suffix(string current_time, time_data suffix);
 
@@ -99,7 +99,8 @@ void draw_mini_map_location_for_player(const player_data &player);
  * Draw the minimap location for all space fighters
  * @param                                          space_fighters
  */ 
-void draw_mini_map_location_for_space_fighters(const vector<space_fighter_data> space_fighters);
+void draw_mini_map_location_for_space_fighters(
+    const vector<space_fighter_data> space_fighters);
 
 /**
  * Draw the minimap and each entity as a pixel on the map
@@ -107,7 +108,9 @@ void draw_mini_map_location_for_space_fighters(const vector<space_fighter_data> 
  * @param                                          player
  * @param                                          enemies
  */ 
-void draw_mini_map(const vector<power_up_data> &power_ups, const player_data &player, const enemy_handler_data &enemies);
+void draw_mini_map(
+    const vector<power_up_data> &power_ups, const player_data &player, 
+    const enemy_handler_data &enemies);
 
 /**
  * Draw the HUD background
